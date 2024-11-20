@@ -19,4 +19,9 @@ public class LinkController {
     public ResponseEntity<LinkResponseDTO> getLink(Long userId) {
         return ResponseEntity.status(HttpStatus.OK).body(linkService.getLinkResponseDTO(userId));
     }
+
+    @GetMapping("/test")
+    public ResponseEntity<String> test(){
+        return ResponseEntity.status(HttpStatus.OK).body("test");
+    }
 }
