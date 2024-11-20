@@ -1,6 +1,6 @@
 package com.team5.on_stage.link.controller;
 
-import com.team5.on_stage.link.entity.Link;
+import com.team5.on_stage.link.dto.LinkResponseDTO;
 import com.team5.on_stage.link.service.LinkService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,14 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/api/link")
 public class LinkController {
-
     private final LinkService linkService;
 
-    // test 용 api (linkId 기반으로 탐색 -> 추후에는 userId 기반으로 탐색)
     @GetMapping
-    public ResponseEntity<Link> getLink(Long id) {
-        return ResponseEntity.status(HttpStatus.OK).body( linkService.getLink(id));
+    public ResponseEntity<LinkResponseDTO> getLink(Long userId) {
+        return ResponseEntity.status(HttpStatus.OK).body(linkService.getLinkResponseDTO(userId));
     }
-
-
 }

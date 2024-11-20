@@ -1,17 +1,15 @@
-package com.team5.on_stage.link.entity;
+package com.team5.on_stage.link.dto;
 
 import com.team5.on_stage.link.constants.Layout;
-import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
 @Getter @Setter
-@Table(name = "link")
-public class Link {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+@NoArgsConstructor
+@AllArgsConstructor
+public class LinkDTO {
     private Long id;
 
     private String thumbnail;
@@ -22,11 +20,8 @@ public class Link {
 
     private int priority;
 
-    @Enumerated(EnumType.STRING)
     private Layout layout;
 
     private boolean active;
 
-    // 추후 매핑
-    private Long userId;
 }
