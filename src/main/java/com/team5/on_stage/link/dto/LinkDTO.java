@@ -10,6 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LinkDTO {
+    private Long id;
 
     private String thumbnail;
 

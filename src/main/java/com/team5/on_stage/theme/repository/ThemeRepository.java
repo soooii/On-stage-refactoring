@@ -14,5 +14,5 @@ public interface ThemeRepository extends JpaRepository<Theme, Long> {
 
     @Query("SELECT new com.team5.on_stage.theme.dto.ThemeDTO(t.backgroundImage, t.preferColor, t.fontColor, t.borderRadius, t.linkId) " +
             "FROM Theme t WHERE t.linkId = :linkId" )
-    ThemeDTO findAllThemes(@Param("linkId") Long linkId);
+    ThemeDTO findThemeByLinkId(@Param("linkId") Long linkId);
 }

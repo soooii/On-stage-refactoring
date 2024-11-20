@@ -12,7 +12,7 @@ import java.util.List;
 public class LinkDetailService {
     private final LinkDetailRepository linkDetailRepository;
 
-    public List<LinkDetailDTO> getLinkDetailsByLinkId(Long linkId) {
+    public List<LinkDetailDTO> findByLinkId(Long linkId) {
         return linkDetailRepository.findLinkDetailsByLinkId(linkId);
     }
 }
