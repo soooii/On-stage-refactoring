@@ -3,9 +3,11 @@ package com.team5.on_stage.user.service;
 import com.team5.on_stage.global.constants.ErrorCode;
 import com.team5.on_stage.global.exception.GlobalException;
 import com.team5.on_stage.user.dto.SignUpDto;
+import com.team5.on_stage.user.dto.UpdateUserDto;
 import com.team5.on_stage.user.entity.EmailDomain;
 import com.team5.on_stage.user.entity.User;
 import com.team5.on_stage.user.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -41,12 +43,27 @@ public class UserService {
         return true;
     }
 
+    @Transactional
+    public Boolean updateUserInformation(String email, UpdateUserDto updateUserDto) {
 
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
 
+        // description 수정
+        if (updateUserDto.getDescription() != null) {
+            user.setDescription(updateUserDto.getDescription());
+        }
+
+        // nickname 수정
+        if (updateUserDto.getNickname() != null) {
+            user.setNickname(updateUserDto.getNickname());
+        }
+
+        return true;
+    }
 
 
     public static String extractDomain(String email) {
 
-        return email.substring(email.indexOf("@") + 1, email.lastIndexOf("."));
+        return email.substring(email.indexOf("@") + 1, email.lastIndexOf(".")).toUpperCase();
     }
 }

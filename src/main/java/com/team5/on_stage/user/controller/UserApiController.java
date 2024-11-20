@@ -1,6 +1,7 @@
 package com.team5.on_stage.user.controller;
 
 import com.team5.on_stage.user.dto.SignUpDto;
+import com.team5.on_stage.user.dto.UpdateUserDto;
 import com.team5.on_stage.user.repository.UserRepository;
 import com.team5.on_stage.user.service.UserService;
 import jakarta.validation.Valid;
@@ -30,4 +31,13 @@ public class UserApiController {
 
         return ResponseEntity.ok(userRepository.deleteUserByEmail(email));
     }
+
+
+    @PatchMapping("/{email}")
+    public ResponseEntity<Boolean> updateUserInformation(@PathVariable("email") String email,
+                                                         @RequestBody UpdateUserDto updateUserDto) {
+
+        return ResponseEntity.ok(userService.updateUserInformation(email, updateUserDto));
+    }
+
 }
