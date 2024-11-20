@@ -49,6 +49,15 @@ dependencies {
 	//- mysql-conncetor-j
 	runtimeOnly 'com.mysql:mysql-connector-j'
 
+	//Selenium
+	//implementation 'org.seleniumhq.selenium:selenium-java'
+	//implementation 'io.github.bonigarcia:webdrivermanager'
+	//jsoup
+	implementation 'org.jsoup:jsoup:1.15.3'
+	//mapper
+	implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+
 
 }
 
