@@ -2,8 +2,11 @@ package com.team5.on_stage.link.entity;
 
 import com.team5.on_stage.link.constants.Layout;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Getter @Setter
 @Table(name = "link")
 public class Link {
 
