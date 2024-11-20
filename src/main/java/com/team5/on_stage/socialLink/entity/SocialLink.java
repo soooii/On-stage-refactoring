@@ -1,5 +1,6 @@
 package com.team5.on_stage.socialLink.entity;
 
+import com.team5.on_stage.link.entity.Link;
 import jakarta.persistence.*;
 
 @Entity
@@ -17,7 +18,6 @@ public class SocialLink {
 
     private String spotify;
 
-    // 추후 연관관계 매핑
-    private Long userId;
+    private Long linkId;
 
 }
