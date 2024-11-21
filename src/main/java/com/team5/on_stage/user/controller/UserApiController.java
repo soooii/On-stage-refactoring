@@ -7,12 +7,11 @@ import com.team5.on_stage.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @AllArgsConstructor
 @RequestMapping("/api/user")
-@Controller
+@RestController
 public class UserApiController {
 
     private final UserService userService;
@@ -20,7 +19,7 @@ public class UserApiController {
 
 
     @PostMapping("/signup")
-    public ResponseEntity<Boolean> signUp(@Valid @RequestBody SignUpDto dto) {
+    public ResponseEntity<Boolean> signUp(@Valid SignUpDto dto) {
 
         return ResponseEntity.ok(userService.signUp(dto));
     }
@@ -35,7 +34,7 @@ public class UserApiController {
 
     @PatchMapping("/{email}")
     public ResponseEntity<Boolean> updateUserInformation(@PathVariable("email") String email,
-                                                         @RequestBody UpdateUserDto updateUserDto) {
+                                                         UpdateUserDto updateUserDto) {
 
         return ResponseEntity.ok(userService.updateUserInformation(email, updateUserDto));
     }
