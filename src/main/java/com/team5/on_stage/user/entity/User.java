@@ -39,12 +39,21 @@ public class User {
     @Column(name = "email_domain", nullable = false)
     private EmailDomain emailDomain;
 
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private Role role;
+
     @Column(name = "image")
     private String image;
 
 
     @PrePersist
     public void setDefaultValue() {
+
+        if (this.role == null) {
+            this.role = Role.ROLE_USER;
+        }
 
         if (this.verified == null) {
             this.verified = false;
