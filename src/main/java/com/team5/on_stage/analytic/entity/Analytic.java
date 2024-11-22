@@ -28,7 +28,7 @@ public class Analytic {
     private LocalDateTime date;
 
     //TODO 추후에 연결
-    private Long page;
+    private Long link;
     private Long user;
-    private Long link_detail;
+    private Long linkDetail;
 }

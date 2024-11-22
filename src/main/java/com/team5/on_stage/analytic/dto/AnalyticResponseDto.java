@@ -4,10 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class AnalyticResponseDto {
-    private Long id;          // 로그 ID
-    private String message;   // 성공 메시지
+    private LocalDate date; // 날짜
+    private Long pageViewCount; // 페이지 조회수
+    private Long linkClickCount; // 링크 클릭 수
 }
