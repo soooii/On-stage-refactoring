@@ -43,9 +43,9 @@ public class SecurityConfig {
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll() /* Swagger */
                 .anyRequest().authenticated());
 
-//        http.oauth2Login((oauth2) -> oauth2
-//                .userInfoEndpoint((userInfoEndpointConfig -> userInfoEndpointConfig
-//                        .userService(customOAuth2UserService))));
+        http.oauth2Login((oauth2) -> oauth2
+                .userInfoEndpoint((userInfoEndpointConfig -> userInfoEndpointConfig
+                        .userService(customOAuth2UserService))));
 
 
         return http.build();
