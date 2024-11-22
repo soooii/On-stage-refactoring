@@ -18,6 +18,7 @@ public class UserApiController {
     private final UserRepository userRepository;
 
 
+    // 회원가입
     @PostMapping("/signup")
     public ResponseEntity<Boolean> signUp(@Valid SignUpDto dto) {
 
@@ -25,6 +26,7 @@ public class UserApiController {
     }
 
 
+    // 유저 삭제
     @DeleteMapping("/{email}")
     public ResponseEntity<Boolean> deleteUser(@PathVariable("email") String email) {
 
@@ -32,6 +34,8 @@ public class UserApiController {
     }
 
 
+    // 유저 정보 수정
+    // Todo: 수정 항목 별로 구분할 것
     @PatchMapping("/{email}")
     public ResponseEntity<Boolean> updateUserInformation(@PathVariable("email") String email,
                                                          UpdateUserDto updateUserDto) {
