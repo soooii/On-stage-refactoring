@@ -12,5 +12,5 @@ public interface LinkRepository extends JpaRepository<Link, Long> {
 
     @Query("SELECT new com.team5.on_stage.link.dto.LinkDTO(l.id, l.thumbnail, l.title, l.description, l.priority, l.layout, l.active) " +
             "FROM Link l WHERE l.userId = :userId")
-    LinkDTO findAllByUserId(@Param("linkId") Long userId);
+    LinkDTO findAllByUserId(@Param("userId") Long userId);
 }
