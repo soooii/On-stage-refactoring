@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 public class SocialLinkService {
     private final SocialLinkRepository socialLinkRepository;
 
-    public SocialLinkDTO findByLinkId(Long linkId) {
-        return socialLinkRepository.findByLinkId(linkId);
+    public SocialLinkDTO findByUserId(Long userId) {
+        return socialLinkRepository.findByUserId(userId);
     }
 
 }

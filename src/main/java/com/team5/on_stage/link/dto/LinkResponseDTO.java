@@ -1,7 +1,5 @@
 package com.team5.on_stage.link.dto;
 
-import com.team5.on_stage.link.constants.Layout;
-import com.team5.on_stage.linkDetail.dto.LinkDetailDTO;
 import com.team5.on_stage.socialLink.dto.SocialLinkDTO;
 import com.team5.on_stage.theme.dto.ThemeDTO;
 import lombok.Getter;
@@ -12,9 +10,7 @@ import java.util.List;
 @Getter @Setter
 public class LinkResponseDTO {
 
-    private LinkDTO link;
-
-    private List<LinkDetailDTO> details;
+    private List<LinkDTO> link;
 
     private SocialLinkDTO socialLink;
 

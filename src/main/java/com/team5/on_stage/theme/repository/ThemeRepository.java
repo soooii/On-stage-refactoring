@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface ThemeRepository extends JpaRepository<Theme, Long> {
 
-    @Query("SELECT new com.team5.on_stage.theme.dto.ThemeDTO(t.backgroundImage, t.preferColor, t.fontColor, t.borderRadius, t.linkId) " +
-            "FROM Theme t WHERE t.linkId = :linkId" )
-    ThemeDTO findThemeByLinkId(@Param("linkId") Long linkId);
+    @Query("SELECT new com.team5.on_stage.theme.dto.ThemeDTO(t.backgroundImage, t.preferColor, t.fontColor, t.borderRadius, t.userId) " +
+            "FROM Theme t WHERE t.userId = :userId" )
+    ThemeDTO findThemeByUserId(@Param("userId") Long userId);
 }
