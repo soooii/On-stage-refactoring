@@ -46,7 +46,8 @@ public class UserService {
     @Transactional
     public Boolean updateUserInformation(String email, UpdateUserDto updateUserDto) {
 
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
 
         // description 수정
         if (updateUserDto.getDescription() != null) {
@@ -57,6 +58,17 @@ public class UserService {
         if (updateUserDto.getNickname() != null) {
             user.setNickname(updateUserDto.getNickname());
         }
+
+        return true;
+    }
+
+
+    public Boolean deleteUser(String email) {
+
+        userRepository.findByEmail(email)
+                .orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
+
+        userRepository.deleteUserByEmail(email);
 
         return true;
     }

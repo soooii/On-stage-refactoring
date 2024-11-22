@@ -26,14 +26,6 @@ public class UserApiController {
     }
 
 
-    // 유저 삭제
-    @DeleteMapping("/{email}")
-    public ResponseEntity<Boolean> deleteUser(@PathVariable("email") String email) {
-
-        return ResponseEntity.ok(userRepository.deleteUserByEmail(email));
-    }
-
-
     // 유저 정보 수정
     // Todo: 수정 항목 별로 구분할 것
     @PatchMapping("/{email}")
@@ -43,4 +35,11 @@ public class UserApiController {
         return ResponseEntity.ok(userService.updateUserInformation(email, updateUserDto));
     }
 
+
+    // 유저 삭제
+    @DeleteMapping("/{email}")
+    public ResponseEntity<Boolean> deleteUser(@PathVariable("email") String email) {
+
+        return ResponseEntity.ok(userService.deleteUser(email));
+    }
 }
