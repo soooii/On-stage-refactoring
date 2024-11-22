@@ -1,14 +1,22 @@
 package com.team5.on_stage.global.config.auth;
 
 import com.team5.on_stage.global.config.auth.dto.*;
+import com.team5.on_stage.user.entity.Role;
+import com.team5.on_stage.user.entity.User;
+import com.team5.on_stage.user.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+@RequiredArgsConstructor
 @Service
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
+
+    private final UserRepository userRepository;
+
 
     // 사용자 정보를 확인하기 위한 메서드
     @Override
@@ -37,10 +45,43 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         // 리소스 서버에서 발급 받은 정보로 사용자를 특정하는 아이디 값을 만든다.
         String username = oAuth2Response.getProvider() + " " + oAuth2Response.getProviderId();
 
-        UserDto userDto = new UserDto();
-        userDto.setUsername(username);
-        userDto.setName(oAuth2Response.getName());
+        User existData = userRepository.findByUsername(username);
 
-        return new CustomOAuth2User(userDto);
+        // Todo: 회원가입 기능 고려하여 수정하기 + dto 사용
+        if (existData == null) {
+            // 사용자 정보가 없는 경우, DB에 정보를 새로이 저장한다.
+            User user = new User();
+            user.setUsername(username);
+            user.setEmail(oAuth2Response.getEmail());
+            user.setName(oAuth2Response.getName());
+            user.setRole(Role.valueOf("ROLE_USER"));
+
+            userRepository.save(user);
+
+            UserDto userDto = new UserDto();
+            userDto.setUsername(username);
+            userDto.setName(oAuth2Response.getName());
+            userDto.setRole("ROLE_USER");
+
+            return new CustomOAuth2User(userDto);
+        }
+        else {
+            // DB에 사용자 정보가 있는 경우, 정보를 업데이트한다.
+            existData.setEmail(oAuth2Response.getEmail());
+            existData.setName(oAuth2Response.getName());
+
+            userRepository.save(existData);
+
+            UserDto userDto = new UserDto();
+            userDto.setUsername(existData.getUsername());
+            userDto.setName(oAuth2Response.getName());
+            userDto.setRole(existData.getRole().toString());
+
+            return new CustomOAuth2User(userDto);
+        }
+
+
+
+
     }
 }
