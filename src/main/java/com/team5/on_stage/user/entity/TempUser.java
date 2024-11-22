@@ -28,6 +28,7 @@ public class TempUser {
     private String email;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     private Role role;
 }
