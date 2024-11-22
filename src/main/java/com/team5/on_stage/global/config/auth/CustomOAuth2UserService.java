@@ -1,8 +1,6 @@
 package com.team5.on_stage.global.config.auth;
 
-import com.team5.on_stage.global.config.auth.dto.GoogleResponse;
-import com.team5.on_stage.global.config.auth.dto.NaverResponse;
-import com.team5.on_stage.global.config.auth.dto.OAuth2Response;
+import com.team5.on_stage.global.config.auth.dto.*;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -36,6 +34,13 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             return null;
         }
 
-        // Todo: 로그인 완료 시 로직. 수정할 것
+        // 리소스 서버에서 발급 받은 정보로 사용자를 특정하는 아이디 값을 만든다.
+        String username = oAuth2Response.getProvider() + " " + oAuth2Response.getProviderId();
+
+        UserDto userDto = new UserDto();
+        userDto.setUsername(username);
+        userDto.setName(oAuth2Response.getName());
+
+        return new CustomOAuth2User(userDto);
     }
 }
