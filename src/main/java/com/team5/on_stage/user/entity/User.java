@@ -40,6 +40,10 @@ public class User {
     private EmailDomain emailDomain;
 
     @NotNull
+    @Column(name = "name", nullable = false)
+    private String name;
+
+    @NotNull
     @Column(name = "username", nullable = false)
     private String username;
 
