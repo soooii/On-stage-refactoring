@@ -39,8 +39,8 @@ public class User {
     @Column(name = "email_domain", nullable = false)
     private EmailDomain emailDomain;
 
-    @Column(name = "favorite")
-    private Boolean favorite;
+    @Column(name = "image")
+    private String image;
 
 
     @PrePersist
