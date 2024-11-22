@@ -17,6 +17,6 @@ public class Theme {
 
     private int borderRadius;
 
-    private Long linkId;
+    private Long userId;
 
 }

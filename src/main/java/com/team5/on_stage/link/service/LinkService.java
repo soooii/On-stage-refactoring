@@ -9,6 +9,8 @@ import com.team5.on_stage.theme.service.ThemeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class LinkService {
@@ -21,11 +23,10 @@ public class LinkService {
 
     public LinkResponseDTO getLinkResponseDTO(Long userId){
         LinkResponseDTO linkResponseDTO = new LinkResponseDTO();
-        LinkDTO linkDTO = linkRepository.findAllByUserId(userId);
-        linkResponseDTO.setLink(linkDTO);
-        linkResponseDTO.setDetails(linkDetailService.findByLinkId(linkDTO.getId()));
-        linkResponseDTO.setSocialLink(socialLinkService.findByLinkId(linkDTO.getId()));
-        linkResponseDTO.setTheme(themeService.findByLinkId(linkDTO.getId()));
+        //LinkDTO linkDTO = linkRepository.findAllByUserId(userId);
+        linkResponseDTO.setLink(linkRepository.findAllByUserId(userId));
+        linkResponseDTO.setSocialLink(socialLinkService.findByUserId(userId));
+        linkResponseDTO.setTheme(themeService.findByUserId(userId));
 
         return linkResponseDTO;
     }

@@ -1,10 +1,13 @@
 package com.team5.on_stage.link.dto;
 
 import com.team5.on_stage.link.constants.Layout;
+import com.team5.on_stage.linkDetail.dto.LinkDetailDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter @Setter
 @NoArgsConstructor
@@ -16,12 +19,12 @@ public class LinkDTO {
 
     private String title;
 
-    private String description;
-
     private int priority;
 
     private Layout layout;
 
     private boolean active;
+
+    private List<LinkDetailDTO> details;
 
 }

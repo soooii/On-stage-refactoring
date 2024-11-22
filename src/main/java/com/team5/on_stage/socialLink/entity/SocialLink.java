@@ -18,6 +18,6 @@ public class SocialLink {
 
     private String spotify;
 
-    private Long linkId;
+    private Long userId;
 
 }

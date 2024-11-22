@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 public class ThemeService {
     private final ThemeRepository themeRepository;
 
-    public ThemeDTO findByLinkId(Long linkId) {
-        return themeRepository.findThemeByLinkId(linkId);
+    public ThemeDTO findByUserId(Long userId) {
+        return themeRepository.findThemeByUserId(userId);
     }
 }
