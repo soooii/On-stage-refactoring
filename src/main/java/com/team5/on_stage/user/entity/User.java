@@ -40,6 +40,10 @@ public class User {
     private EmailDomain emailDomain;
 
     @NotNull
+    @Column(name = "username", nullable = false)
+    private String username;
+
+    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     private Role role;
