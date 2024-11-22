@@ -23,16 +23,12 @@ public class Analytic {
     @Enumerated(EnumType.STRING)
     private EventType eventType;
 
-
     private String location;
-
-    @Column(name = "device_info")
-    private String deviceInfo;
 
     private LocalDateTime date;
 
     //TODO 추후에 연결
-    private String page;
-    private String user;
-    private String link_detail;
+    private Long page;
+    private Long user;
+    private Long link_detail;
 }
