@@ -17,4 +17,6 @@ public interface LinkDetailRepository extends JpaRepository<LinkDetail, Long> {
             "FROM LinkDetail ld " +
             "WHERE ld.link.id = :linkId")
     List<LinkDetailDTO> findLinkDetailsByLinkId(@Param("linkId") Long linkId);
+
+    void deleteAllByLinkId(Long linkId);
 }

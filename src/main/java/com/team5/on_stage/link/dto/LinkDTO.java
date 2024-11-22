@@ -13,11 +13,13 @@ import java.util.List;
 public class LinkDTO {
     private Long id;
 
+    private Long userId;
+
     private String thumbnail;
 
     private String title;
 
-    private int priority;
+    private Long prevLinkId;
 
     private Layout layout;
 

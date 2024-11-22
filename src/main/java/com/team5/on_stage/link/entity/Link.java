@@ -15,16 +15,17 @@ public class Link {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String thumbnail;
+    private String thumbnail = null;
 
     private String title;
 
-    private int priority;
+    // LinkedList 자료구조 방식 사용할 예정
+    private Long prevLinkId;
 
     @Enumerated(EnumType.STRING)
-    private Layout layout;
+    private Layout layout = Layout.CLASSIC;
 
-    private boolean active;
+    private boolean active = true;
 
     // 추후 매핑
     private Long userId;

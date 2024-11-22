@@ -21,9 +21,20 @@ public class LinkController {
         return ResponseEntity.status(HttpStatus.OK).body(linkService.getLinkResponseDTO(1L)); // 수정예정
     }
 
+    @PostMapping
+    public ResponseEntity<LinkDTO> createLink(@RequestBody LinkDTO link) {
+        return ResponseEntity.status(HttpStatus.OK).body(linkService.createLink(link));
+    }
+
     @PutMapping
     public ResponseEntity<LinkDTO> updateLink(@RequestBody LinkDTO link) {
-        log.info("Updating link: {}", link);
         return ResponseEntity.status(HttpStatus.OK).body(linkService.updateLinkDTO(link));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteLink(@PathVariable Long id) {
+        linkService.deleteLink(id);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
 }
