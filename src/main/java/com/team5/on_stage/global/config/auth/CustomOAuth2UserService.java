@@ -37,6 +37,5 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         }
 
         // Todo: 로그인 완료 시 로직. 수정할 것
-        return oAuth2User;
     }
 }
