@@ -10,7 +10,9 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
 
     // 이미 생성된 사용자인지, 최초 가입 사용자인지 판단
+    // Todo: 확인을 username으로 하는 게 좋을 것 같다.
     Boolean existsByEmail(String email);
+    Optional<User> findByUsername(String username);
 
 
     Optional<User> findByEmail(String email);
