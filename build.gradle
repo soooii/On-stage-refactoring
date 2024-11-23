@@ -62,6 +62,7 @@ dependencies {
 	// JSoup
 	implementation 'org.jsoup:jsoup:1.15.3'
 
+
 	// MapStruct
 	implementation 'org.mapstruct:mapstruct:1.6.0'
 	implementation 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
