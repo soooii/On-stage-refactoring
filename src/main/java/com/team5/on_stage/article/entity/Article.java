@@ -1,5 +1,6 @@
 package com.team5.on_stage.article.entity;
 
+import com.team5.on_stage.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,6 +17,11 @@ public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    //유저 id
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     //기사 제목
     @Column(name="title", nullable = false)
