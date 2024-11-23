@@ -43,6 +43,7 @@ public class LinkDetailService {
         target.setUrl(linkDetailDTO.getUrl());
         target.setPlatform(linkDetailDTO.getPlatform());
         LinkDetail save = linkDetailRepository.save(target);
+        linkDetailDTO.setId(save.getId());
         return linkDetailDTO;
     }
 
