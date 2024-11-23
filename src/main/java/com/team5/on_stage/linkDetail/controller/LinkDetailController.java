@@ -19,4 +19,9 @@ public class LinkDetailController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(linkDetailService.saveLinkDetail(linkDetail,linkId));
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<LinkDetailDTO> updateLinkDetail(@RequestBody LinkDetailDTO linkDetail, @PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(linkDetailService.updateLinkDetail(linkDetail,id));
+    }
 }

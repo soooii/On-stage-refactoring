@@ -7,6 +7,7 @@ import com.team5.on_stage.link.repository.LinkRepository;
 import com.team5.on_stage.linkDetail.dto.LinkDetailDTO;
 import com.team5.on_stage.linkDetail.entity.LinkDetail;
 import com.team5.on_stage.linkDetail.repository.LinkDetailRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,7 @@ public class LinkDetailService {
         return linkDetailRepository.findLinkDetailsByLinkId(linkId);
     }
 
+    @Transactional
     public LinkDetailDTO saveLinkDetail(LinkDetailDTO linkDetailDTO, Long linkId) {
         LinkDetail target = new LinkDetail();
         Link link = linkRepository.findById(linkId)
@@ -31,6 +33,16 @@ public class LinkDetailService {
         target.setPlatform(linkDetailDTO.getPlatform());
         LinkDetail save = linkDetailRepository.save(target);
         linkDetailDTO.setId(save.getId());
+        return linkDetailDTO;
+    }
+
+    @Transactional
+    public LinkDetailDTO updateLinkDetail(LinkDetailDTO linkDetailDTO, Long id) {
+        LinkDetail target = linkDetailRepository.findById(id)
+                .orElseThrow(() -> new GlobalException(ErrorCode.LINK_DETAIL_NOT_FOUND));
+        target.setUrl(linkDetailDTO.getUrl());
+        target.setPlatform(linkDetailDTO.getPlatform());
+        LinkDetail save = linkDetailRepository.save(target);
         return linkDetailDTO;
     }
 }
