@@ -45,4 +45,9 @@ public class LinkDetailService {
         LinkDetail save = linkDetailRepository.save(target);
         return linkDetailDTO;
     }
+
+    @Transactional
+    public void deleteLinkDetail(Long id) {
+        linkDetailRepository.deleteById(id);
+    }
 }

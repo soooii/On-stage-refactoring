@@ -24,4 +24,10 @@ public class LinkDetailController {
     public ResponseEntity<LinkDetailDTO> updateLinkDetail(@RequestBody LinkDetailDTO linkDetail, @PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(linkDetailService.updateLinkDetail(linkDetail,id));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteLinkDetail(@PathVariable Long id) {
+        linkDetailService.deleteLinkDetail(id);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 }
