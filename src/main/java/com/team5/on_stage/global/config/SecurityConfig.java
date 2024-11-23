@@ -1,7 +1,7 @@
 package com.team5.on_stage.global.config;
 
+import com.team5.on_stage.global.config.auth.CustomClientRegistrationRepo;
 import com.team5.on_stage.global.config.auth.CustomOAuth2UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,10 +9,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-
-import java.util.Collections;
 
 @RequiredArgsConstructor
 @Configuration
@@ -20,6 +16,7 @@ import java.util.Collections;
 public class SecurityConfig {
 
     private final CustomOAuth2UserService customOAuth2UserService;
+    private final CustomClientRegistrationRepo customClientRegistrationRepo;
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -44,6 +41,8 @@ public class SecurityConfig {
                 .anyRequest().permitAll());
 
         http.oauth2Login((oauth2) -> oauth2
+                //.loginPage("/login")
+                .clientRegistrationRepository(customClientRegistrationRepo.ClientRegistrationRepository())
                 .userInfoEndpoint((userInfoEndpointConfig -> userInfoEndpointConfig
                         .userService(customOAuth2UserService))));
 
