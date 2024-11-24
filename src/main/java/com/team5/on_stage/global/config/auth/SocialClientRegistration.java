@@ -24,6 +24,18 @@ public class SocialClientRegistration {
     @Value("${google.client.secret}")
     private String googleClientSecret;
 
+    @Value("${github.client.id}")
+    private String githubClientId;
+
+    @Value("${github.client.secret}")
+    private String githubClientSecret;
+
+    @Value("${kakao.client.id}")
+    private String kakaoClientId;
+
+//    @Value("${kakao.client.secret}")
+//    private String kakaoClientSecret;
+
 
     public ClientRegistration naverClientRegistration() {
 
@@ -37,6 +49,7 @@ public class SocialClientRegistration {
                 .tokenUri("https://nid.naver.com/oauth2.0/token")
                 .userInfoUri("https://openapi.naver.com/v1/nid/me")
                 .userNameAttributeName("response")
+                .clientName("Naver")
                 .build();
     }
 
@@ -54,6 +67,36 @@ public class SocialClientRegistration {
                 .issuerUri("https://accounts.google.com")
                 .userInfoUri("https://www.googleapis.com/oauth2/v3/userinfo")
                 .userNameAttributeName(IdTokenClaimNames.SUB)
+                .clientName("Google")
+                .build();
+    }
+
+    public ClientRegistration githubClientRegistration() {
+        return ClientRegistration.withRegistrationId("github")
+                .clientId(githubClientId)
+                .clientSecret(githubClientSecret)
+                .redirectUri(BASE_URL + "/login/oauth2/code/{registrationId}")
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .scope("read:user", "user:email")
+                .authorizationUri("https://github.com/login/oauth/authorize")
+                .tokenUri("https://github.com/login/oauth/access_token")
+                .userInfoUri("https://api.github.com/user")
+                .userNameAttributeName("id")
+                .clientName("GitHub")
+                .build();
+    }
+
+    public ClientRegistration kakaoClientRegistration() {
+        return ClientRegistration.withRegistrationId("kakao")
+                .clientId(kakaoClientId)
+                .redirectUri(BASE_URL + "/login/oauth2/code/{registrationId}")
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .scope("account_email", "profile_nickname")
+                .authorizationUri("https://kauth.kakao.com/oauth/authorize")
+                .tokenUri("https://kauth.kakao.com/oauth/token")
+                .userInfoUri("https://kapi.kakao.com/v2/user/me")
+                .userNameAttributeName("id")
+                .clientName("Kakao")
                 .build();
     }
 }

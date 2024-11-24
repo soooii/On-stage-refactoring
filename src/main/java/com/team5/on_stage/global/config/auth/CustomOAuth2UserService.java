@@ -41,6 +41,14 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
             oAuth2Response = new NaverResponse(oAuth2User.getAttributes());
         }
+        else if (registrationId.equals("github")) {
+
+            oAuth2Response = new GithubResponse(oAuth2User.getAttributes());
+        }
+        else if (registrationId.equals("kakao")) {
+
+            oAuth2Response = new KakaoResponse(oAuth2User.getAttributes());
+        }
         else {
             return null;
         }
