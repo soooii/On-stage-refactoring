@@ -1,10 +1,12 @@
 package com.team5.on_stage.global.config;
 
 import com.team5.on_stage.global.config.auth.CustomClientRegistrationRepo;
+import com.team5.on_stage.global.config.auth.CustomOAuth2AuthorizedClientService;
 import com.team5.on_stage.global.config.auth.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,11 +19,14 @@ public class SecurityConfig {
 
     private final CustomOAuth2UserService customOAuth2UserService;
     private final CustomClientRegistrationRepo customClientRegistrationRepo;
+    private final CustomOAuth2AuthorizedClientService customOAuth2AuthorizedClientService;
+    private final JdbcTemplate jdbcTemplate;
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -42,6 +47,7 @@ public class SecurityConfig {
 
         http.oauth2Login((oauth2) -> oauth2
                 //.loginPage("/login")
+                .authorizedClientService(customOAuth2AuthorizedClientService.oAuth2AuthorizedClientService(jdbcTemplate, customClientRegistrationRepo.ClientRegistrationRepository()))
                 .clientRegistrationRepository(customClientRegistrationRepo.ClientRegistrationRepository())
                 .userInfoEndpoint((userInfoEndpointConfig -> userInfoEndpointConfig
                         .userService(customOAuth2UserService))));
