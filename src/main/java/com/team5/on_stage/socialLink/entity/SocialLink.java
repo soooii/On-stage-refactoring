@@ -1,10 +1,13 @@
 package com.team5.on_stage.socialLink.entity;
 
-import com.team5.on_stage.link.entity.Link;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Table (name = "social-link")
+@Table (name = "social_link")
+@Getter
+@Setter
 public class SocialLink {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
