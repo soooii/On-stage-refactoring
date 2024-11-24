@@ -11,6 +11,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class SocialLinkDTO {
 
+    private Long userId;
+
     private String instagram;
 
     private String youtube;
@@ -19,5 +21,6 @@ public class SocialLinkDTO {
 
     private String spotify;
 
-    private Long linkId;
+    private String github;
+
 }

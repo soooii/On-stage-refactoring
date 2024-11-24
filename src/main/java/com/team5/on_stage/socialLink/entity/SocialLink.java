@@ -13,6 +13,8 @@ public class SocialLink {
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Long userId;
+
     private String instagram;
 
     private String youtube;
@@ -21,6 +23,6 @@ public class SocialLink {
 
     private String spotify;
 
-    private Long userId;
+    private String github;
 
 }
