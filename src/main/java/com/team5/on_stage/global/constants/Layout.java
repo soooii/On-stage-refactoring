@@ -1,4 +1,4 @@
-package com.team5.on_stage.link.constants;
+package com.team5.on_stage.global.constants;
 
 public enum Layout {
     CLASSIC, EXTENDED

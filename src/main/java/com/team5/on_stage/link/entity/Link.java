@@ -1,6 +1,6 @@
 package com.team5.on_stage.link.entity;
 
-import com.team5.on_stage.link.constants.Layout;
+import com.team5.on_stage.global.constants.Layout;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
