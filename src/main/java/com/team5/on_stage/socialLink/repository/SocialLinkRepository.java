@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SocialLinkRepository  extends JpaRepository<SocialLink, Long> {
 
-    @Query("SELECT new com.team5.on_stage.socialLink.dto.SocialLinkDTO(s.instagram, s.youtube, s.x, s.spotify, s.userId) " +
+    @Query("SELECT new com.team5.on_stage.socialLink.dto.SocialLinkDTO(s.userId, s.instagram, s.youtube, s.x, s.spotify, s.github) " +
             "FROM SocialLink s WHERE s.userId = :userId")
     SocialLinkDTO findByUserId(@Param("userId") Long userId);
 }
