@@ -17,7 +17,7 @@ public class SocialLinkService {
         return socialLinkRepository.findDTOByUserId(userId);
     }
 
-    public SocialLinkDTO createSocialLink(SocialLinkDTO socialLinkDTO) {
+    public SocialLinkDTO updateSocialLink(SocialLinkDTO socialLinkDTO) {
         SocialLink target = socialLinkRepository.findByUserId(socialLinkDTO.getUserId())
                 .orElseThrow(() -> new GlobalException(ErrorCode.SOCIAL_LINK_NOT_FOUND));
         target.setInstagram(socialLinkDTO.getInstagram());
