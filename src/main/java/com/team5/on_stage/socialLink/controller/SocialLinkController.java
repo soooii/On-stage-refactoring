@@ -5,10 +5,7 @@ import com.team5.on_stage.socialLink.service.SocialLinkService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/social-link")
@@ -16,8 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class SocialLinkController {
     private final SocialLinkService socialLinkService;
 
-    @PostMapping
-    public ResponseEntity<SocialLinkDTO> createSocialLink(@RequestBody SocialLinkDTO socialLinkDTO) {
-        return ResponseEntity.status(HttpStatus.OK).body(socialLinkService.createSocialLink(socialLinkDTO));
+    @PutMapping
+    public ResponseEntity<SocialLinkDTO> updateSocialLink(@RequestBody SocialLinkDTO socialLinkDTO) {
+        return ResponseEntity.status(HttpStatus.OK).body(socialLinkService.updateSocialLink(socialLinkDTO));
     }
 }
