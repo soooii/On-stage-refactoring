@@ -12,6 +12,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @AllArgsConstructor
 @Getter @Setter
 @Builder
+@Table(name = "user")
 @Entity
 public class User {
 
