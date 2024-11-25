@@ -4,5 +4,6 @@ public enum EmailDomain {
 
     NAVER,
     GOOGLE,
-    KAKAO;
+    KAKAO,
+    GITHUB;
 }
