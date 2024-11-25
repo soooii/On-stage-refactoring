@@ -5,10 +5,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter @Setter
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class SocialLinkDTO {
+
+    private Long userId;
 
     private String instagram;
 
@@ -18,5 +21,6 @@ public class SocialLinkDTO {
 
     private String spotify;
 
-    private Long linkId;
+    private String github;
+
 }

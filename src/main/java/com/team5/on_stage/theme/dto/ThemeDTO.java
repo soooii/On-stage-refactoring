@@ -5,10 +5,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class ThemeDTO {
+    private Long linkId;
+
     private String backgroundImage;
 
     private String preferColor;
@@ -17,5 +20,4 @@ public class ThemeDTO {
 
     private int borderRadius;
 
-    private Long linkId;
 }

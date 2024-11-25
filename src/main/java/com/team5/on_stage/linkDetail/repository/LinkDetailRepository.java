@@ -13,8 +13,10 @@ import java.util.List;
 public interface LinkDetailRepository extends JpaRepository<LinkDetail, Long> {
 
 
-    @Query("SELECT new com.team5.on_stage.linkDetail.dto.LinkDetailDTO(ld.platform, ld.url) " +
+    @Query("SELECT new com.team5.on_stage.linkDetail.dto.LinkDetailDTO(ld.id, ld.platform, ld.url) " +
             "FROM LinkDetail ld " +
             "WHERE ld.link.id = :linkId")
     List<LinkDetailDTO> findLinkDetailsByLinkId(@Param("linkId") Long linkId);
+
+    void deleteAllByLinkId(Long linkId);
 }

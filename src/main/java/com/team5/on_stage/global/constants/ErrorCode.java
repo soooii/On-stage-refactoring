@@ -15,7 +15,10 @@ public enum ErrorCode {
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USER-02", "유저를 찾을 수 없습니다."),
 
     // Link
-    LINK_NOT_FOUND(HttpStatus.NOT_FOUND, "LINK-01","link not found");
+    LINK_NOT_FOUND(HttpStatus.NOT_FOUND, "LINK-01","link not found"),
+    LINK_DETAIL_NOT_FOUND(HttpStatus.NOT_FOUND, "LINK-02","link detail not found"),
+    SOCIAL_LINK_NOT_FOUND(HttpStatus.NOT_FOUND, "LINK-03","social link not found");
+
 
     // ANALYSIS
 
