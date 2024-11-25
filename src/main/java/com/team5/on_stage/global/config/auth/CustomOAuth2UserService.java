@@ -3,7 +3,6 @@ package com.team5.on_stage.global.config.auth;
 import com.team5.on_stage.global.config.auth.dto.*;
 import com.team5.on_stage.user.entity.Role;
 import com.team5.on_stage.user.entity.TempUser;
-import com.team5.on_stage.user.entity.User;
 import com.team5.on_stage.user.repository.TempUserRepository;
 import com.team5.on_stage.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -62,6 +61,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                     .username(username)
                     .email(oAuth2Response.getEmail())
                     .name(oAuth2Response.getName())
+                    .role(Role.valueOf("ROLE_TEMP"))
                     .build();
 
             tempUserRepository.save(tempUser);
@@ -69,7 +69,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             UserDto userDto = new UserDto();
             userDto.setUsername(username);
             userDto.setName(oAuth2Response.getName());
-            userDto.setRole("ROLE_USER");
+            userDto.setRole(Role.ROLE_TEMP.toString());
 
             return new CustomOAuth2User(userDto);
         }

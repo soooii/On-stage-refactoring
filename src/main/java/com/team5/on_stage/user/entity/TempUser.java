@@ -31,7 +31,7 @@ public class TempUser {
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
-    private Role role = Role.ROLE_USER;
+    private Role role;
 
 
     public void updateTempUser(String name, String email) {

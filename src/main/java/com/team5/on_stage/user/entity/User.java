@@ -59,10 +59,6 @@ public class User {
     @PrePersist
     public void setDefaultValue() {
 
-        if (this.role == null) {
-            this.role = Role.ROLE_USER;
-        }
-
         if (this.verified == null) {
             this.verified = false;
         }
