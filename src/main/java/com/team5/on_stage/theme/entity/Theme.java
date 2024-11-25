@@ -17,10 +17,14 @@ public class Theme {
 
     private String backgroundImage;
 
-    private String preferColor;
+    private String buttonColor = "#ffffff";
 
-    private String fontColor;
+    private String profileColor = "#ffffff";
 
-    private int borderRadius;
+    private String fontColor = "#000000";
+
+    private String iconColor = "#ffffff";
+
+    private int borderRadius = 10;
 
 }

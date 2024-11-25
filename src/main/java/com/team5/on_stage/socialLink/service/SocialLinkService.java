@@ -5,6 +5,7 @@ import com.team5.on_stage.global.exception.GlobalException;
 import com.team5.on_stage.socialLink.dto.SocialLinkDTO;
 import com.team5.on_stage.socialLink.entity.SocialLink;
 import com.team5.on_stage.socialLink.repository.SocialLinkRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,7 @@ public class SocialLinkService {
         return socialLinkRepository.findDTOByUserId(userId);
     }
 
+    @Transactional
     public SocialLinkDTO updateSocialLink(SocialLinkDTO socialLinkDTO) {
         SocialLink target = socialLinkRepository.findByUserId(socialLinkDTO.getUserId())
                 .orElseThrow(() -> new GlobalException(ErrorCode.SOCIAL_LINK_NOT_FOUND));
