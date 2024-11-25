@@ -1,13 +1,20 @@
 package com.team5.on_stage.socialLink.controller;
 
+import com.team5.on_stage.socialLink.dto.SocialLinkDTO;
 import com.team5.on_stage.socialLink.service.SocialLinkService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/social-link")
 @RequiredArgsConstructor
 public class SocialLinkController {
     private final SocialLinkService socialLinkService;
+
+    @PutMapping
+    public ResponseEntity<SocialLinkDTO> updateSocialLink(@RequestBody SocialLinkDTO socialLinkDTO) {
+        return ResponseEntity.status(HttpStatus.OK).body(socialLinkService.updateSocialLink(socialLinkDTO));
+    }
 }
