@@ -56,14 +56,13 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         TempUser existData = tempUserRepository.findByUsername(username);
 
-        // Todo: 회원가입 기능 고려하여 수정하기 + dto 사용
         if (existData == null) {
             // 사용자 정보가 없는 경우, DB에 정보를 새로이 저장한다.
-            TempUser tempUser = new TempUser();
-            tempUser.setUsername(username);
-            tempUser.setEmail(oAuth2Response.getEmail());
-            tempUser.setName(oAuth2Response.getName());
-            tempUser.setRole(Role.valueOf("ROLE_USER"));
+            TempUser tempUser = TempUser.builder()
+                    .username(username)
+                    .email(oAuth2Response.getEmail())
+                    .name(oAuth2Response.getName())
+                    .build();
 
             tempUserRepository.save(tempUser);
 
