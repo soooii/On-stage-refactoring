@@ -31,12 +31,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
         OAuth2Response oAuth2Response = null;
 
-        // 구글은 JSON 응답의 body에 id를 담는다.
         if (registrationId.equals("google")) {
 
             oAuth2Response = new GoogleResponse(oAuth2User.getAttributes());
         }
-        // 네이버는 JSON 응답 body의 response 내부에 id를 담는다.
         else if (registrationId.equals("naver")) {
 
             oAuth2Response = new NaverResponse(oAuth2User.getAttributes());
@@ -61,7 +59,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         // Todo: 회원가입 기능 고려하여 수정하기 + dto 사용
         if (existData == null) {
             // 사용자 정보가 없는 경우, DB에 정보를 새로이 저장한다.
-            System.out.println("정보가 없는 경우");
             TempUser tempUser = new TempUser();
             tempUser.setUsername(username);
             tempUser.setEmail(oAuth2Response.getEmail());
@@ -79,9 +76,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         }
         else {
             // DB에 사용자 정보가 있는 경우, 정보를 업데이트한다.
-            System.out.println("정보가 있는 경우");
-            existData.setEmail(oAuth2Response.getEmail());
-            existData.setName(oAuth2Response.getName());
+            existData.updateTempUser(oAuth2User.getName(), oAuth2Response.getEmail());
 
             tempUserRepository.save(existData);
 

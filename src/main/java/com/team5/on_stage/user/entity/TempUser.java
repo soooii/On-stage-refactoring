@@ -31,4 +31,11 @@ public class TempUser {
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     private Role role;
+
+
+    public void updateTempUser(String name, String email) {
+
+        this.name = name;
+        this.email = email;
+    }
 }
