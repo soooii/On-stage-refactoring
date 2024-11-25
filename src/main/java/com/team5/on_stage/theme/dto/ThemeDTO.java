@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ThemeDTO {
-    private Long linkId;
+    private Long userId;
 
     private String backgroundImage;
 

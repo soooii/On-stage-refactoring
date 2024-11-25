@@ -17,7 +17,8 @@ public enum ErrorCode {
     // Link
     LINK_NOT_FOUND(HttpStatus.NOT_FOUND, "LINK-01","link not found"),
     LINK_DETAIL_NOT_FOUND(HttpStatus.NOT_FOUND, "LINK-02","link detail not found"),
-    SOCIAL_LINK_NOT_FOUND(HttpStatus.NOT_FOUND, "LINK-03","social link not found");
+    SOCIAL_LINK_NOT_FOUND(HttpStatus.NOT_FOUND, "LINK-03","social link not found"),
+    THEME_NOT_FOUND(HttpStatus.NOT_FOUND, "LINK-04","theme not found");
 
 
     // ANALYSIS
