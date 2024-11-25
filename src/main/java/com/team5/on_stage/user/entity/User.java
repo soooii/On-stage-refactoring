@@ -2,6 +2,7 @@ package com.team5.on_stage.user.entity;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
@@ -30,7 +31,8 @@ public class User {
     // 소셜 로그인 정보에서 가져온 이메일
     // Todo: 이메일이 없을 수도 있다. (ex: 깃허브)
     @NotNull
-    @Column(name = "email", nullable = false, unique = true)
+    @Email
+    @Column(name = "email", nullable = false)
     private String email;
 
     // 소셜 로그인 정보에서 가져온 이름
@@ -40,12 +42,12 @@ public class User {
 
     // 소셜 로그인 도메인 + 소셜 로그인 ID 문자열
     @NotNull
-    @Column(name = "username", nullable = false)
+    @Column(name = "username", nullable = false, unique = true)
     private String username;
 
-    // Todo: Enum으로 관리할지.
+    // 아티스트 인증 여부
     @Column(name = "verified", nullable = false)
-    private Boolean verified;
+    private Verified verified;
 
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -64,12 +66,12 @@ public class User {
     @PrePersist
     public void setDefaultValue() {
 
-        if (this.verified == null) {
-            this.verified = false;
-        }
-
         if (this.description == null) {
             this.description = "나를 소개하는 문장을 입력해주세요.";
+        }
+
+        if (this.image == null) {
+            this.image = "";
         }
     }
 }

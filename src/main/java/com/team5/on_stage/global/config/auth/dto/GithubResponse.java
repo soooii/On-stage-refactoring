@@ -29,7 +29,7 @@ public class GithubResponse implements OAuth2Response {
         if (attribute.get("email") != null) {
             return attribute.get("email").toString();
         }
-        return "email@not.provided";
+        return "notprovided@github.com";
     }
 
     @Override
@@ -38,6 +38,6 @@ public class GithubResponse implements OAuth2Response {
         if (attribute.get("name") != null) {
             return attribute.get("name").toString();
         }
-        return "name@not.provided";
+        return "notprovided";
     }
 }
