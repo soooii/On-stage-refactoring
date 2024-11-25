@@ -25,6 +25,6 @@ public class Theme {
 
     private String iconColor = "#ffffff";
 
-    private int borderRadius = 10;
+    private int borderRadius = 25;
 
 }
