@@ -1,5 +1,6 @@
 package com.team5.on_stage.global.config.auth.dto;
 
+import com.team5.on_stage.user.entity.Role;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,7 +8,7 @@ import lombok.Setter;
 @Setter
 public class UserDto {
 
-    private String role;
+    private Role role;
 
     private String name;
 
