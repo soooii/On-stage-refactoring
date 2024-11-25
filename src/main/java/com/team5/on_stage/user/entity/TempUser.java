@@ -2,11 +2,12 @@ package com.team5.on_stage.user.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Getter @Setter
 @Table(name = "temp_user")
 @Entity
 public class TempUser {
@@ -30,7 +31,7 @@ public class TempUser {
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
-    private Role role;
+    private Role role = Role.ROLE_USER;
 
 
     public void updateTempUser(String name, String email) {
