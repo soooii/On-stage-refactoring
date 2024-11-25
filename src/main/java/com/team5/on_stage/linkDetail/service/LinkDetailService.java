@@ -23,7 +23,6 @@ public class LinkDetailService {
         return linkDetailRepository.findLinkDetailsByLinkId(linkId);
     }
 
-    @Transactional
     public LinkDetailDTO saveLinkDetail(LinkDetailDTO linkDetailDTO, Long linkId) {
         LinkDetail target = new LinkDetail();
         Link link = linkRepository.findById(linkId)
@@ -36,7 +35,6 @@ public class LinkDetailService {
         return linkDetailDTO;
     }
 
-    @Transactional
     public LinkDetailDTO updateLinkDetail(LinkDetailDTO linkDetailDTO, Long id) {
         LinkDetail target = linkDetailRepository.findById(id)
                 .orElseThrow(() -> new GlobalException(ErrorCode.LINK_DETAIL_NOT_FOUND));

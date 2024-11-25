@@ -18,7 +18,6 @@ public class SocialLinkService {
         return socialLinkRepository.findDTOByUserId(userId);
     }
 
-    @Transactional
     public SocialLinkDTO updateSocialLink(SocialLinkDTO socialLinkDTO) {
         SocialLink target = socialLinkRepository.findByUserId(socialLinkDTO.getUserId())
                 .orElseThrow(() -> new GlobalException(ErrorCode.SOCIAL_LINK_NOT_FOUND));
