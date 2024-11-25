@@ -13,14 +13,14 @@ public class SocialLinkDTO {
 
     private Long userId;
 
-    private String instagram;
+    private String instagram ="";
 
-    private String youtube;
+    private String youtube ="";
 
-    private String x;
+    private String x ="";
 
-    private String spotify;
+    private String spotify ="";
 
-    private String github;
+    private String github ="";
 
 }
