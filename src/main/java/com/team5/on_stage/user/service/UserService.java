@@ -46,6 +46,7 @@ public class UserService {
     }
 
 
+    @Transactional
     public Boolean signUpUser(String username,
                               SignUpUserDto signUpUserDto) {
 
@@ -68,6 +69,8 @@ public class UserService {
                 .build();
 
         userRepository.save(user);
+
+        tempUserRepository.deleteByUsername(username);
 
         return true;
     }

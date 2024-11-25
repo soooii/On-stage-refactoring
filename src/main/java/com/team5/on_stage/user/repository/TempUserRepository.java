@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TempUserRepository extends JpaRepository<TempUser, Long> {
     TempUser findByUsername(String username);
+
+    void deleteByUsername(String username);
 }
