@@ -7,12 +7,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ThemeRepository extends JpaRepository<Theme, Long> {
 
-    @Query("SELECT new com.team5.on_stage.theme.dto.ThemeDTO(t.backgroundImage, t.preferColor, t.fontColor, t.borderRadius, t.linkId) " +
-            "FROM Theme t WHERE t.linkId = :linkId" )
-    ThemeDTO findThemeByLinkId(@Param("linkId") Long linkId);
+    @Query("SELECT new com.team5.on_stage.theme.dto.ThemeDTO(t.userId, t.backgroundImage, t.buttonColor, t.profileColor, t.fontColor,t.iconColor, t.borderRadius ) " +
+            "FROM Theme t WHERE t.userId = :userId" )
+    ThemeDTO findThemeDTOByUserId(@Param("userId") Long userId);
+
+    Optional<Theme> findByUserId(Long userId);
 }

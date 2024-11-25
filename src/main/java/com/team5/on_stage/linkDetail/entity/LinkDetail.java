@@ -1,15 +1,14 @@
 package com.team5.on_stage.linkDetail.entity;
 
-import com.team5.on_stage.link.constants.Platform;
+import com.team5.on_stage.global.constants.Platform;
 import com.team5.on_stage.link.entity.Link;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
 @Table(name = "link_detail")
 public class LinkDetail {
 

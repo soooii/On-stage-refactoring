@@ -1,23 +1,28 @@
 package com.team5.on_stage.socialLink.entity;
 
-import com.team5.on_stage.link.entity.Link;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Table (name = "social-link")
+@Table (name = "social_link")
+@Getter
+@Setter
 public class SocialLink {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String instagram;
+    private Long userId;
 
-    private String youtube;
+    private String instagram ="";
 
-    private String x;
+    private String youtube ="";
 
-    private String spotify;
+    private String x ="";
 
-    private Long linkId;
+    private String spotify ="";
+
+    private String github ="";
 
 }

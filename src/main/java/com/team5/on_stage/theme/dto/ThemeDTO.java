@@ -5,17 +5,23 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class ThemeDTO {
+    private Long userId;
+
     private String backgroundImage;
 
-    private String preferColor;
+    private String buttonColor;
+
+    private String profileColor;
 
     private String fontColor;
 
+    private String iconColor;
+
     private int borderRadius;
 
-    private Long linkId;
 }
