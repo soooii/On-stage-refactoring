@@ -3,9 +3,10 @@ package com.team5.on_stage.user.service;
 import com.team5.on_stage.global.constants.ErrorCode;
 import com.team5.on_stage.global.exception.GlobalException;
 import com.team5.on_stage.user.dto.SignUpDto;
+import com.team5.on_stage.user.dto.SignUpUserDto;
 import com.team5.on_stage.user.dto.UpdateUserDto;
-import com.team5.on_stage.user.entity.EmailDomain;
-import com.team5.on_stage.user.entity.User;
+import com.team5.on_stage.user.entity.*;
+import com.team5.on_stage.user.repository.TempUserRepository;
 import com.team5.on_stage.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final TempUserRepository tempUserRepository;
 
 
     public Boolean signUp(SignUpDto signUpDto) {
@@ -43,8 +45,37 @@ public class UserService {
         return true;
     }
 
+
+    public Boolean signUpUser(String username,
+                              SignUpUserDto signUpUserDto) {
+
+        if (tempUserRepository.findByUsername(username) == null) {
+            throw new GlobalException(ErrorCode.USER_NOT_FOUND);
+        }
+
+        TempUser tempUser = tempUserRepository.findByUsername(username);
+
+        User user = User.builder()
+                .nickname(signUpUserDto.getNickname())
+                .description(signUpUserDto.getDescription())
+                .email(tempUser.getEmail())
+                .emailDomain(EmailDomain.valueOf(extractDomain(tempUser.getEmail())))
+                .name(tempUser.getName())
+                .username(tempUser.getUsername())
+                .verified(Verified.UNVERIFIED)
+                .role(Role.ROLE_USER)
+                .image(null)
+                .build();
+
+        userRepository.save(user);
+
+        return true;
+    }
+
+
     @Transactional
-    public Boolean updateUserInformation(String email, UpdateUserDto updateUserDto) {
+    public Boolean updateUserInformation(String email,
+                                         UpdateUserDto updateUserDto) {
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
