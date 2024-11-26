@@ -3,6 +3,7 @@ package com.team5.on_stage.global.config;
 import com.team5.on_stage.global.config.auth.CustomClientRegistrationRepo;
 import com.team5.on_stage.global.config.auth.CustomOAuth2AuthorizedClientService;
 import com.team5.on_stage.global.config.auth.CustomOAuth2UserService;
+import com.team5.on_stage.global.config.auth.OAuth2SuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +22,7 @@ public class SecurityConfig {
     private final CustomClientRegistrationRepo customClientRegistrationRepo;
     private final CustomOAuth2AuthorizedClientService customOAuth2AuthorizedClientService;
     private final JdbcTemplate jdbcTemplate;
+    private final OAuth2SuccessHandler oAuth2SuccessHandler;
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -49,6 +51,7 @@ public class SecurityConfig {
                 //.loginPage("/login")
                 .authorizedClientService(customOAuth2AuthorizedClientService.oAuth2AuthorizedClientService(jdbcTemplate, customClientRegistrationRepo.ClientRegistrationRepository()))
                 .clientRegistrationRepository(customClientRegistrationRepo.ClientRegistrationRepository())
+                .successHandler(oAuth2SuccessHandler)
                 .userInfoEndpoint((userInfoEndpointConfig -> userInfoEndpointConfig
                         .userService(customOAuth2UserService))));
 
