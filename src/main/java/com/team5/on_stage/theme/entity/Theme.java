@@ -15,7 +15,7 @@ public class Theme {
 
     private Long userId;
 
-    private String backgroundImage;
+    private String backgroundImage = "https://s3-on-stage.s3.ap-northeast-2.amazonaws.com/backgroundImages/20.png";
 
     private String buttonColor = "#ffffff";
 
@@ -25,6 +25,6 @@ public class Theme {
 
     private String iconColor = "#ffffff";
 
-    private int borderRadius = 10;
+    private int borderRadius = 25;
 
 }

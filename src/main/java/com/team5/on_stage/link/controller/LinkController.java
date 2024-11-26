@@ -18,7 +18,7 @@ public class LinkController {
 
     @GetMapping("/{userId}")
     public ResponseEntity<LinkResponseDTO> getLink(@PathVariable Long userId) {
-        return ResponseEntity.status(HttpStatus.OK).body(linkService.getLinkResponseDTO(1L)); // 수정예정
+        return ResponseEntity.status(HttpStatus.OK).body(linkService.getLink(1L)); // 수정예정
     }
 
     @PostMapping

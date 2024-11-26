@@ -30,7 +30,7 @@ public class LinkService {
     private final ThemeService themeService;
 
     // ResponseDTO 조회
-    public LinkResponseDTO getLinkResponseDTO(Long userId) {
+    public LinkResponseDTO getLink(Long userId) {
         LinkResponseDTO linkResponseDTO = new LinkResponseDTO();
         List<Link> link = linkRepository.findByUserId(userId)
                 .orElseThrow(() -> new GlobalException(ErrorCode.LINK_NOT_FOUND));
@@ -62,7 +62,6 @@ public class LinkService {
     }
 
     // Update Link
-    @Transactional
     public LinkDTO updateLinkDTO(LinkDTO linkDTO) {
         Link target = linkRepository.findById(linkDTO.getId())
                 .orElseThrow(() -> new GlobalException(ErrorCode.LINK_NOT_FOUND));
@@ -76,12 +75,13 @@ public class LinkService {
     }
 
     // delete Link
-    @Transactional
+    // soft delete
     public void deleteLink(Long linkId) {
         linkDetailRepository.deleteAllByLinkId(linkId);
         linkRepository.deleteById(linkId);
     }
 
+    // TODO 프로젝션 사용
     public List<LinkDTO> convertLinksToLinkDTOList(List<Link> links) {
         return links.stream()
                 .map(link -> {
