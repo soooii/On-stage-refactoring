@@ -37,7 +37,6 @@ public class LinkService {
         linkResponseDTO.setLink(convertLinksToLinkDTOList(link));
         linkResponseDTO.setSocialLink(socialLinkService.findByUserId(userId));
         linkResponseDTO.setTheme(themeService.findByUserId(userId));
-
         return linkResponseDTO;
     }
 
@@ -50,9 +49,6 @@ public class LinkService {
         link.setUserId(linkDTO.getUserId());
         Link savedLink = linkRepository.save(link);
         linkDTO.setId(savedLink.getId());
-//        LinkDetail linkDetail = new LinkDetail();
-//        linkDetail.setLink(link);
-//        linkDetailRepository.save(linkDetail);
 
         List<LinkDetail> linkDetails = linkDTO.getDetails().stream()
                 .map(detail -> {
@@ -69,21 +65,19 @@ public class LinkService {
         return linkDTO;
     }
 
-    // Update Link
+    @Transactional
     public LinkDTO updateLinkDTO(LinkDTO linkDTO) {
-        Link target = linkRepository.findById(linkDTO.getId())
-                .orElseThrow(() -> new GlobalException(ErrorCode.LINK_NOT_FOUND));
-        target.setThumbnail(linkDTO.getThumbnail());
-        target.setTitle(linkDTO.getTitle());
-        target.setPrevLinkId(linkDTO.getPrevLinkId());
-        target.setLayout(linkDTO.getLayout());
-        target.setActive(linkDTO.isActive());
-        linkRepository.save(target);
+        // 쿼리 메서드를 사용 -> DB 접근 최소화
+        linkRepository.updateLink(
+                linkDTO.getTitle(),
+                linkDTO.getPrevLinkId(),
+                linkDTO.isActive(),
+                linkDTO.getId()
+        );
         return linkDTO;
     }
 
     // delete Link
-    // soft delete
     @Transactional
     public void deleteLink(Long linkId) {
         linkDetailRepository.softDeleteByLinkId(linkId);
@@ -97,10 +91,8 @@ public class LinkService {
                     LinkDTO linkDTO = new LinkDTO();
                     linkDTO.setId(link.getId());
                     linkDTO.setUserId(link.getUserId());
-                    linkDTO.setThumbnail(link.getThumbnail());
                     linkDTO.setTitle(link.getTitle());
                     linkDTO.setPrevLinkId(link.getPrevLinkId());
-                    linkDTO.setLayout(link.getLayout());
                     linkDTO.setActive(link.isActive());
                     linkDTO.setDetails(linkDetailService.findByLinkId(link.getId()));
                     return linkDTO;

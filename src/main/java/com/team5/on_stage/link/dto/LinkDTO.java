@@ -15,13 +15,9 @@ public class LinkDTO {
 
     private Long userId;
 
-    private String thumbnail;
-
     private String title;
 
     private Long prevLinkId;
-
-    private Layout layout;
 
     private boolean active;
 
