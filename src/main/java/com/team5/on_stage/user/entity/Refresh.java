@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
+@Table(name = "refresh")
 @Entity
 public class Refresh {
 
