@@ -13,7 +13,7 @@ import lombok.Setter;
 public class LinkDetail {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @ManyToOne
@@ -24,5 +24,7 @@ public class LinkDetail {
     private Platform platform;
 
     private String url;
+
+    private boolean isDeleted = false;
 
 }

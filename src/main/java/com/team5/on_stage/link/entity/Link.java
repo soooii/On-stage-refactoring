@@ -27,6 +27,8 @@ public class Link {
 
     private boolean active = true;
 
+    private boolean isDeleted = false;
+
     // 추후 매핑
     private Long userId;
 }

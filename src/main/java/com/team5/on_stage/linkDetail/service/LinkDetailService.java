@@ -20,7 +20,7 @@ public class LinkDetailService {
     private final LinkRepository linkRepository;
 
     public List<LinkDetailDTO> findByLinkId(Long linkId) {
-        return linkDetailRepository.findLinkDetailsByLinkId(linkId);
+        return linkDetailRepository.findByLinkId(linkId);
     }
 
     public LinkDetailDTO saveLinkDetail(LinkDetailDTO linkDetailDTO, Long linkId) {
@@ -47,6 +47,6 @@ public class LinkDetailService {
 
     @Transactional
     public void deleteLinkDetail(Long id) {
-        linkDetailRepository.deleteById(id);
+        linkDetailRepository.softDeleteById(id);
     }
 }

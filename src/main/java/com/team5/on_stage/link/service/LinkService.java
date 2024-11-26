@@ -41,7 +41,7 @@ public class LinkService {
         return linkResponseDTO;
     }
 
-    //create Link
+    // create link
     @Transactional
     public LinkDTO createLink(LinkDTO linkDTO) {
         Link link = new Link();
@@ -50,14 +50,22 @@ public class LinkService {
         link.setUserId(linkDTO.getUserId());
         Link savedLink = linkRepository.save(link);
         linkDTO.setId(savedLink.getId());
+//        LinkDetail linkDetail = new LinkDetail();
+//        linkDetail.setLink(link);
+//        linkDetailRepository.save(linkDetail);
 
-        for (LinkDetailDTO detail : linkDTO.getDetails()) {
-            LinkDetail linkDetail = new LinkDetail();
-            linkDetail.setLink(savedLink);
-            linkDetail.setPlatform(detail.getPlatform());
-            linkDetail.setUrl(detail.getUrl());
-            linkDetailRepository.save(linkDetail);
-        }
+        List<LinkDetail> linkDetails = linkDTO.getDetails().stream()
+                .map(detail -> {
+                    LinkDetail linkDetail = new LinkDetail();
+                    linkDetail.setLink(savedLink);
+                    linkDetail.setPlatform(detail.getPlatform());
+                    linkDetail.setUrl(detail.getUrl());
+                    return linkDetail;
+                })
+                .collect(Collectors.toList());
+
+        // 벌크 인서트 수행
+        linkDetailRepository.saveAll(linkDetails);
         return linkDTO;
     }
 
@@ -76,9 +84,10 @@ public class LinkService {
 
     // delete Link
     // soft delete
+    @Transactional
     public void deleteLink(Long linkId) {
-        linkDetailRepository.deleteAllByLinkId(linkId);
-        linkRepository.deleteById(linkId);
+        linkDetailRepository.softDeleteByLinkId(linkId);
+        linkRepository.softDeleteById(linkId);
     }
 
     // TODO 프로젝션 사용
