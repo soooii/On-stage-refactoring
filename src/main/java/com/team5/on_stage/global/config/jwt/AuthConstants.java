@@ -5,6 +5,10 @@ public class AuthConstants {
     public static final String FRONT_DOMAIN = "http://localhost:3000";
     public static final String BACK_DOMAIN = "http://localhost:8080";
 
+    // Token Type
+    public static final String REFRESH_TOKEN = "refresh";
+    public static final String ACCESS_TOKEN = "access";
+
     // Access Token을 전달할 헤더
     public static final String AUTH_HEADER = "Authorization";
 

@@ -13,12 +13,12 @@ import java.time.LocalDateTime;
 import java.util.Date;
 
 @Component
-public class JWTUtil {
+public class JwtUtil {
 
     private final SecretKey secretKey;
     private final RefreshRepository refreshRepository;
 
-    public JWTUtil(@Value("${JWT_SECRET_KEY}") String secret,
+    public JwtUtil(@Value("${JWT_SECRET_KEY}") String secret,
                    RefreshRepository refreshRepository) {
 
         byte[] keyBytes = secret.getBytes(StandardCharsets.UTF_8);
@@ -29,7 +29,7 @@ public class JWTUtil {
 
 
     // JWT 생성
-    public String generateToken(String category,
+    public String generateToken(String type,
                                 String username,
                                 String role,
                                 Long expiredMs) {
@@ -37,7 +37,7 @@ public class JWTUtil {
         LocalDateTime now = LocalDateTime.now();
 
         return Jwts.builder()
-                .claim("category", category)
+                .claim("type", type)
                 .claim("username", username)
                 .claim("role", role)
                 .issuedAt(new Date(System.currentTimeMillis()))
@@ -83,15 +83,15 @@ public class JWTUtil {
                 .get("role", String.class);
     }
 
-    // category 추출 (access / refresh)
-    public String getCategory(String token) {
+    // type 추출 (access / refresh)
+    public String getType(String token) {
 
         return Jwts.parser()
                 .verifyWith(secretKey)
                 .build()
                 .parseSignedClaims(token)
                 .getPayload()
-                .get("category", String.class);
+                .get("type", String.class);
     }
 
     // 만료 시간 추출
