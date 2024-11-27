@@ -28,7 +28,7 @@ public class AnalyticController {
     public ResponseEntity<List<AnalyticResponseDto>> getEventCountsByDate(
             @RequestParam LocalDateTime startDate,
             @RequestParam LocalDateTime endDate) {
-        List<AnalyticResponseDto> analytics = analyticService.getEventCountsByDate(startDate, endDate);
+        List<AnalyticResponseDto> analytics = analyticService.getEventCountsByDateAndLocation(startDate, endDate);
         return ResponseEntity.ok(analytics);
     }
 }
