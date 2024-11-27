@@ -48,6 +48,7 @@ public class User {
 
     // 아티스트 인증 여부
     @Column(name = "verified", nullable = false)
+    @Enumerated(EnumType.STRING)
     private Verified verified;
 
     @NotNull
