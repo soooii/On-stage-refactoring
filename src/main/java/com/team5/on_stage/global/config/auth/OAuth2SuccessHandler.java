@@ -53,7 +53,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             jwtUtil.addRefresh(username, refreshToken);
 
 //        response.sendRedirect(request.getContextPath() + "/");
-            response.setHeader(AUTH_HEADER, AUTH_TYPE + accessToken);
+            response.addCookie(createCookie("access", AUTH_TYPE + accessToken));
             response.addCookie(createCookie("refresh", refreshToken));
             response.setStatus(HttpStatus.OK.value());
         } catch (Exception e) {
