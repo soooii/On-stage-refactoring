@@ -1,5 +1,6 @@
 package com.team5.on_stage.global.config.auth;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.team5.on_stage.global.config.auth.dto.CustomOAuth2User;
 import com.team5.on_stage.global.config.jwt.AuthConstants;
 import com.team5.on_stage.global.config.jwt.JwtUtil;
@@ -15,6 +16,9 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 import static com.team5.on_stage.global.config.auth.cookie.CookieUtil.createCookie;
 
@@ -53,7 +57,18 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             jwtUtil.addRefresh(username, refreshToken);
 
 //        response.sendRedirect(request.getContextPath() + "/");
-            response.setHeader(AUTH_HEADER, AUTH_TYPE + accessToken);
+
+//            ObjectMapper mapper = new ObjectMapper();
+//            String cookieTokenValue = mapper.writeValueAsString(Map.of(
+//                    "refresh", refreshToken,
+//                    "access", AUTH_TYPE + accessToken)
+//            );
+//
+//            String encodedCookieValue = URLEncoder.encode(cookieTokenValue, StandardCharsets.UTF_8);
+//
+//            response.addCookie(createCookie("token", encodedCookieValue));
+
+            response.addCookie(createCookie("access", accessToken));
             response.addCookie(createCookie("refresh", refreshToken));
             response.setStatus(HttpStatus.OK.value());
         } catch (Exception e) {

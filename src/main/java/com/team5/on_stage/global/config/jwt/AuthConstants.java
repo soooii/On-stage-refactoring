@@ -17,6 +17,6 @@ public interface AuthConstants {
     String AUTH_TYPE = "Bearer ";
 
     // 각 Token의 유효 시간
-    Long REFRESH_TOKEN_EXPIRED_MS = 600000L;
+    Long REFRESH_TOKEN_EXPIRED_MS = 86400000L;
     Long ACCESS_TOKEN_EXPIRED_MS = 86400000L;
 }
