@@ -8,13 +8,15 @@ import lombok.*;
 @Getter
 @Setter
 @Table(name = "link")
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class Link {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    // 추후 매핑
+    private Long userId;
 
     private String title;
 
@@ -23,10 +25,17 @@ public class Link {
 
     private boolean active = true;
 
+    // 소프트 딜리트 여부
     private boolean isDeleted = false;
 
-    // 추후 매핑
-    private Long userId;
+
+    @Builder
+    public Link(Long userId, Long prevLinkId, String title) {
+        this.userId = userId;
+        this.prevLinkId = prevLinkId;
+        this.title = title;
+        this.isDeleted = false;
+    }
 }
 
 

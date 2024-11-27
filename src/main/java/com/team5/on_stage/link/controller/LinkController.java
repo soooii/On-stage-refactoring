@@ -28,7 +28,7 @@ public class LinkController {
 
     @PutMapping
     public ResponseEntity<LinkDTO> updateLink(@RequestBody LinkDTO link) {
-        return ResponseEntity.status(HttpStatus.OK).body(linkService.updateLinkDTO(link));
+        return ResponseEntity.status(HttpStatus.OK).body(linkService.updateLink(link));
     }
 
     @DeleteMapping("/{id}")

@@ -6,7 +6,6 @@ import com.team5.on_stage.link.dto.LinkDTO;
 import com.team5.on_stage.link.dto.LinkResponseDTO;
 import com.team5.on_stage.link.entity.Link;
 import com.team5.on_stage.link.repository.LinkRepository;
-import com.team5.on_stage.linkDetail.dto.LinkDetailDTO;
 import com.team5.on_stage.linkDetail.entity.LinkDetail;
 import com.team5.on_stage.linkDetail.repository.LinkDetailRepository;
 import com.team5.on_stage.linkDetail.service.LinkDetailService;
@@ -43,30 +42,17 @@ public class LinkService {
     // create link
     @Transactional
     public LinkDTO createLink(LinkDTO linkDTO) {
-        Link link = new Link();
-        link.setTitle(linkDTO.getTitle());
-        link.setPrevLinkId(linkDTO.getPrevLinkId());
-        link.setUserId(linkDTO.getUserId());
-        Link savedLink = linkRepository.save(link);
-        linkDTO.setId(savedLink.getId());
-
-        List<LinkDetail> linkDetails = linkDTO.getDetails().stream()
-                .map(detail -> {
-                    LinkDetail linkDetail = new LinkDetail();
-                    linkDetail.setLink(savedLink);
-                    linkDetail.setPlatform(detail.getPlatform());
-                    linkDetail.setUrl(detail.getUrl());
-                    return linkDetail;
-                })
-                .collect(Collectors.toList());
-
-        // 벌크 인서트 수행
-        linkDetailRepository.saveAll(linkDetails);
+        Link link = Link.builder()
+                .userId(linkDTO.getUserId())
+                .title(linkDTO.getTitle())
+                .prevLinkId(linkDTO.getPrevLinkId())
+                .build();
+        linkDTO.setId(linkRepository.save(link).getId());
         return linkDTO;
     }
 
     @Transactional
-    public LinkDTO updateLinkDTO(LinkDTO linkDTO) {
+    public LinkDTO updateLink(LinkDTO linkDTO) {
         // 쿼리 메서드를 사용 -> DB 접근 최소화
         linkRepository.updateLink(
                 linkDTO.getTitle(),
