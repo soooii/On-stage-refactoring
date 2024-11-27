@@ -1,5 +1,6 @@
 package com.team5.on_stage.user.service;
 
+import com.team5.on_stage.global.config.auth.dto.CustomOAuth2User;
 import com.team5.on_stage.global.constants.ErrorCode;
 import com.team5.on_stage.global.exception.GlobalException;
 import com.team5.on_stage.user.dto.SignUpDto;
@@ -10,6 +11,8 @@ import com.team5.on_stage.user.repository.TempUserRepository;
 import com.team5.on_stage.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -111,5 +114,16 @@ public class UserService {
     public static String extractDomain(String email) {
 
         return email.substring(email.indexOf("@") + 1, email.lastIndexOf(".")).toUpperCase();
+    }
+
+
+    // Context에서 메인 파라미터 username 추출
+    public String getUsername() {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        CustomOAuth2User oauth2User = (CustomOAuth2User) authentication.getPrincipal();
+
+        return oauth2User.getUsername();
     }
 }
