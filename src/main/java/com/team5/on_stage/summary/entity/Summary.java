@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Getter
@@ -13,6 +15,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name="summary")
+@SQLDelete(sql = "UPDATE summary SET is_deleted = true WHERE id = ?")
+@Where(clause = "is_deleted = false")
 public class Summary {
 
     @Id
@@ -26,4 +30,8 @@ public class Summary {
 
     //요약 뉴스
     private String summary;
+
+    //삭제 여부
+    @Column(name="is_deleted", nullable = false)
+    private boolean isDeleted;
 }
