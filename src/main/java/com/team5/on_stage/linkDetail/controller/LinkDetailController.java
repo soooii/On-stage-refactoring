@@ -14,18 +14,18 @@ public class LinkDetailController {
     private final LinkDetailService linkDetailService;
 
     @PostMapping("/{linkId}")
-    public ResponseEntity<LinkDetailDTO> addLinkDetail(@RequestBody LinkDetailDTO linkDetail, @PathVariable Long linkId) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(linkDetailService.createLinkDetail(linkDetail,linkId));
+    public ResponseEntity<LinkDetailDTO> createDetail(@RequestBody LinkDetailDTO linkDetail, @PathVariable Long linkId) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(linkDetailService.createDetail(linkDetail,linkId));
     }
 
     @PutMapping
-    public ResponseEntity<LinkDetailDTO> updateLinkDetail(@RequestBody LinkDetailDTO linkDetail) {
-        return ResponseEntity.status(HttpStatus.OK).body(linkDetailService.updateLinkDetail(linkDetail));
+    public ResponseEntity<LinkDetailDTO> updateDetail(@RequestBody LinkDetailDTO linkDetail) {
+        return ResponseEntity.status(HttpStatus.OK).body(linkDetailService.updateDetail(linkDetail));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteLinkDetail(@PathVariable Long id) {
-        linkDetailService.deleteLinkDetail(id);
+    public ResponseEntity<Void> deleteDetail(@PathVariable Long id) {
+        linkDetailService.deleteDetail(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

@@ -32,7 +32,7 @@ public class LinkMapper {
                 .title(link.getTitle())
                 .prevLinkId(link.getPrevLinkId())
                 .active(link.isActive())
-                .details(linkDetailService.getLinkDetail(link.getId()))
+                .details(linkDetailService.getDetail(link.getId()))
                 .build();
     }
 
@@ -53,8 +53,8 @@ public class LinkMapper {
                 .orElseThrow(() -> new GlobalException(ErrorCode.LINK_NOT_FOUND));
         return LinkResponseDTO.builder()
                 .link(toDTOList(links))
-                .socialLink(socialLinkService.findByUserId(userId))
-                .theme(themeService.findByUserId(userId))
+                .socialLink(socialLinkService.getSocial(userId))
+                .theme(themeService.getTheme(userId))
                 .build();
     }
 }

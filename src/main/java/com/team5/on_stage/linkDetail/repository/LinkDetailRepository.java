@@ -33,7 +33,7 @@ public interface LinkDetailRepository extends JpaRepository<LinkDetail, Long> {
     void softDeleteById(Long id);
 
     @Modifying
-    @Query("UPDATE LinkDetail  ld SET ld.platform = :platform, ld.url = :url WHERE ld.id = :id")
+    @Query("UPDATE LinkDetail ld SET ld.platform = :platform, ld.url = :url WHERE ld.id = :id")
     void updateLinkDetail(@Param("platform")Platform platform, @Param("url") String url, @Param("id") Long id);
 
     //void deleteAllByLinkId(Long linkId);

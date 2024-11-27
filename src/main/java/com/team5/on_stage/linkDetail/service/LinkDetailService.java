@@ -22,12 +22,12 @@ public class LinkDetailService {
 
     // READ
     @Transactional(readOnly = true)
-    public List<LinkDetailDTO> getLinkDetail(Long linkId) {
+    public List<LinkDetailDTO> getDetail(Long linkId) {
         return linkDetailRepository.findByLinkId(linkId);
     }
 
     // CREATE
-    public LinkDetailDTO createLinkDetail(LinkDetailDTO dto, Long linkId) {
+    public LinkDetailDTO createDetail(LinkDetailDTO dto, Long linkId) {
         LinkDetail target = LinkDetail.builder()
                 .link(findLink(linkId))
                 .url(dto.getUrl())
@@ -39,7 +39,7 @@ public class LinkDetailService {
     }
 
     // UPDATE
-    public LinkDetailDTO updateLinkDetail(LinkDetailDTO dto) {
+    public LinkDetailDTO updateDetail(LinkDetailDTO dto) {
         linkDetailRepository.updateLinkDetail(
                 dto.getPlatform(),
                 dto.getUrl(),
@@ -49,7 +49,7 @@ public class LinkDetailService {
     }
 
     // DELETE
-    public void deleteLinkDetail(Long id) {
+    public void deleteDetail(Long id) {
         linkDetailRepository.softDeleteById(id);
     }
 
