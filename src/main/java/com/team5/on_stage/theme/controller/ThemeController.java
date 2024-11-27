@@ -5,10 +5,10 @@ import com.team5.on_stage.theme.service.ThemeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/theme")
@@ -20,5 +20,10 @@ public class ThemeController {
     @PutMapping
     public ResponseEntity<ThemeDTO> updateTheme(@RequestBody ThemeDTO themeDTO) {
         return ResponseEntity.status(HttpStatus.OK).body(themeService.updateTheme(themeDTO));
+    }
+
+    @PutMapping("/{username}/background")
+    public ThemeDTO uploadBackgroundImage(@PathVariable String username, @RequestParam("file") MultipartFile file) throws IOException {
+        return themeService.updateBackgroundImage(username, file);
     }
 }

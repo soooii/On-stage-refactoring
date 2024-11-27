@@ -1,7 +1,6 @@
 package com.team5.on_stage.linkDetail.controller;
 
 import com.team5.on_stage.linkDetail.dto.LinkDetailDTO;
-import com.team5.on_stage.linkDetail.entity.LinkDetail;
 import com.team5.on_stage.linkDetail.service.LinkDetailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,19 +14,18 @@ public class LinkDetailController {
     private final LinkDetailService linkDetailService;
 
     @PostMapping("/{linkId}")
-    public ResponseEntity<LinkDetailDTO> addLinkDetail(@RequestBody LinkDetailDTO linkDetail, @PathVariable Long linkId) {
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(linkDetailService.saveLinkDetail(linkDetail,linkId));
+    public ResponseEntity<LinkDetailDTO> createDetail(@RequestBody LinkDetailDTO linkDetail, @PathVariable Long linkId) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(linkDetailService.createDetail(linkDetail,linkId));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<LinkDetailDTO> updateLinkDetail(@RequestBody LinkDetailDTO linkDetail, @PathVariable Long id) {
-        return ResponseEntity.status(HttpStatus.OK).body(linkDetailService.updateLinkDetail(linkDetail,id));
+    @PutMapping
+    public ResponseEntity<LinkDetailDTO> updateDetail(@RequestBody LinkDetailDTO linkDetail) {
+        return ResponseEntity.status(HttpStatus.OK).body(linkDetailService.updateDetail(linkDetail));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteLinkDetail(@PathVariable Long id) {
-        linkDetailService.deleteLinkDetail(id);
+    public ResponseEntity<Void> deleteDetail(@PathVariable Long id) {
+        linkDetailService.deleteDetail(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

@@ -1,34 +1,58 @@
 package com.team5.on_stage.theme.service;
 
+import com.team5.on_stage.global.config.s3.S3Uploader;
 import com.team5.on_stage.global.constants.ErrorCode;
 import com.team5.on_stage.global.exception.GlobalException;
 import com.team5.on_stage.theme.dto.ThemeDTO;
 import com.team5.on_stage.theme.entity.Theme;
 import com.team5.on_stage.theme.repository.ThemeRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ThemeService {
     private final ThemeRepository themeRepository;
+    private final S3Uploader s3Uploader;
 
-    public ThemeDTO findByUserId(Long userId) {
-        return themeRepository.findThemeDTOByUserId(userId);
+    // READ
+    @Transactional(readOnly = true)
+    public ThemeDTO getTheme(String username) {
+        return themeRepository.getTheme(username)
+                .orElseThrow(() -> new GlobalException(ErrorCode.THEME_NOT_FOUND));
     }
 
-    @Transactional
-    public ThemeDTO updateTheme(ThemeDTO themeDTO) {
-        Theme target = themeRepository.findByUserId(themeDTO.getUserId())
+    // CREATE (user 생성 시점에 같이 생성)
+    public void createTheme(String username) {
+        themeRepository.save(new Theme(username));
+    }
+
+    // UPDATE
+    public ThemeDTO updateTheme(ThemeDTO dto) {
+        themeRepository.updateTheme(
+                dto.getUsername(),
+                dto.getBorderRadius(),
+                dto.getButtonColor(),
+                dto.getProfileColor(),
+                dto.getFontColor(),
+                dto.getIconColor()
+        );
+        return dto;
+    }
+
+    // IMAGE UPDATE
+    public ThemeDTO updateBackgroundImage(String username, MultipartFile backgroundImage) throws IOException {
+        Theme theme = themeRepository.findByUsername(username)
                 .orElseThrow(() -> new GlobalException(ErrorCode.THEME_NOT_FOUND));
-        target.setBackgroundImage(themeDTO.getBackgroundImage());
-        target.setBorderRadius(themeDTO.getBorderRadius());
-        target.setButtonColor(themeDTO.getButtonColor());
-        target.setProfileColor(themeDTO.getProfileColor());
-        target.setFontColor(themeDTO.getFontColor());
-        target.setIconColor(themeDTO.getIconColor());
-        themeRepository.save(target);
-        return themeDTO;
+
+        String imageUrl = s3Uploader.upload(backgroundImage, "backgroundImages");
+        theme.setBackgroundImage(imageUrl);
+        themeRepository.save(theme);
+        return getTheme(username);
     }
 }
