@@ -33,5 +33,6 @@ public interface LinkRepository extends JpaRepository<Link, Long> {
             @Param("title") String title,
             @Param("prevLinkId") Long prevLinkId,
             @Param("active") boolean active,
-            @Param("id") Long id);
+            @Param("id") Long id
+    );
 }

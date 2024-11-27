@@ -1,5 +1,6 @@
 package com.team5.on_stage.linkDetail.repository;
 
+import com.team5.on_stage.global.constants.Platform;
 import com.team5.on_stage.linkDetail.dto.LinkDetailDTO;
 import com.team5.on_stage.linkDetail.entity.LinkDetail;
 import jakarta.transaction.Transactional;
@@ -30,6 +31,10 @@ public interface LinkDetailRepository extends JpaRepository<LinkDetail, Long> {
     @Modifying
     @Query("UPDATE LinkDetail  ld SET ld.isDeleted = true  WHERE ld.id = :id")
     void softDeleteById(Long id);
+
+    @Modifying
+    @Query("UPDATE LinkDetail  ld SET ld.platform = :platform, ld.url = :url WHERE ld.id = :id")
+    void updateLinkDetail(@Param("platform")Platform platform, @Param("url") String url, @Param("id") Long id);
 
     //void deleteAllByLinkId(Long linkId);
 }

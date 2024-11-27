@@ -1,18 +1,27 @@
 package com.team5.on_stage.link.mapper;
 
+import com.team5.on_stage.global.constants.ErrorCode;
+import com.team5.on_stage.global.exception.GlobalException;
 import com.team5.on_stage.link.dto.LinkDTO;
+import com.team5.on_stage.link.dto.LinkResponseDTO;
 import com.team5.on_stage.link.entity.Link;
+import com.team5.on_stage.link.repository.LinkRepository;
 import com.team5.on_stage.linkDetail.service.LinkDetailService;
+import com.team5.on_stage.socialLink.service.SocialLinkService;
+import com.team5.on_stage.theme.service.ThemeService;
 import lombok.RequiredArgsConstructor;
-import org.mapstruct.Mapper;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Mapper
+@Component
 @RequiredArgsConstructor
 public class LinkMapper {
+    private final LinkRepository linkRepository;
     private final LinkDetailService linkDetailService;
+    private final SocialLinkService socialLinkService;
+    private final ThemeService themeService;
 
 
 
@@ -23,7 +32,7 @@ public class LinkMapper {
                 .title(link.getTitle())
                 .prevLinkId(link.getPrevLinkId())
                 .active(link.isActive())
-                .details(linkDetailService.findByLinkId(link.getId()))
+                .details(linkDetailService.getLinkDetail(link.getId()))
                 .build();
     }
 
@@ -31,5 +40,21 @@ public class LinkMapper {
         return links.stream().map(this::toDTO).collect(Collectors.toList());
     }
 
+    public Link toEntity(LinkDTO dto) {
+        return Link.builder()
+                .userId(dto.getUserId())
+                .title(dto.getTitle())
+                .prevLinkId(dto.getPrevLinkId())
+                .build();
+    }
 
+    public LinkResponseDTO toResponseDTO(Long userId) {
+        List<Link> links = linkRepository.findByUserId(userId)
+                .orElseThrow(() -> new GlobalException(ErrorCode.LINK_NOT_FOUND));
+        return LinkResponseDTO.builder()
+                .link(toDTOList(links))
+                .socialLink(socialLinkService.findByUserId(userId))
+                .theme(themeService.findByUserId(userId))
+                .build();
+    }
 }

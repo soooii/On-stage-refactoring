@@ -16,14 +16,14 @@ import org.springframework.web.bind.annotation.*;
 public class LinkController {
     private final LinkService linkService;
 
-    @GetMapping
-    public ResponseEntity<LinkResponseDTO> getLink() {
+    @GetMapping("/{userId}")
+    public ResponseEntity<LinkResponseDTO> getLink(@PathVariable Long userId) {
         return ResponseEntity.status(HttpStatus.OK).body(linkService.getLink(1L)); // 수정예정
     }
 
     @PostMapping
     public ResponseEntity<LinkDTO> createLink(@RequestBody LinkDTO link) {
-        return ResponseEntity.status(HttpStatus.OK).body(linkService.createLink(link));
+        return ResponseEntity.status(HttpStatus.CREATED).body(linkService.createLink(link));
     }
 
     @PutMapping
