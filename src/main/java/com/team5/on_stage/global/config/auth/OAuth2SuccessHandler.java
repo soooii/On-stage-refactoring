@@ -58,15 +58,18 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
 //        response.sendRedirect(request.getContextPath() + "/");
 
-            ObjectMapper mapper = new ObjectMapper();
-            String cookieTokenValue = mapper.writeValueAsString(Map.of(
-                    "refresh", refreshToken,
-                    "access", AUTH_TYPE + accessToken)
-            );
+//            ObjectMapper mapper = new ObjectMapper();
+//            String cookieTokenValue = mapper.writeValueAsString(Map.of(
+//                    "refresh", refreshToken,
+//                    "access", AUTH_TYPE + accessToken)
+//            );
+//
+//            String encodedCookieValue = URLEncoder.encode(cookieTokenValue, StandardCharsets.UTF_8);
+//
+//            response.addCookie(createCookie("token", encodedCookieValue));
 
-            String encodedCookieValue = URLEncoder.encode(cookieTokenValue, StandardCharsets.UTF_8);
-
-            response.addCookie(createCookie("token", encodedCookieValue));
+            response.addCookie(createCookie("access", accessToken));
+            response.addCookie(createCookie("refresh", refreshToken));
             response.setStatus(HttpStatus.OK.value());
         } catch (Exception e) {
             throw new ServletException(e);
