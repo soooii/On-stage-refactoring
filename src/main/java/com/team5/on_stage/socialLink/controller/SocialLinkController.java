@@ -15,6 +15,6 @@ public class SocialLinkController {
 
     @PutMapping
     public ResponseEntity<SocialLinkDTO> updateSocialLink(@RequestBody SocialLinkDTO socialLinkDTO) {
-        return ResponseEntity.status(HttpStatus.OK).body(socialLinkService.updateSocialLink(socialLinkDTO));
+        return ResponseEntity.status(HttpStatus.OK).body(socialLinkService.updateSocial(socialLinkDTO));
     }
 }

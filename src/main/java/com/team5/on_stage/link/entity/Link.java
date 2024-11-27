@@ -1,32 +1,39 @@
 package com.team5.on_stage.link.entity;
 
-import com.team5.on_stage.global.constants.Layout;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter
-@Setter
 @Table(name = "link")
+@NoArgsConstructor
 public class Link {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String thumbnail = null;
+    // 추후 매핑
+    private String username;
 
     private String title;
 
-    // LinkedList 자료구조 방식 사용할 예정
+    // LinkedList
     private Long prevLinkId;
-
-    @Enumerated(EnumType.STRING)
-    private Layout layout = Layout.CLASSIC;
 
     private boolean active = true;
 
-    // 추후 매핑
-    private Long userId;
+    // 소프트 딜리트 여부
+    private boolean isDeleted = false;
+
+
+    @Builder
+    public Link(String username, Long prevLinkId, String title) {
+        this.username = username;
+        this.prevLinkId = prevLinkId;
+        this.title = title;
+        this.isDeleted = false;
+    }
 }
+
+
+
