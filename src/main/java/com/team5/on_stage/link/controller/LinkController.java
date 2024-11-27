@@ -1,5 +1,6 @@
 package com.team5.on_stage.link.controller;
 
+import com.team5.on_stage.global.config.jwt.JwtUtil;
 import com.team5.on_stage.link.dto.LinkDTO;
 import com.team5.on_stage.link.dto.LinkResponseDTO;
 import com.team5.on_stage.link.service.LinkService;
