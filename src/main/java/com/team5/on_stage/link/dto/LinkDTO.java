@@ -10,11 +10,11 @@ import java.util.List;
 public class LinkDTO {
     private Long id;
 
-    private Long userId;
+    private String username;
 
     private String title;
 
-    private Long prevLinkId;
+    private String prevLinkId;
 
     private boolean active;
 
@@ -22,10 +22,10 @@ public class LinkDTO {
 
 
     @Builder
-    public LinkDTO(boolean active, Long id, Long userId, String title, Long prevLinkId, List<LinkDetailDTO> details) {
+    public LinkDTO(boolean active, Long id, String username, String title, String prevLinkId, List<LinkDetailDTO> details) {
         this.active = active;
         this.id = id;
-        this.userId = userId;
+        this.username = username;
         this.title = title;
         this.prevLinkId = prevLinkId;
         this.details = details;

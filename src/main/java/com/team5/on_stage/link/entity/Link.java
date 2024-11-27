@@ -13,12 +13,12 @@ public class Link {
     private Long id;
 
     // 추후 매핑
-    private Long userId;
+    private String username;
 
     private String title;
 
     // LinkedList
-    private Long prevLinkId;
+    private String prevLinkId;
 
     private boolean active = true;
 
@@ -27,8 +27,8 @@ public class Link {
 
 
     @Builder
-    public Link(Long userId, Long prevLinkId, String title) {
-        this.userId = userId;
+    public Link(String username, String prevLinkId, String title) {
+        this.username = username;
         this.prevLinkId = prevLinkId;
         this.title = title;
         this.isDeleted = false;

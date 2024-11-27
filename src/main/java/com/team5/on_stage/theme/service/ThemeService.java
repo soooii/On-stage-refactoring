@@ -22,20 +22,20 @@ public class ThemeService {
 
     // READ
     @Transactional(readOnly = true)
-    public ThemeDTO getTheme(Long userId) {
-        return themeRepository.getTheme(userId)
+    public ThemeDTO getTheme(String username) {
+        return themeRepository.getTheme(username)
                 .orElseThrow(() -> new GlobalException(ErrorCode.THEME_NOT_FOUND));
     }
 
     // CREATE (user 생성 시점에 같이 생성)
-    public void createTheme(Long userId) {
-        themeRepository.save(new Theme(userId));
+    public void createTheme(String username) {
+        themeRepository.save(new Theme(username));
     }
 
     // UPDATE
     public ThemeDTO updateTheme(ThemeDTO dto) {
         themeRepository.updateTheme(
-                dto.getUserId(),
+                dto.getUsername(),
                 dto.getBorderRadius(),
                 dto.getButtonColor(),
                 dto.getProfileColor(),
@@ -45,13 +45,14 @@ public class ThemeService {
         return dto;
     }
 
-    public ThemeDTO updateBackgroundImage(Long userId, MultipartFile backgroundImage) throws IOException {
-        Theme theme = themeRepository.findByUserId(userId)
+    // IMAGE UPDATE
+    public ThemeDTO updateBackgroundImage(String username, MultipartFile backgroundImage) throws IOException {
+        Theme theme = themeRepository.findByUsername(username)
                 .orElseThrow(() -> new GlobalException(ErrorCode.THEME_NOT_FOUND));
 
         String imageUrl = s3Uploader.upload(backgroundImage, "backgroundImages");
         theme.setBackgroundImage(imageUrl);
         themeRepository.save(theme);
-        return getTheme(userId);
+        return getTheme(username);
     }
 }

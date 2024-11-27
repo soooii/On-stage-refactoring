@@ -22,8 +22,8 @@ public class ThemeController {
         return ResponseEntity.status(HttpStatus.OK).body(themeService.updateTheme(themeDTO));
     }
 
-    @PutMapping("/{userId}/background")
-    public ThemeDTO uploadBackgroundImage(@PathVariable Long userId, @RequestParam("file") MultipartFile file) throws IOException {
-        return themeService.updateBackgroundImage(userId, file);
+    @PutMapping("/{username}/background")
+    public ThemeDTO uploadBackgroundImage(@PathVariable String username, @RequestParam("file") MultipartFile file) throws IOException {
+        return themeService.updateBackgroundImage(username, file);
     }
 }

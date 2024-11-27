@@ -14,22 +14,22 @@ public class SocialLink {
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long userId;
+    private String username;
 
-    private String instagram ="";
+    private String instagram;
 
-    private String youtube ="";
+    private String youtube;
 
-    private String x ="";
+    private String x;
 
-    private String spotify ="";
+    private String spotify;
 
-    private String github ="";
+    private String github;
 
 
     @Builder
-    public SocialLink(Long userId) {
-        this.userId = userId;
+    public SocialLink(String username) {
+        this.username = username;
         this.instagram = "";
         this.youtube = "";
         this.x = "";

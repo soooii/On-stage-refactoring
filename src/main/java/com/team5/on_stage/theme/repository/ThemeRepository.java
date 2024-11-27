@@ -13,16 +13,16 @@ import java.util.Optional;
 @Repository
 public interface ThemeRepository extends JpaRepository<Theme, Long> {
 
-    @Query("SELECT new com.team5.on_stage.theme.dto.ThemeDTO(t.userId, t.backgroundImage, t.buttonColor, t.profileColor, t.fontColor,t.iconColor, t.borderRadius ) " +
-            "FROM Theme t WHERE t.userId = :userId" )
-    Optional<ThemeDTO> getTheme(@Param("userId") Long userId);
+    @Query("SELECT new com.team5.on_stage.theme.dto.ThemeDTO(t.username, t.backgroundImage, t.buttonColor, t.profileColor, t.fontColor,t.iconColor, t.borderRadius ) " +
+            "FROM Theme t WHERE t.username = :username" )
+    Optional<ThemeDTO> getTheme(@Param("username") String username);
 
-    Optional<Theme> findByUserId(Long userId);
+    Optional<Theme> findByUsername(String username);
 
     @Modifying
-    @Query("UPDATE Theme t SET t.borderRadius = :borderRadius, t.buttonColor = :buttonColor, t.profileColor = :profileColor, t.fontColor = :fontColor, t.iconColor = :iconColor WHERE t.userId = :userId")
+    @Query("UPDATE Theme t SET t.borderRadius = :borderRadius, t.buttonColor = :buttonColor, t.profileColor = :profileColor, t.fontColor = :fontColor, t.iconColor = :iconColor WHERE t.username = :username")
     void updateTheme(
-            @Param("userId") Long userId,
+            @Param("username") String username,
             @Param("borderRadius") int borderRadius,
             @Param("buttonColor") String buttonColor,
             @Param("profileColor") String profileColor,
