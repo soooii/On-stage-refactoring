@@ -6,20 +6,18 @@ import com.team5.on_stage.link.entity.Link;
 import com.team5.on_stage.link.mapper.LinkMapper;
 import com.team5.on_stage.link.repository.LinkRepository;
 import com.team5.on_stage.linkDetail.repository.LinkDetailRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class LinkService {
     private final LinkMapper linkMapper;
     private final LinkRepository linkRepository;
     private final LinkDetailRepository linkDetailRepository;
 
     // READ
-    @Transactional(readOnly = true)
     public LinkResponseDTO getLink(String username) {
         return linkMapper.toResponseDTO(username);
     }
@@ -48,6 +46,7 @@ public class LinkService {
     }
 
     // DELETE
+    @Transactional
     public void deleteLink(Long linkId) {
         linkDetailRepository.softDeleteByLinkId(linkId);
         linkRepository.softDeleteById(linkId);

@@ -16,13 +16,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/link")
 public class LinkController {
     private final LinkService linkService;
-//    private final JwtUtil jwtUtil;
-//
-//    @GetMapping
-//    public ResponseEntity<LinkResponseDTO> getLink(@RequestHeader("Authorization") String authorizationHeader) {
-//        String username = jwtUtil.getUsername(authorizationHeader.substring(7));
-//        return ResponseEntity.status(HttpStatus.OK).body(linkService.getLink(username));
-//    }
 
     @GetMapping
     public ResponseEntity<LinkResponseDTO> getLink() {

@@ -7,16 +7,13 @@ import com.team5.on_stage.socialLink.entity.SocialLink;
 import com.team5.on_stage.socialLink.repository.SocialLinkRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class SocialLinkService {
     private final SocialLinkRepository socialLinkRepository;
 
     // READ
-    @Transactional(readOnly = true)
     public SocialLinkDTO getSocial(String username) {
         return socialLinkRepository.getSocial(username)
                 .orElseThrow(() -> new GlobalException(ErrorCode.SOCIAL_LINK_NOT_FOUND));
