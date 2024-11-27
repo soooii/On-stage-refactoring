@@ -6,10 +6,8 @@ import lombok.*;
 import java.util.List;
 
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
-@ToString
 public class LinkDTO {
     private Long id;
 
@@ -23,5 +21,15 @@ public class LinkDTO {
 
     private List<LinkDetailDTO> details;
 
+
+    @Builder
+    public LinkDTO(boolean active, Long id, Long userId, String title, Long prevLinkId, List<LinkDetailDTO> details) {
+        this.active = active;
+        this.id = id;
+        this.userId = userId;
+        this.title = title;
+        this.prevLinkId = prevLinkId;
+        this.details = details;
+    }
 }
 

@@ -5,6 +5,7 @@ import com.team5.on_stage.global.exception.GlobalException;
 import com.team5.on_stage.link.dto.LinkDTO;
 import com.team5.on_stage.link.dto.LinkResponseDTO;
 import com.team5.on_stage.link.entity.Link;
+import com.team5.on_stage.link.mapper.LinkMapper;
 import com.team5.on_stage.link.repository.LinkRepository;
 import com.team5.on_stage.linkDetail.repository.LinkDetailRepository;
 import com.team5.on_stage.linkDetail.service.LinkDetailService;
@@ -15,12 +16,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class LinkService {
-
+    private final LinkMapper linkMapper;
     private final LinkRepository linkRepository;
     private final LinkDetailService linkDetailService;
     private final LinkDetailRepository linkDetailRepository;
@@ -32,7 +32,7 @@ public class LinkService {
         LinkResponseDTO linkResponseDTO = new LinkResponseDTO();
         List<Link> link = linkRepository.findByUserId(userId)
                 .orElseThrow(() -> new GlobalException(ErrorCode.LINK_NOT_FOUND));
-        linkResponseDTO.setLink(convertLinksToLinkDTOList(link));
+        linkResponseDTO.setLink(toDTOList(link));
         linkResponseDTO.setSocialLink(socialLinkService.findByUserId(userId));
         linkResponseDTO.setTheme(themeService.findByUserId(userId));
         return linkResponseDTO;
@@ -70,19 +70,7 @@ public class LinkService {
         linkRepository.softDeleteById(linkId);
     }
 
-    // TODO 프로젝션 사용
-    public List<LinkDTO> convertLinksToLinkDTOList(List<Link> links) {
-        return links.stream()
-                .map(link -> {
-                    LinkDTO linkDTO = new LinkDTO();
-                    linkDTO.setId(link.getId());
-                    linkDTO.setUserId(link.getUserId());
-                    linkDTO.setTitle(link.getTitle());
-                    linkDTO.setPrevLinkId(link.getPrevLinkId());
-                    linkDTO.setActive(link.isActive());
-                    linkDTO.setDetails(linkDetailService.findByLinkId(link.getId()));
-                    return linkDTO;
-                })
-                .collect(Collectors.toList());
+    public List<LinkDTO> toDTOList(List<Link> links) {
+        return linkMapper.toDTOList(links);
     }
 }
