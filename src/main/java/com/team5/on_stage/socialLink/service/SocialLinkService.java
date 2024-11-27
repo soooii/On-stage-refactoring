@@ -5,29 +5,42 @@ import com.team5.on_stage.global.exception.GlobalException;
 import com.team5.on_stage.socialLink.dto.SocialLinkDTO;
 import com.team5.on_stage.socialLink.entity.SocialLink;
 import com.team5.on_stage.socialLink.repository.SocialLinkRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class SocialLinkService {
     private final SocialLinkRepository socialLinkRepository;
 
-    public SocialLinkDTO findByUserId(Long userId) {
-        return socialLinkRepository.findDTOByUserId(userId);
+    // READ
+    @Transactional(readOnly = true)
+    public SocialLinkDTO getSocial(Long userId) {
+        return socialLinkRepository.getSocial(userId)
+                .orElseThrow(() -> new GlobalException(ErrorCode.SOCIAL_LINK_NOT_FOUND));
     }
 
-    public SocialLinkDTO updateSocialLink(SocialLinkDTO socialLinkDTO) {
-        SocialLink target = socialLinkRepository.findByUserId(socialLinkDTO.getUserId())
-                .orElseThrow(() -> new GlobalException(ErrorCode.SOCIAL_LINK_NOT_FOUND));
-        target.setInstagram(socialLinkDTO.getInstagram());
-        target.setYoutube(socialLinkDTO.getYoutube());
-        target.setX(socialLinkDTO.getX());
-        target.setSpotify(socialLinkDTO.getSpotify());
-        target.setGithub(socialLinkDTO.getGithub());
-        socialLinkRepository.save(target);
-        return socialLinkDTO;
+    // CREATE (user 생성 시점에 같이 생성)
+    public void createSocial(Long userId){
+        SocialLink socialLink = SocialLink.builder()
+                .userId(userId)
+                .build();
+        socialLinkRepository.save(socialLink);
+    }
+
+    // UPDATE
+    public SocialLinkDTO updateSocial(SocialLinkDTO dto) {
+        socialLinkRepository.updateSocial(
+                dto.getUserId(),
+                dto.getInstagram(),
+                dto.getYoutube(),
+                dto.getX(),
+                dto.getSpotify(),
+                dto.getGithub()
+        );
+        return dto;
     }
 
 }

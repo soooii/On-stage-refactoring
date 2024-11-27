@@ -23,12 +23,12 @@ public class LinkController {
 
     @PostMapping
     public ResponseEntity<LinkDTO> createLink(@RequestBody LinkDTO link) {
-        return ResponseEntity.status(HttpStatus.OK).body(linkService.createLink(link));
+        return ResponseEntity.status(HttpStatus.CREATED).body(linkService.createLink(link));
     }
 
     @PutMapping
     public ResponseEntity<LinkDTO> updateLink(@RequestBody LinkDTO link) {
-        return ResponseEntity.status(HttpStatus.OK).body(linkService.updateLinkDTO(link));
+        return ResponseEntity.status(HttpStatus.OK).body(linkService.updateLink(link));
     }
 
     @DeleteMapping("/{id}")

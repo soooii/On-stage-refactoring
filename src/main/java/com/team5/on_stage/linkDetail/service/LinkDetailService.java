@@ -7,46 +7,54 @@ import com.team5.on_stage.link.repository.LinkRepository;
 import com.team5.on_stage.linkDetail.dto.LinkDetailDTO;
 import com.team5.on_stage.linkDetail.entity.LinkDetail;
 import com.team5.on_stage.linkDetail.repository.LinkDetailRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class LinkDetailService {
     private final LinkDetailRepository linkDetailRepository;
     private final LinkRepository linkRepository;
 
-    public List<LinkDetailDTO> findByLinkId(Long linkId) {
-        return linkDetailRepository.findLinkDetailsByLinkId(linkId);
+    // READ
+    @Transactional(readOnly = true)
+    public List<LinkDetailDTO> getDetail(Long linkId) {
+        return linkDetailRepository.findByLinkId(linkId);
     }
 
-    public LinkDetailDTO saveLinkDetail(LinkDetailDTO linkDetailDTO, Long linkId) {
-        LinkDetail target = new LinkDetail();
-        Link link = linkRepository.findById(linkId)
+    // CREATE
+    public LinkDetailDTO createDetail(LinkDetailDTO dto, Long linkId) {
+        LinkDetail target = LinkDetail.builder()
+                .link(findLink(linkId))
+                .url(dto.getUrl())
+                .platform(dto.getPlatform())
+                .build();
+        LinkDetail saved = linkDetailRepository.save(target);
+        dto.setId(saved.getId());
+        return dto;
+    }
+
+    // UPDATE
+    public LinkDetailDTO updateDetail(LinkDetailDTO dto) {
+        linkDetailRepository.updateLinkDetail(
+                dto.getPlatform(),
+                dto.getUrl(),
+                dto.getId()
+        );
+        return dto;
+    }
+
+    // DELETE
+    public void deleteDetail(Long id) {
+        linkDetailRepository.softDeleteById(id);
+    }
+
+    private Link findLink(Long id) {
+        return linkRepository.findById(id)
                 .orElseThrow(() -> new GlobalException(ErrorCode.LINK_NOT_FOUND));
-        target.setLink(link);
-        target.setUrl(linkDetailDTO.getUrl());
-        target.setPlatform(linkDetailDTO.getPlatform());
-        LinkDetail save = linkDetailRepository.save(target);
-        linkDetailDTO.setId(save.getId());
-        return linkDetailDTO;
-    }
-
-    public LinkDetailDTO updateLinkDetail(LinkDetailDTO linkDetailDTO, Long id) {
-        LinkDetail target = linkDetailRepository.findById(id)
-                .orElseThrow(() -> new GlobalException(ErrorCode.LINK_DETAIL_NOT_FOUND));
-        target.setUrl(linkDetailDTO.getUrl());
-        target.setPlatform(linkDetailDTO.getPlatform());
-        LinkDetail save = linkDetailRepository.save(target);
-        linkDetailDTO.setId(save.getId());
-        return linkDetailDTO;
-    }
-
-    @Transactional
-    public void deleteLinkDetail(Long id) {
-        linkDetailRepository.deleteById(id);
     }
 }
