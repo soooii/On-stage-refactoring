@@ -17,15 +17,15 @@ public class SocialLinkService {
 
     // READ
     @Transactional(readOnly = true)
-    public SocialLinkDTO getSocial(Long userId) {
-        return socialLinkRepository.getSocial(userId)
+    public SocialLinkDTO getSocial(String username) {
+        return socialLinkRepository.getSocial(username)
                 .orElseThrow(() -> new GlobalException(ErrorCode.SOCIAL_LINK_NOT_FOUND));
     }
 
     // CREATE (user 생성 시점에 같이 생성)
-    public void createSocial(Long userId){
+    public void createSocial(String username){
         SocialLink socialLink = SocialLink.builder()
-                .userId(userId)
+                .username(username)
                 .build();
         socialLinkRepository.save(socialLink);
     }
@@ -33,7 +33,7 @@ public class SocialLinkService {
     // UPDATE
     public SocialLinkDTO updateSocial(SocialLinkDTO dto) {
         socialLinkRepository.updateSocial(
-                dto.getUserId(),
+                dto.getUsername(),
                 dto.getInstagram(),
                 dto.getYoutube(),
                 dto.getX(),

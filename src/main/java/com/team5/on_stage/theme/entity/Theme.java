@@ -15,7 +15,7 @@ public class Theme {
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long userId;
+    private String username;
 
     private String backgroundImage;
 
@@ -29,8 +29,8 @@ public class Theme {
 
     private int borderRadius;
 
-    public Theme(Long userId) {
-        this.userId = userId;
+    public Theme(String username) {
+        this.username = username;
         this.backgroundImage = "https://s3-on-stage.s3.ap-northeast-2.amazonaws.com/backgroundImages/2.png";
         this.buttonColor = "#ffffff";
         this.profileColor = "#ffffff";

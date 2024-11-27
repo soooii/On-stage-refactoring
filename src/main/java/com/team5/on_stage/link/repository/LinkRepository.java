@@ -18,8 +18,8 @@ public interface LinkRepository extends JpaRepository<Link, Long> {
     // Optional<Link> findById(Long id);
 
     // 활성화된 링크 조회 (isDeleted = false)
-    @Query("SELECT l FROM Link l WHERE l.userId = :userId AND l.isDeleted = false")
-    Optional<List<Link>> findByUserId(Long userId);
+    @Query("SELECT l FROM Link l WHERE l.username = :username AND l.isDeleted = false")
+    Optional<List<Link>> findByUsername(String username);
 
     // 소프트 딜리트
     @Modifying

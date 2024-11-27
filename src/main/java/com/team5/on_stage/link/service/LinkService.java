@@ -20,14 +20,14 @@ public class LinkService {
 
     // READ
     @Transactional(readOnly = true)
-    public LinkResponseDTO getLink(Long userId) {
-        return linkMapper.toResponseDTO(userId);
+    public LinkResponseDTO getLink(String username) {
+        return linkMapper.toResponseDTO(username);
     }
 
     // CREATE
     public LinkDTO createLink(LinkDTO dto) {
         Link link = Link.builder()
-                .userId(dto.getUserId())
+                .username(dto.getUsername())
                 .title(dto.getTitle())
                 .prevLinkId(dto.getPrevLinkId())
                 .build();

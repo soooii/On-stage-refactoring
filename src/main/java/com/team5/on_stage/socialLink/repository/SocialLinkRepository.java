@@ -15,14 +15,14 @@ import java.util.Optional;
 public interface SocialLinkRepository  extends JpaRepository<SocialLink, Long> {
     // Optional<SocialLink> findByUserId(Long userId);
 
-    @Query("SELECT new com.team5.on_stage.socialLink.dto.SocialLinkDTO(s.userId, s.instagram, s.youtube, s.x, s.spotify, s.github) " +
-            "FROM SocialLink s WHERE s.userId = :userId")
-    Optional<SocialLinkDTO> getSocial(@Param("userId") Long userId);
+    @Query("SELECT new com.team5.on_stage.socialLink.dto.SocialLinkDTO(s.username, s.instagram, s.youtube, s.x, s.spotify, s.github) " +
+            "FROM SocialLink s WHERE s.username = :username")
+    Optional<SocialLinkDTO> getSocial(@Param("username") String username);
 
     @Modifying
-    @Query("UPDATE SocialLink sl SET sl.instagram = :instagram, sl.youtube = :youtube, sl.x = :x, sl.spotify = :spotify, sl.github = :github WHERE sl.userId = :userId")
+    @Query("UPDATE SocialLink sl SET sl.instagram = :instagram, sl.youtube = :youtube, sl.x = :x, sl.spotify = :spotify, sl.github = :github WHERE sl.username = :username")
     void updateSocial(
-            @Param("userId") Long userId,
+            @Param("username") String username,
             @Param("instagram") String instagram,
             @Param("youtube") String youtube,
             @Param("x") String x,

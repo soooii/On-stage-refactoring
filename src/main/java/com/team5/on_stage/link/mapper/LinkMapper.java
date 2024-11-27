@@ -28,7 +28,7 @@ public class LinkMapper {
     public LinkDTO toDTO(Link link) {
         return LinkDTO.builder()
                 .id(link.getId())
-                .userId(link.getUserId())
+                .username(link.getUsername())
                 .title(link.getTitle())
                 .prevLinkId(link.getPrevLinkId())
                 .active(link.isActive())
@@ -42,19 +42,19 @@ public class LinkMapper {
 
     public Link toEntity(LinkDTO dto) {
         return Link.builder()
-                .userId(dto.getUserId())
+                .username(dto.getUsername())
                 .title(dto.getTitle())
                 .prevLinkId(dto.getPrevLinkId())
                 .build();
     }
 
-    public LinkResponseDTO toResponseDTO(Long userId) {
-        List<Link> links = linkRepository.findByUserId(userId)
+    public LinkResponseDTO toResponseDTO(String username) {
+        List<Link> links = linkRepository.findByUsername(username)
                 .orElseThrow(() -> new GlobalException(ErrorCode.LINK_NOT_FOUND));
         return LinkResponseDTO.builder()
                 .link(toDTOList(links))
-                .socialLink(socialLinkService.getSocial(userId))
-                .theme(themeService.getTheme(userId))
+                .socialLink(socialLinkService.getSocial(username))
+                .theme(themeService.getTheme(username))
                 .build();
     }
 }
