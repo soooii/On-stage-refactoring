@@ -18,7 +18,7 @@ public class Link {
     private String title;
 
     // LinkedList
-    private String prevLinkId;
+    private Long prevLinkId;
 
     private boolean active = true;
 
@@ -27,7 +27,7 @@ public class Link {
 
 
     @Builder
-    public Link(String username, String prevLinkId, String title) {
+    public Link(String username, Long prevLinkId, String title) {
         this.username = username;
         this.prevLinkId = prevLinkId;
         this.title = title;

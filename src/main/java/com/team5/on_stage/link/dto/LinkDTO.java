@@ -14,7 +14,7 @@ public class LinkDTO {
 
     private String title;
 
-    private String prevLinkId;
+    private Long prevLinkId;
 
     private boolean active;
 
@@ -22,7 +22,7 @@ public class LinkDTO {
 
 
     @Builder
-    public LinkDTO(boolean active, Long id, String username, String title, String prevLinkId, List<LinkDetailDTO> details) {
+    public LinkDTO(boolean active, Long id, String username, String title, Long prevLinkId, List<LinkDetailDTO> details) {
         this.active = active;
         this.id = id;
         this.username = username;

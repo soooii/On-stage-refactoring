@@ -31,7 +31,7 @@ public interface LinkRepository extends JpaRepository<Link, Long> {
     @Query("UPDATE Link l SET l.title = :title, l.prevLinkId = :prevLinkId, l.active = :active WHERE l.id = :id")
     void updateLink(
             @Param("title") String title,
-            @Param("prevLinkId") String prevLinkId,
+            @Param("prevLinkId") Long prevLinkId,
             @Param("active") boolean active,
             @Param("id") Long id
     );

@@ -18,8 +18,6 @@ public class LinkController {
 
     @GetMapping
     public ResponseEntity<LinkResponseDTO> getLink() {
-
-
         return ResponseEntity.status(HttpStatus.OK).body(linkService.getLink("1")); // 수정예정
     }
 
