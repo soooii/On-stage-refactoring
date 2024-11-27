@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.*;
 public class LinkController {
     private final LinkService linkService;
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<LinkResponseDTO> getLink(@PathVariable Long userId) {
+    @GetMapping
+    public ResponseEntity<LinkResponseDTO> getLink() {
         return ResponseEntity.status(HttpStatus.OK).body(linkService.getLink(1L)); // 수정예정
     }
 

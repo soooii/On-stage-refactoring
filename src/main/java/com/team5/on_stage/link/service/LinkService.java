@@ -6,7 +6,6 @@ import com.team5.on_stage.link.dto.LinkDTO;
 import com.team5.on_stage.link.dto.LinkResponseDTO;
 import com.team5.on_stage.link.entity.Link;
 import com.team5.on_stage.link.repository.LinkRepository;
-import com.team5.on_stage.linkDetail.entity.LinkDetail;
 import com.team5.on_stage.linkDetail.repository.LinkDetailRepository;
 import com.team5.on_stage.linkDetail.service.LinkDetailService;
 import com.team5.on_stage.socialLink.service.SocialLinkService;
@@ -28,7 +27,7 @@ public class LinkService {
     private final SocialLinkService socialLinkService;
     private final ThemeService themeService;
 
-    // ResponseDTO 조회
+    // READ
     public LinkResponseDTO getLink(Long userId) {
         LinkResponseDTO linkResponseDTO = new LinkResponseDTO();
         List<Link> link = linkRepository.findByUserId(userId)
@@ -39,18 +38,19 @@ public class LinkService {
         return linkResponseDTO;
     }
 
-    // create link
+    // CREATE
     @Transactional
-    public LinkDTO createLink(LinkDTO linkDTO) {
+    public LinkDTO createLink(LinkDTO dto) {
         Link link = Link.builder()
-                .userId(linkDTO.getUserId())
-                .title(linkDTO.getTitle())
-                .prevLinkId(linkDTO.getPrevLinkId())
+                .userId(dto.getUserId())
+                .title(dto.getTitle())
+                .prevLinkId(dto.getPrevLinkId())
                 .build();
-        linkDTO.setId(linkRepository.save(link).getId());
-        return linkDTO;
+        dto.setId(linkRepository.save(link).getId());
+        return dto;
     }
 
+    // UPDATE
     @Transactional
     public LinkDTO updateLink(LinkDTO linkDTO) {
         // 쿼리 메서드를 사용 -> DB 접근 최소화
@@ -63,7 +63,7 @@ public class LinkService {
         return linkDTO;
     }
 
-    // delete Link
+    // DELETE
     @Transactional
     public void deleteLink(Long linkId) {
         linkDetailRepository.softDeleteByLinkId(linkId);

@@ -1,14 +1,11 @@
 package com.team5.on_stage.link.entity;
 
-import com.team5.on_stage.global.constants.Layout;
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
 @Getter
-@Setter
 @Table(name = "link")
-@AllArgsConstructor
 @NoArgsConstructor
 public class Link {
     @Id
