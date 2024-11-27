@@ -5,15 +5,17 @@ import com.team5.on_stage.global.exception.GlobalException;
 import com.team5.on_stage.socialLink.dto.SocialLinkDTO;
 import com.team5.on_stage.socialLink.entity.SocialLink;
 import com.team5.on_stage.socialLink.repository.SocialLinkRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class SocialLinkService {
     private final SocialLinkRepository socialLinkRepository;
 
+    @Transactional(readOnly = true)
     public SocialLinkDTO findByUserId(Long userId) {
         return socialLinkRepository.findDTOByUserId(userId);
     }

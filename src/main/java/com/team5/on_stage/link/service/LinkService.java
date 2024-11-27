@@ -1,7 +1,5 @@
 package com.team5.on_stage.link.service;
 
-import com.team5.on_stage.global.constants.ErrorCode;
-import com.team5.on_stage.global.exception.GlobalException;
 import com.team5.on_stage.link.dto.LinkDTO;
 import com.team5.on_stage.link.dto.LinkResponseDTO;
 import com.team5.on_stage.link.entity.Link;

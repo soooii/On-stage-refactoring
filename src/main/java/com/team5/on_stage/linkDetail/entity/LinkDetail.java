@@ -5,11 +5,12 @@ import com.team5.on_stage.link.entity.Link;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
+@NoArgsConstructor
 @Getter
-@Setter
 @Table(name = "link_detail")
 public class LinkDetail {
 
@@ -26,7 +27,7 @@ public class LinkDetail {
 
     private String url;
 
-    private boolean isDeleted = false;
+    private boolean isDeleted;
 
     @Builder
     public LinkDetail(Long id, Link link, Platform platform, String url) {
