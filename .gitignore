@@ -256,3 +256,6 @@ $RECYCLE.BIN/
 *.env
 
 # End of https://www.toptal.com/developers/gitignore/api/macos,windows,intellij,java,react
+
+#generated 예외
+/src/main/generated/
