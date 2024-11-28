@@ -1,5 +1,6 @@
 package com.team5.on_stage.link.controller;
 
+import com.team5.on_stage.global.config.jwt.JwtUtil;
 import com.team5.on_stage.link.dto.LinkDTO;
 import com.team5.on_stage.link.dto.LinkResponseDTO;
 import com.team5.on_stage.link.service.LinkService;
@@ -16,19 +17,19 @@ import org.springframework.web.bind.annotation.*;
 public class LinkController {
     private final LinkService linkService;
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<LinkResponseDTO> getLink(@PathVariable Long userId) {
-        return ResponseEntity.status(HttpStatus.OK).body(linkService.getLinkResponseDTO(1L)); // 수정예정
+    @GetMapping
+    public ResponseEntity<LinkResponseDTO> getLink() {
+        return ResponseEntity.status(HttpStatus.OK).body(linkService.getLink("1")); // 수정예정
     }
 
     @PostMapping
     public ResponseEntity<LinkDTO> createLink(@RequestBody LinkDTO link) {
-        return ResponseEntity.status(HttpStatus.OK).body(linkService.createLink(link));
+        return ResponseEntity.status(HttpStatus.CREATED).body(linkService.createLink(link));
     }
 
     @PutMapping
     public ResponseEntity<LinkDTO> updateLink(@RequestBody LinkDTO link) {
-        return ResponseEntity.status(HttpStatus.OK).body(linkService.updateLinkDTO(link));
+        return ResponseEntity.status(HttpStatus.OK).body(linkService.updateLink(link));
     }
 
     @DeleteMapping("/{id}")

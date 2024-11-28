@@ -1,19 +1,20 @@
 package com.team5.on_stage.socialLink.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table (name = "social_link")
 @Getter
-@Setter
+@NoArgsConstructor
 public class SocialLink {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long userId;
+    private String username;
 
     private String instagram;
 
@@ -25,4 +26,14 @@ public class SocialLink {
 
     private String github;
 
+
+    @Builder
+    public SocialLink(String username) {
+        this.username = username;
+        this.instagram = "";
+        this.youtube = "";
+        this.x = "";
+        this.spotify = "";
+        this.github = "";
+    }
 }

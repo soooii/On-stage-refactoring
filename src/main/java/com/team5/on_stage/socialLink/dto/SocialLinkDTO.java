@@ -11,7 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class SocialLinkDTO {
 
-    private Long userId;
+    private String username;
 
     private String instagram;
 

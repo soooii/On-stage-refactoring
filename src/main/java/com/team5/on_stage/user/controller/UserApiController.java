@@ -1,8 +1,8 @@
 package com.team5.on_stage.user.controller;
 
 import com.team5.on_stage.user.dto.SignUpDto;
+import com.team5.on_stage.user.dto.SignUpUserDto;
 import com.team5.on_stage.user.dto.UpdateUserDto;
-import com.team5.on_stage.user.repository.UserRepository;
 import com.team5.on_stage.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -15,14 +15,22 @@ import org.springframework.web.bind.annotation.*;
 public class UserApiController {
 
     private final UserService userService;
-    private final UserRepository userRepository;
 
 
-    // 회원가입
-    @PostMapping("/signup")
-    public ResponseEntity<Boolean> signUp(@Valid SignUpDto dto) {
+    // Todo: 아이디, 비밀번호 가입 방식의 필요성 재고.
+    @PostMapping
+    public ResponseEntity<Boolean> basicSignUp(@Valid @RequestBody SignUpDto signUpDto) {
 
-        return ResponseEntity.ok(userService.signUp(dto));
+        return ResponseEntity.ok(userService.signUp(signUpDto));
+    }
+
+
+    // TempUser -> User 회원가입
+    // Todo: 추후 인증 정보에서 username 뽑아서 파라미터로 전달할 것
+    @PostMapping("/{username}")
+    public ResponseEntity<Boolean> signUp(@Valid @PathVariable("username") String username, SignUpUserDto dto) {
+
+        return ResponseEntity.ok(userService.signUpUser(username, dto));
     }
 
 

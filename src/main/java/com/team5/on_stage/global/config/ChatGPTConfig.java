@@ -5,21 +5,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
-import java.time.Duration;
 
-/*
 @Configuration
-public class OpenApiConfig {
+public class ChatGPTConfig {
 
-
-    public final static String MODEL = "gpt-3.5-turbo";
-    public final static double TOP_P = 1.0;
-    public final static int MAX_TOKEN = 200; //생성될 답변의 길이
-    public final static double TEMPERATURE = 1.0;
-    public final static Duration TIME_OUT = Duration.ofSeconds(300);
-
-
-    @Value("${gpt_secret_key}")
+    @Value("${ON-STAGE-CHATGPT}")
     private String gptSecretKey;
     @Bean
     public RestTemplate template() {
@@ -30,4 +20,4 @@ public class OpenApiConfig {
         });
         return restTemplate;
     }
-}*/
+}

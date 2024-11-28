@@ -14,11 +14,10 @@ public class CorsConfig implements CorsConfigurationSource {
 
         CorsConfiguration config = new CorsConfiguration();
 
-        //config.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
         config.setAllowedOrigins(List.of("http://localhost:3000","http://localhost:8080"));
-        config.setAllowedMethods(Collections.singletonList("*"));
-        config.setAllowedHeaders(Collections.singletonList("*"));
-        config.setExposedHeaders(Collections.singletonList("Authorization"));
+        config.setAllowedMethods(List.of("GET","POST","PUT","DELETE","PATCH"));
+        config.setAllowedHeaders(List.of("*"));
+        config.setExposedHeaders(List.of("Authorization"));
         config.setAllowCredentials(true);
 
         return config;
