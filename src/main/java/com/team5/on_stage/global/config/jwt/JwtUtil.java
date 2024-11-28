@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 
 @Component
-public class JwtUtil {
+public class JwtUtil implements AuthConstants {
 
     private final SecretKey secretKey;
     private final RefreshRepository refreshRepository;
@@ -51,7 +51,7 @@ public class JwtUtil {
     public void addRefresh(String username,
                            String refreshToken) {
 
-        Date date = new Date(System.currentTimeMillis() + AuthConstants.REFRESH_TOKEN_EXPIRED_MS);
+        Date date = new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRED_MS);
 
         Refresh newRefreshToken = new Refresh();
         newRefreshToken.setUsername(username);
