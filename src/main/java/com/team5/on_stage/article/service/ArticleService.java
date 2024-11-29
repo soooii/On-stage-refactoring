@@ -40,6 +40,6 @@ public class ArticleService {
     //해당 userId의 기사 모두 삭제
     //물리적으로 지울 필요는 없다 (soft delete)
     public void delete(Long userId) {
-        articleRepository.deleteAllByUserId(userId);
+        articleRepository.softDeleteByUserId(userId);
     }
 }
