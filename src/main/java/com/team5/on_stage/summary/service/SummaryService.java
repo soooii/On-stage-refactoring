@@ -4,28 +4,30 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.team5.on_stage.article.entity.Article;
 import com.team5.on_stage.article.repository.ArticleRepository;
+import com.team5.on_stage.summary.dto.SummaryRequestDTO;
 import com.team5.on_stage.summary.dto.SummaryResponseDTO;
+
 import com.team5.on_stage.summary.entity.QSummary;
 import com.team5.on_stage.summary.entity.Summary;
 import com.team5.on_stage.summary.mapper.SummaryMapper;
 import com.team5.on_stage.summary.repository.SummaryRespository;
 import com.team5.on_stage.user.entity.User;
 import com.team5.on_stage.user.repository.UserRepository;
+import com.team5.on_stage.util.chatGPT.service.ChatGPTService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SummaryService {
@@ -38,6 +40,7 @@ public class SummaryService {
 
     //해당 userId의 summary 저장
     public void saveSummary(Long userId) {
+        //articleService.saveArticle(userId);
         List<Article> articles = articleRepository.findAllByUserId(userId);
         User user = userRepository.findById(userId).get();
         String allArticles = articles.stream()
@@ -45,23 +48,42 @@ public class SummaryService {
                 .collect(Collectors.joining());
 
         //기존 Summary soft delete
-        summaryRespository.deleteSummariesByUserId(userId);
+        summaryRespository.softDeleteByUserId(userId);
 
         String prompt = """
                 다음 문장을 부정적이거나 논란이 될 수 있는 주제는 배제하고,
-                아티스트를 소개할 수 있는 측면에 초점을 맞춰서 4개의 간결한 뉴스 기사로 요약해줘 : %s
+                아티스트를 소개할 수 있는 측면에 초점을 맞춰서 기사 번호없이 4개의 요약을 제목과 4줄의 내용으로 작성해줘:%s
                 """.formatted(allArticles);
 
         String summarizedNews = chatGPTService.sendMessage(prompt);
+
+        log.info("ChatGPT Response: \n{}", summarizedNews);
+
         String[] separatedSummaries = summarizedNews.split("\n");
 
+        List<String> filteredSummaries = Arrays.stream(separatedSummaries)
+                .filter(line -> !line.trim().isEmpty()) // 공백 줄 제거한 것만
+                .collect(Collectors.toList());
+
+        log.info("ChatGPT Response: \n{}", filteredSummaries);
+
         List<Summary> summaries = new ArrayList<>();
-        for (String summaryText : separatedSummaries) {
-            Summary summary = Summary.builder()
-                    .user(user)
-                    .summary(summaryText)
-                    .build();
-            summaries.add(summary);
+
+        //줄바꿈으로 저장/ 리스트에 2개씩 제목, 내용 i+=2
+        for (int i = 0; i < filteredSummaries.size(); i += 2) {
+            if (i + 1 < filteredSummaries.size()) {
+                String title = filteredSummaries.get(i).replace("### ", "").trim();
+                String content = filteredSummaries.get(i + 1).trim();
+
+                Summary summary = Summary.builder()
+                        .user(user)
+                        .title(title)
+                        .summary(content)
+                        .isDeleted(false)
+                        .build();
+
+                summaries.add(summary);
+            }
         }
 
         summaryRespository.saveAll(summaries); //bulk insert
@@ -69,10 +91,10 @@ public class SummaryService {
 
     // saveSummary 호출하는 순간부터 3개월마다 자동으로 saveSummary 동작되도록 -> taskScheduler?
     // 해당 userId의 뉴스 요약 가져오기 (페이지네이션 적용)
-    public Page<SummaryResponseDTO> getSummary(Long userId, int page, int size) {
+    public Page<SummaryResponseDTO> getSummary(SummaryRequestDTO request) {
         QSummary summary = QSummary.summary1;
-        BooleanExpression condition = summary.user.id.eq(userId); // userId로 필터링
-        Pageable pageable = PageRequest.of(page, size);
+        BooleanExpression condition = summary.user.id.eq(request.getUserId()); // userId로 필터링
+        Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
 
         // querydsl
         List<Summary> summaries = jpaQueryFactory
@@ -84,8 +106,8 @@ public class SummaryService {
 
         //저장된 뉴스가 없을 경우
         if(summaries.isEmpty()){
-            saveSummary(userId);
-            getSummary(userId, page, size); //다시 요청
+            saveSummary(request.getUserId());
+            return getSummary(request); //다시 요청
         }
 
         List<SummaryResponseDTO> summaryList = summaries.stream()
@@ -97,7 +119,7 @@ public class SummaryService {
 
     //해당 userId의 summary 삭제
     public void deleteSummary(Long userId) {
-        summaryRespository.deleteSummariesByUserId(userId);
+        summaryRespository.softDeleteByUserId(userId);
     }
 
 
