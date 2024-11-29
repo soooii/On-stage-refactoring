@@ -1,4 +1,4 @@
-package com.team5.on_stage.summary.dto;
+package com.team5.on_stage.util.chatGPT.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

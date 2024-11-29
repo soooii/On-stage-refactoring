@@ -1,7 +1,7 @@
-package com.team5.on_stage.summary.service;
+package com.team5.on_stage.util.chatGPT.service;
 
-import com.team5.on_stage.summary.dto.ChatGPTRequestDTO;
-import com.team5.on_stage.summary.dto.ChatGPTResponseDTO;
+import com.team5.on_stage.util.chatGPT.dto.ChatGPTRequestDTO;
+import com.team5.on_stage.util.chatGPT.dto.ChatGPTResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
