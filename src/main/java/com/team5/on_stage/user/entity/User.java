@@ -76,4 +76,10 @@ public class User {
             this.image = "";
         }
     }
+
+    public void updateOAuthUser(String name, String email) {
+
+        this.name = name;
+        this.email = email;
+    }
 }
