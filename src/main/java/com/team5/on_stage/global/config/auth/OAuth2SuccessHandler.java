@@ -33,7 +33,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             CustomOAuth2User oauth2User = (CustomOAuth2User) authentication.getPrincipal();
 
             String username = oauth2User.getUsername();
-            String role = oauth2User.getAuthorities().toString();
+            String role = oauth2User.getRole().toString();
 
             String accessToken = jwtUtil.generateToken(TYPE_ACCESS,
                                                        username,
