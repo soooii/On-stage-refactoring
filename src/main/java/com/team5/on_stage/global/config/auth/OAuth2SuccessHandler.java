@@ -1,7 +1,6 @@
 package com.team5.on_stage.global.config.auth;
 
 import com.team5.on_stage.global.config.auth.dto.CustomOAuth2User;
-import com.team5.on_stage.global.config.jwt.AuthConstants;
 import com.team5.on_stage.global.config.jwt.JwtUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,10 +14,11 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 import static com.team5.on_stage.global.config.auth.cookie.CookieUtil.createCookie;
+import static com.team5.on_stage.global.config.jwt.AuthConstants.*;
 
 @RequiredArgsConstructor
 @Component
-public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler implements AuthConstants {
+public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final JwtUtil jwtUtil;
 
