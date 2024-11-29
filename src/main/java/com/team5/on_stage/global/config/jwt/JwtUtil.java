@@ -3,29 +3,21 @@ package com.team5.on_stage.global.config.jwt;
 import com.team5.on_stage.user.entity.Refresh;
 import com.team5.on_stage.user.repository.RefreshRepository;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+import static com.team5.on_stage.global.config.jwt.AuthConstants.*;
+
+@RequiredArgsConstructor
 @Component
 public class JwtUtil {
 
     private final SecretKey secretKey;
     private final RefreshRepository refreshRepository;
-
-    public JwtUtil(@Value("${JWT_SECRET_KEY}") String secret,
-                   RefreshRepository refreshRepository) {
-
-        byte[] keyBytes = secret.getBytes(StandardCharsets.UTF_8);
-
-        this.secretKey = Keys.hmacShaKeyFor(keyBytes);
-        this.refreshRepository = refreshRepository;
-    }
 
 
     // JWT 생성
@@ -51,7 +43,7 @@ public class JwtUtil {
     public void addRefresh(String username,
                            String refreshToken) {
 
-        Date date = new Date(System.currentTimeMillis() + AuthConstants.REFRESH_TOKEN_EXPIRED_MS);
+        Date date = new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRED_MS);
 
         Refresh newRefreshToken = new Refresh();
         newRefreshToken.setUsername(username);

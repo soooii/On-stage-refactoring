@@ -1,6 +1,7 @@
 package com.team5.on_stage.theme.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -29,6 +30,7 @@ public class Theme {
 
     private int borderRadius;
 
+    @Builder
     public Theme(String username) {
         this.username = username;
         this.backgroundImage = "https://s3-on-stage.s3.ap-northeast-2.amazonaws.com/backgroundImages/2.png";

@@ -3,6 +3,10 @@ package com.team5.on_stage.user.service;
 import com.team5.on_stage.global.config.auth.dto.CustomOAuth2User;
 import com.team5.on_stage.global.constants.ErrorCode;
 import com.team5.on_stage.global.exception.GlobalException;
+import com.team5.on_stage.socialLink.entity.SocialLink;
+import com.team5.on_stage.socialLink.repository.SocialLinkRepository;
+import com.team5.on_stage.theme.entity.Theme;
+import com.team5.on_stage.theme.repository.ThemeRepository;
 import com.team5.on_stage.user.dto.SignUpDto;
 import com.team5.on_stage.user.dto.SignUpUserDto;
 import com.team5.on_stage.user.dto.UpdateUserDto;
@@ -23,6 +27,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final TempUserRepository tempUserRepository;
+    private final ThemeRepository themeRepository;
+    private final SocialLinkRepository socialLinkRepository;
 
 
     public Boolean signUp(SignUpDto signUpDto) {
@@ -72,8 +78,17 @@ public class UserService {
                 .build();
 
         userRepository.save(user);
-
         tempUserRepository.deleteByUsername(username);
+
+        Theme theme = Theme.builder()
+                .username(tempUser.getUsername())
+                .build();
+        themeRepository.save(theme);
+
+        SocialLink socialLink = SocialLink.builder()
+                .username(tempUser.getUsername())
+                .build();
+        socialLinkRepository.save(socialLink);
 
         return true;
     }

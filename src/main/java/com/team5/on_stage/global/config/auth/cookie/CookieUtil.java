@@ -16,7 +16,19 @@ public class CookieUtil {
         cookie.setMaxAge(COOKIE_MAX_AGE);
         cookie.setDomain(COOKIE_DOMAIN);
         cookie.setPath(COOKIE_PATH);
-        cookie.setSecure(false);
+        cookie.setSecure(true);
+        cookie.setHttpOnly(true);
+
+        return cookie;
+    }
+
+    public static Cookie deleteCookie(String key) {
+
+        Cookie cookie = new Cookie(key, null);
+        cookie.setMaxAge(0);
+        cookie.setDomain(COOKIE_DOMAIN);
+        cookie.setPath(COOKIE_PATH);
+        cookie.setSecure(true);
         cookie.setHttpOnly(true);
 
         return cookie;

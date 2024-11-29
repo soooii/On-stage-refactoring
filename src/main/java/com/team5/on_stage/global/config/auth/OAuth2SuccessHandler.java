@@ -1,30 +1,24 @@
 package com.team5.on_stage.global.config.auth;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.team5.on_stage.global.config.auth.dto.CustomOAuth2User;
-import com.team5.on_stage.global.config.jwt.AuthConstants;
 import com.team5.on_stage.global.config.jwt.JwtUtil;
-import com.team5.on_stage.global.exception.GlobalException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.Map;
 
 import static com.team5.on_stage.global.config.auth.cookie.CookieUtil.createCookie;
+import static com.team5.on_stage.global.config.jwt.AuthConstants.*;
 
 @RequiredArgsConstructor
 @Component
-public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler implements AuthConstants {
+public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final JwtUtil jwtUtil;
 
@@ -38,25 +32,20 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         try {
             CustomOAuth2User oauth2User = (CustomOAuth2User) authentication.getPrincipal();
 
-/*            String username = oauth2User.getAttribute("username");
-            String role = oauth2User.getAttribute("role");*/
-
             String username = oauth2User.getUsername();
             String role = oauth2User.getAuthorities().toString();
 
-            String accessToken = jwtUtil.generateToken(ACCESS_TOKEN,
+            String accessToken = jwtUtil.generateToken(TYPE_ACCESS,
                                                        username,
                                                        role,
                                                        ACCESS_TOKEN_EXPIRED_MS);
 
-            String refreshToken = jwtUtil.generateToken(REFRESH_TOKEN,
+            String refreshToken = jwtUtil.generateToken(TYPE_REFRESH,
                                                         username,
                                                         role,
                                                         REFRESH_TOKEN_EXPIRED_MS);
 
             jwtUtil.addRefresh(username, refreshToken);
-
-//        response.sendRedirect(request.getContextPath() + "/");
 
 //            ObjectMapper mapper = new ObjectMapper();
 //            String cookieTokenValue = mapper.writeValueAsString(Map.of(
@@ -76,5 +65,6 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         }
 
         //super.onAuthenticationSuccess(request, response, authentication);
+        response.sendRedirect(FRONT_DOMAIN);
     }
 }
