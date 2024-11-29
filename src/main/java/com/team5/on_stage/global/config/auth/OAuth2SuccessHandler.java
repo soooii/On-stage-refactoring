@@ -57,8 +57,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 //
 //            response.addCookie(createCookie("token", encodedCookieValue));
 
-            response.addCookie(createCookie("access", accessToken));
-            response.addCookie(createCookie("refresh", refreshToken));
+            response.addCookie(createCookie("access", accessToken, false));
+            response.addCookie(createCookie("refresh", refreshToken, true));
             response.setStatus(HttpStatus.OK.value());
         } catch (Exception e) {
             throw new ServletException(e);

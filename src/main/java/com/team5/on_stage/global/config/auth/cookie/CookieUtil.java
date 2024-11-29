@@ -9,7 +9,7 @@ public class CookieUtil {
     public final static int COOKIE_MAX_AGE = 24 * 60 * 60;
 
 
-    public static Cookie createCookie(String key, String value) {
+    public static Cookie createCookie(String key, String value, Boolean httpOnly) {
 
         Cookie cookie = new Cookie(key, value);
 
@@ -17,7 +17,7 @@ public class CookieUtil {
         cookie.setDomain(COOKIE_DOMAIN);
         cookie.setPath(COOKIE_PATH);
         cookie.setSecure(true);
-        cookie.setHttpOnly(true);
+        cookie.setHttpOnly(httpOnly);
 
         return cookie;
     }
