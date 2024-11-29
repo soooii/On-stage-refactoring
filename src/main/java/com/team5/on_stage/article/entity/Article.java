@@ -15,7 +15,6 @@ import org.hibernate.annotations.Where;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "article")
-@SQLDelete(sql = "UPDATE article SET is_deleted = true WHERE id = ?")
 @Where(clause = "is_deleted = false")
 public class Article {
     @Id
@@ -33,7 +32,7 @@ public class Article {
 
     //기사 내용
     @Lob
-    @Column(name="content",nullable = false)
+    @Column(name="content", columnDefinition = "TEXT", nullable = false)
     private String content;
 
     //기사 링크

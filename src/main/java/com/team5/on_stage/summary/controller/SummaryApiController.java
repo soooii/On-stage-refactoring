@@ -1,5 +1,6 @@
 package com.team5.on_stage.summary.controller;
 
+import com.team5.on_stage.summary.dto.SummaryRequestDTO;
 import com.team5.on_stage.summary.dto.SummaryResponseDTO;
 import com.team5.on_stage.summary.entity.Summary;
 import com.team5.on_stage.summary.service.SummaryService;
@@ -26,9 +27,10 @@ public class SummaryApiController {
     /*
     @GetMapping("/{userId}")
     public ResponseEntity<List<SummaryResponseDTO>> getSummary(@PathVariable Long userId) {
-        List<SummaryResponseDTO> summaryResponseDTO = summaryService.getSummary(userId);
+        List<SummaryResponseDTO> summaryResponseDTO = summaryService.getSummary(userId,);
         return ResponseEntity.ok(summaryResponseDTO);
     }*/
+
 
     //해당하는 페이지의 아티스트 뉴스 가져오기
     @GetMapping("/{userId}")
@@ -37,9 +39,9 @@ public class SummaryApiController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "2") int size) {
 
-        Page<SummaryResponseDTO> summaryResponseDTOPage = summaryService.getSummary(userId, page, size);
-
-        return ResponseEntity.ok(summaryResponseDTOPage);
+        SummaryRequestDTO request = new SummaryRequestDTO(userId, page, size);
+        Page<SummaryResponseDTO> response = summaryService.getSummary(request);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{userId}")
