@@ -1,6 +1,10 @@
 package com.team5.on_stage.global.config.auth;
 
 import com.team5.on_stage.global.config.auth.dto.*;
+import com.team5.on_stage.socialLink.entity.SocialLink;
+import com.team5.on_stage.socialLink.repository.SocialLinkRepository;
+import com.team5.on_stage.theme.entity.Theme;
+import com.team5.on_stage.theme.repository.ThemeRepository;
 import com.team5.on_stage.user.entity.*;
 import com.team5.on_stage.user.repository.TempUserRepository;
 import com.team5.on_stage.user.repository.UserRepository;
@@ -16,7 +20,8 @@ import org.springframework.stereotype.Service;
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private final UserRepository userRepository;
-    private final TempUserRepository tempUserRepository;
+    private final ThemeRepository themeRepository;
+    private final SocialLinkRepository socialLinkRepository;
 
 
     // 사용자 정보를 확인하기 위한 메서드
@@ -68,6 +73,16 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                     .build();
 
             userRepository.save(newUser);
+
+            Theme theme = Theme.builder()
+                    .username(username)
+                    .build();
+            themeRepository.save(theme);
+
+            SocialLink socialLink = SocialLink.builder()
+                    .username(username)
+                    .build();
+            socialLinkRepository.save(socialLink);
 
             UserDto userDto = new UserDto();
             userDto.setUsername(username);
