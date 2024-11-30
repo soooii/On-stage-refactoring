@@ -50,7 +50,7 @@ public class SummaryService {
 
         String prompt = """
                 다음 문장을 부정적이거나 논란이 될 수 있는 주제는 배제하고,
-                아티스트를 소개할 수 있는 측몀에서 제목 번호없이 4개의 각 요약을 최대한 다른 내용의 제목과 7문장의 내용으로 작성해줘:%s
+                아티스트를 소개할 수 있는 측면에서 제목에 숫자없이 4개의 각 요약을 최대한 다른 내용의 제목과 7문장의 내용으로 작성해줘:%s
                 """.formatted(allArticles);
 
         String summarizedNews = chatGPTService.sendMessage(prompt);
