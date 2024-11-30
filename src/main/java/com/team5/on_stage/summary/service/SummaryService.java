@@ -1,13 +1,11 @@
 package com.team5.on_stage.summary.service;
 
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.team5.on_stage.article.entity.Article;
 import com.team5.on_stage.article.repository.ArticleRepository;
+import com.team5.on_stage.article.service.ArticleService;
 import com.team5.on_stage.summary.dto.SummaryRequestDTO;
 import com.team5.on_stage.summary.dto.SummaryResponseDTO;
 
-import com.team5.on_stage.summary.entity.QSummary;
 import com.team5.on_stage.summary.entity.Summary;
 import com.team5.on_stage.summary.mapper.SummaryMapper;
 import com.team5.on_stage.summary.repository.SummaryRespository;
@@ -32,15 +30,15 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class SummaryService {
     private final ArticleRepository articleRepository;
+    private final ArticleService articleService;
     private final SummaryRespository summaryRespository;
     private final SummaryMapper summaryMapper;
     private final ChatGPTService chatGPTService;
     private final UserRepository userRepository;
-    private final JPAQueryFactory jpaQueryFactory;
 
     //해당 userId의 summary 저장
     public void saveSummary(Long userId) {
-        //articleService.saveArticle(userId);
+        articleService.save(userId);
         List<Article> articles = articleRepository.findAllByUserId(userId);
         User user = userRepository.findById(userId).get();
         String allArticles = articles.stream()
@@ -52,7 +50,7 @@ public class SummaryService {
 
         String prompt = """
                 다음 문장을 부정적이거나 논란이 될 수 있는 주제는 배제하고,
-                아티스트를 소개할 수 있는 측면에 초점을 맞춰서 기사 번호없이 4개의 요약을 제목과 4줄의 내용으로 작성해줘:%s
+                아티스트를 소개할 수 있는 측몀에서 제목 번호없이 4개의 각 요약을 최대한 다른 내용의 제목과 7문장의 내용으로 작성해줘:%s
                 """.formatted(allArticles);
 
         String summarizedNews = chatGPTService.sendMessage(prompt);
@@ -69,7 +67,7 @@ public class SummaryService {
 
         List<Summary> summaries = new ArrayList<>();
 
-        //줄바꿈으로 저장/ 리스트에 2개씩 제목, 내용 i+=2
+        //줄바꿈으로 저장 / 리스트에 2개씩 제목, 내용 i+=2
         for (int i = 0; i < filteredSummaries.size(); i += 2) {
             if (i + 1 < filteredSummaries.size()) {
                 String title = filteredSummaries.get(i).replace("### ", "").trim();
@@ -89,32 +87,27 @@ public class SummaryService {
         summaryRespository.saveAll(summaries); //bulk insert
     }
 
-    // saveSummary 호출하는 순간부터 3개월마다 자동으로 saveSummary 동작되도록 -> taskScheduler?
+    // saveSummary 호출하는 순간부터 3개월마다 자동으로 saveSummary 동작되도록 -> batch
     // 해당 userId의 뉴스 요약 가져오기 (페이지네이션 적용)
     public Page<SummaryResponseDTO> getSummary(SummaryRequestDTO request) {
-        QSummary summary = QSummary.summary1;
-        BooleanExpression condition = summary.user.id.eq(request.getUserId()); // userId로 필터링
+        long userId = request.getUserId();
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
-
-        // querydsl
-        List<Summary> summaries = jpaQueryFactory
-                .selectFrom(summary)
-                .where(condition)
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
+        List<Summary> summaries = summaryRespository.getSummaryByUserId(userId, pageable);
 
         //저장된 뉴스가 없을 경우
         if(summaries.isEmpty()){
             saveSummary(request.getUserId());
-            return getSummary(request); //다시 요청
+            return getSummary(request);
         }
 
         List<SummaryResponseDTO> summaryList = summaries.stream()
                 .map(s->summaryMapper.toDTO(s))
                 .collect(Collectors.toList());
 
-        return new PageImpl<>(summaryList, pageable, summaries.size());
+        //현재 페이지의 개수가 아닌 해당 유저의 전체 뉴스 요약 개수
+        long total = summaryRespository.countSummaryByUserId(userId);
+
+        return new PageImpl<>(summaryList, pageable, total);
     }
 
     //해당 userId의 summary 삭제
