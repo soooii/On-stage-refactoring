@@ -8,5 +8,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SummaryRespository extends JpaRepository<Summary, Long>, SummaryQueryDslRepository {
-    Page<Summary> findSummariesByUserId(Long userId, Pageable pageable);
 }
