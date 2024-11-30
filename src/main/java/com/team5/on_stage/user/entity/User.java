@@ -53,8 +53,8 @@ public class User {
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(name = "email_domain", nullable = false)
-    private EmailDomain emailDomain;
+    @Column(name = "oauth2_domain", nullable = false)
+    private OAuth2Domain OAuth2Domain;
 
     @NotNull
     @Enumerated(EnumType.STRING)

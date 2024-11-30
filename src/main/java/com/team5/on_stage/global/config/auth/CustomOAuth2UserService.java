@@ -6,7 +6,6 @@ import com.team5.on_stage.socialLink.repository.SocialLinkRepository;
 import com.team5.on_stage.theme.entity.Theme;
 import com.team5.on_stage.theme.repository.ThemeRepository;
 import com.team5.on_stage.user.entity.*;
-import com.team5.on_stage.user.repository.TempUserRepository;
 import com.team5.on_stage.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -25,6 +24,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
 
     // 사용자 정보를 확인하기 위한 메서드
+    // Todo: 유저 저장 로직을 SuccessHandler에 넣을지 고민
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 
@@ -34,24 +34,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
         OAuth2Response oAuth2Response = null;
 
-        if (registrationId.equals("google")) {
-
-            oAuth2Response = new GoogleResponse(oAuth2User.getAttributes());
-        }
-        else if (registrationId.equals("naver")) {
-
-            oAuth2Response = new NaverResponse(oAuth2User.getAttributes());
-        }
-        else if (registrationId.equals("github")) {
-
-            oAuth2Response = new GithubResponse(oAuth2User.getAttributes());
-        }
-        else if (registrationId.equals("kakao")) {
-
-            oAuth2Response = new KakaoResponse(oAuth2User.getAttributes());
-        }
-        else {
-            return null;
+        switch(registrationId) {
+            case "google" -> oAuth2Response = new GoogleResponse(oAuth2User.getAttributes());
+            case "naver" -> oAuth2Response = new NaverResponse(oAuth2User.getAttributes());
+            case "github" -> oAuth2Response = new GithubResponse(oAuth2User.getAttributes());
+            case "kakao" -> oAuth2Response = new KakaoResponse(oAuth2User.getAttributes());
         }
 
         // 리소스 서버에서 발급 받은 정보로 사용자를 특정하는 아이디 값을 만든다.
@@ -65,7 +52,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                     .nickname(getTempNickname())
                     .username(username)
                     .email(oAuth2Response.getEmail())
-                    .emailDomain(EmailDomain.valueOf(extractDomain(oAuth2Response.getEmail())))
+                    .OAuth2Domain(OAuth2Domain.valueOf(registrationId.toUpperCase()))
                     .name(oAuth2Response.getName())
                     .verified(Verified.UNVERIFIED)
                     .role(Role.ROLE_USER)
@@ -108,12 +95,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     }
 
-    // Todo: username에서 추출하도록 수정할 것
-    public static String extractDomain(String email) {
 
-        return email.substring(email.indexOf("@") + 1, email.lastIndexOf(".")).toUpperCase();
-    }
-
+    // Todo: 중복 검사
     public String getTempNickname() {
 
         char[] charSet = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F',

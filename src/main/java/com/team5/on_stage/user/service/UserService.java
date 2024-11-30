@@ -31,67 +31,67 @@ public class UserService {
     private final SocialLinkRepository socialLinkRepository;
 
 
-    public Boolean signUp(SignUpDto signUpDto) {
+//    public Boolean signUp(SignUpDto signUpDto) {
+//
+////      1. 중복 이메일 검증
+//        if (userRepository.existsByEmail(signUpDto.getEmail())) {
+//            throw new GlobalException(ErrorCode.EMAIL_DUPLICATED);
+//        }
+//
+//        String encodedPassword = bCryptPasswordEncoder.encode(signUpDto.getPassword());
+//
+//        signUpDto.setPassword(encodedPassword);
+//
+//        User user = User.builder()
+//                .nickname(signUpDto.getNickname())
+//                .description(signUpDto.getDescription())
+//                .email(signUpDto.getEmail())
+//                .OAuth2Domain(OAuth2Domain.valueOf(extractDomain(signUpDto.getEmail())))
+//                .build();
+//
+//        userRepository.save(user);
+//
+//        return true;
+//    }
 
-//      1. 중복 이메일 검증
-        if (userRepository.existsByEmail(signUpDto.getEmail())) {
-            throw new GlobalException(ErrorCode.EMAIL_DUPLICATED);
-        }
 
-        String encodedPassword = bCryptPasswordEncoder.encode(signUpDto.getPassword());
-
-        signUpDto.setPassword(encodedPassword);
-
-        User user = User.builder()
-                .nickname(signUpDto.getNickname())
-                .description(signUpDto.getDescription())
-                .email(signUpDto.getEmail())
-                .emailDomain(EmailDomain.valueOf(extractDomain(signUpDto.getEmail())))
-                .build();
-
-        userRepository.save(user);
-
-        return true;
-    }
-
-
-    @Transactional
-    public Boolean signUpUser(String username,
-                              SignUpUserDto signUpUserDto) {
-
-        if (tempUserRepository.findByUsername(username) == null) {
-            throw new GlobalException(ErrorCode.USER_NOT_FOUND);
-        }
-
-        TempUser tempUser = tempUserRepository.findByUsername(username);
-
-        User user = User.builder()
-                .nickname(signUpUserDto.getNickname())
-                .description(signUpUserDto.getDescription())
-                .email(tempUser.getEmail())
-                .emailDomain(EmailDomain.valueOf(extractDomain(tempUser.getEmail())))
-                .name(tempUser.getName())
-                .username(tempUser.getUsername())
-                .verified(Verified.UNVERIFIED)
-                .role(Role.ROLE_USER)
-                .image(null)
-                .build();
-
-        userRepository.save(user);
-        tempUserRepository.deleteByUsername(username);
-
-        Theme theme = Theme.builder()
-                .username(tempUser.getUsername())
-                .build();
-        themeRepository.save(theme);
-
-        SocialLink socialLink = SocialLink.builder()
-                .username(tempUser.getUsername())
-                .build();
-        socialLinkRepository.save(socialLink);
-
-        return true;
-    }
+//    @Transactional
+//    public Boolean signUpUser(String username,
+//                              SignUpUserDto signUpUserDto) {
+//
+//        if (tempUserRepository.findByUsername(username) == null) {
+//            throw new GlobalException(ErrorCode.USER_NOT_FOUND);
+//        }
+//
+//        TempUser tempUser = tempUserRepository.findByUsername(username);
+//
+//        User user = User.builder()
+//                .nickname(signUpUserDto.getNickname())
+//                .description(signUpUserDto.getDescription())
+//                .email(tempUser.getEmail())
+//                .OAuth2Domain(OAuth2Domain.valueOf(extractDomain(tempUser.getEmail())))
+//                .name(tempUser.getName())
+//                .username(tempUser.getUsername())
+//                .verified(Verified.UNVERIFIED)
+//                .role(Role.ROLE_USER)
+//                .image(null)
+//                .build();
+//
+//        userRepository.save(user);
+//        tempUserRepository.deleteByUsername(username);
+//
+//        Theme theme = Theme.builder()
+//                .username(tempUser.getUsername())
+//                .build();
+//        themeRepository.save(theme);
+//
+//        SocialLink socialLink = SocialLink.builder()
+//                .username(tempUser.getUsername())
+//                .build();
+//        socialLinkRepository.save(socialLink);
+//
+//        return true;
+//    }
 
 
     @Transactional
@@ -126,19 +126,13 @@ public class UserService {
     }
 
 
-    public static String extractDomain(String email) {
-
-        return email.substring(email.indexOf("@") + 1, email.lastIndexOf(".")).toUpperCase();
-    }
-
-
     // Context에서 메인 파라미터 username 추출
-    public String getUsername() {
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        CustomOAuth2User oauth2User = (CustomOAuth2User) authentication.getPrincipal();
-
-        return oauth2User.getUsername();
-    }
+//    public String getUsername() {
+//
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//
+//        CustomOAuth2User oauth2User = (CustomOAuth2User) authentication.getPrincipal();
+//
+//        return oauth2User.getUsername();
+//    }
 }
