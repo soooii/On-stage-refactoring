@@ -31,6 +31,8 @@ public class Summary {
     private String title;
 
     //요약 뉴스
+    @Lob
+    @Column(name="summary", columnDefinition = "TEXT", nullable = false)
     private String summary;
 
     //삭제 여부
