@@ -74,6 +74,6 @@ public class ReissueService {
         request.getSession().invalidate();
 
         response.addCookie(createCookie("refresh", newRefreshToken, true));
-
+        response.addCookie(createCookie("access", newAccessToken, false));
     }
 }
