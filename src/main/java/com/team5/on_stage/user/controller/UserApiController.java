@@ -31,7 +31,7 @@ public class UserApiController {
 
 
     // 유저 삭제
-    @DeleteMapping("/{email}")
+    @DeleteMapping
     public ResponseEntity<Boolean> deleteUser(@TokenUsername String username) {
 
         return ResponseEntity.ok(userService.deleteUser(username));
