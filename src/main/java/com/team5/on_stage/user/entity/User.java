@@ -5,11 +5,10 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.NaturalId;
 
 import java.time.LocalDate;
 
-@DynamicUpdate
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter @Setter
@@ -44,6 +43,7 @@ public class User {
     private String name;
 
     // 소셜 로그인 도메인 + 소셜 로그인 ID 문자열
+    @NaturalId
     @NotNull
     @Column(name = "username", nullable = false, unique = true)
     private String username;
