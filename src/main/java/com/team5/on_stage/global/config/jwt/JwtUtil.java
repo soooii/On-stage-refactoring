@@ -21,23 +21,37 @@ public class JwtUtil {
 
 
     // JWT 생성
-    public String generateToken(String type,
-                                String username,
-                                String role,
-                                Long expiredMs) {
+    public String generateAccessToken(String username,
+                                      String role) {
 
         LocalDateTime now = LocalDateTime.now();
 
         return Jwts.builder()
-                .claim("type", type)
+                .claim("type", TYPE_ACCESS)
                 .claim("username", username)
                 .claim("role", role)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + expiredMs))
+                .expiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRED_MS))
                 .signWith(secretKey)
                 .compact();
-
     }
+
+
+    public String generateRefreshToken(String username,
+                                       String role) {
+
+        LocalDateTime now = LocalDateTime.now();
+
+        return Jwts.builder()
+                .claim("type", TYPE_REFRESH)
+                .claim("username", username)
+                .claim("role", role)
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRED_MS))
+                .signWith(secretKey)
+                .compact();
+    }
+
 
     // Refresh Token DB 저장
     public void addRefresh(String username,
