@@ -1,20 +1,26 @@
 package com.team5.on_stage.concert.controller;
 
 
+import com.team5.on_stage.concert.service.ConcertService;
+import org.springframework.http.ResponseEntity;
+
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/concert")
+@RequestMapping("/concert")
 public class ConCertApiController {
+    private final ConcertService concertService;
     @GetMapping("/info/{userId}")
     public void getConcertUpdatedDate(){
 
     }
     @PostMapping("/info/{userId}")
-    public void saveConcertList(){
-
+    public ResponseEntity<String> saveConcertList(){
+        concertService.saveConcertList();
+        return ResponseEntity.ok("ok");
     }
     @GetMapping("/list/{userId}")
     public void getConcertList(){
