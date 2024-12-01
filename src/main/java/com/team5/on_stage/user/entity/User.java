@@ -7,6 +7,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
+import java.time.LocalDate;
+
 @DynamicUpdate
 @NoArgsConstructor
 @AllArgsConstructor
@@ -64,6 +66,9 @@ public class User {
     @Column(name = "image")
     private String image;
 
+    @Column(name = "created_at", nullable = false)
+    private LocalDate createdAt;
+
 
     @PrePersist
     public void setDefaultValue() {
@@ -75,6 +80,8 @@ public class User {
         if (this.image == null) {
             this.image = "";
         }
+
+        this.createdAt = LocalDate.now();
     }
 
     public void updateOAuthUser(String name, String email) {
