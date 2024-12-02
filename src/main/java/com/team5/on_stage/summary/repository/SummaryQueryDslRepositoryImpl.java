@@ -19,30 +19,30 @@ public class SummaryQueryDslRepositoryImpl implements SummaryQueryDslRepository 
 
     @Override
     @Transactional
-    public void softDeleteByUserId(Long userId) {
+    public void softDeleteByUsername(String username) {
         queryFactory
                 .update(summary1)
                 .set(summary1.isDeleted, true)
-                .where(summary1.user.id.eq(userId))
+                .where(summary1.user.username.eq(username))
                 .execute();
     }
 
     @Override
-    public List<Summary> getSummaryByUserId(Long userId, Pageable pageable) {
+    public List<Summary> getSummaryByUsername(String username, Pageable pageable) {
         return queryFactory
                 .selectFrom(summary1)
-                .where(summary1.user.id.eq(userId))
+                .where(summary1.user.username.eq(username))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
     }
 
     @Override
-    public long countSummaryByUserId(Long userId) {
+    public long countSummaryByUsername(String username) {
         return queryFactory
                 .select(summary1.count())
                 .from(summary1)
-                .where(summary1.user.id.eq(userId))
+                .where(summary1.user.name.eq(username))
                 .fetchOne();
     }
 }
