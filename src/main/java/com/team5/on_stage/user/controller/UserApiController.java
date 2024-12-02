@@ -47,11 +47,17 @@ public class UserApiController {
 
 
     @GetMapping
-    public ResponseEntity<UserProfileDto> getUserProfile(@TokenUsername String username) {
+    public ResponseEntity<UserProfileDto> getMyProfile(@TokenUsername String username) {
 
         return ResponseEntity.ok(userService.getUserProfile(username));
     }
 
+
+    @GetMapping("/{username}")
+    public ResponseEntity<UserProfileDto> getOtherProfiles(@PathVariable String username) {
+
+        return ResponseEntity.ok(userService.getUserProfile(username));
+    }
 
 
     // 유저 삭제
