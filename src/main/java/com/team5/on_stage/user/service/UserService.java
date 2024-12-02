@@ -2,6 +2,7 @@ package com.team5.on_stage.user.service;
 
 import com.team5.on_stage.global.constants.ErrorCode;
 import com.team5.on_stage.global.exception.GlobalException;
+import com.team5.on_stage.user.dto.UserProfileDto;
 import com.team5.on_stage.user.entity.*;
 import com.team5.on_stage.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,13 +15,18 @@ public class UserService {
     private final UserRepository userRepository;
 
 
+    public Boolean checkNicknameDuplicated(String nickname) {
+
+        return userRepository.existsByNickname(nickname);
+    }
+
+
     public Boolean updateUserNickname(String username,
                                       String nickname) {
 
         User user = userRepository.findByUsername(username);
 
         if (user == null) {
-
             throw new GlobalException(ErrorCode.USER_NOT_FOUND);
         }
 
@@ -38,7 +44,6 @@ public class UserService {
         User user = userRepository.findByUsername(username);
 
         if (user == null) {
-
             throw new GlobalException(ErrorCode.USER_NOT_FOUND);
         }
 
@@ -58,6 +63,25 @@ public class UserService {
         }
 
         return userRepository.deleteUserByUsername(username);
+    }
+
+
+    public UserProfileDto getUserProfile(String username) {
+
+        User user = userRepository.findByUsername(username);
+
+        if (user == null) {
+            throw new GlobalException(ErrorCode.USER_NOT_FOUND);
+        }
+
+        UserProfileDto userProfileDto = UserProfileDto.builder()
+                .username(user.getUsername())
+                .nickname(user.getNickname())
+                .description(user.getDescription())
+                .picture(user.getPicture())
+                .build();
+
+        return userProfileDto;
     }
 
 

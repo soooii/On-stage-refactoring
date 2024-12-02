@@ -56,7 +56,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                     .name(oAuth2Response.getName())
                     .verified(Verified.UNVERIFIED)
                     .role(Role.ROLE_USER)
-                    .image("Default Image") // Todo: 기본 이미지 설정
+                    .picture("Default Image") // Todo: 기본 이미지 설정
                     .build();
 
             userRepository.save(newUser);
