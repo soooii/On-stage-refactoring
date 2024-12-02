@@ -1,5 +1,6 @@
 package com.team5.on_stage.user.service;
 
+import com.team5.on_stage.global.config.s3.S3Uploader;
 import com.team5.on_stage.global.constants.ErrorCode;
 import com.team5.on_stage.global.exception.GlobalException;
 import com.team5.on_stage.user.dto.UserProfileDto;
@@ -7,12 +8,16 @@ import com.team5.on_stage.user.entity.*;
 import com.team5.on_stage.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RequiredArgsConstructor
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
+    private final S3Uploader s3Uploader;
 
 
     public Boolean checkNicknameDuplicated(String nickname) {
@@ -78,10 +83,35 @@ public class UserService {
                 .username(user.getUsername())
                 .nickname(user.getNickname())
                 .description(user.getDescription())
-                .picture(user.getPicture())
+                .profileImage(user.getProfileImage())
                 .build();
 
         return userProfileDto;
+    }
+
+
+    // Todo: 구현 중
+    public UserProfileDto updateUserProfileImage(String username, MultipartFile profileImage) throws IOException {
+
+        User user = userRepository.findByUsername(username);
+
+        if (user == null) {
+            throw new GlobalException(ErrorCode.USER_NOT_FOUND);
+        }
+
+        String imageUrl = s3Uploader.upload(profileImage, "profileImages");
+        user.setProfileImage(imageUrl);
+        userRepository.save(user);
+
+        return getUserProfile(username);
+    }
+
+
+    public String convertNicknameToUsername(String nickname) {
+
+        User user = userRepository.findByNickname(nickname);
+
+        return user.getUsername();
     }
 
 
