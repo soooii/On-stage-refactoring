@@ -7,10 +7,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SummaryRequestDTO extends PaginationRequestDTO {
-    private Long userId;
+    private String username;
 
-    public SummaryRequestDTO(Long userId, int page, int size){
+    public SummaryRequestDTO(String username, int page, int size){
         super(page, size);
-        this.userId = userId;
+        this.username = username;
     }
 }
