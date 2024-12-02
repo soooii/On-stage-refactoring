@@ -24,7 +24,7 @@ public class User {
 
     // 서비스에서 사용할 이름
     @NotNull
-    @Column(name = "nickname", nullable = false)
+    @Column(name = "nickname", nullable = false, unique = true)
     private String nickname;
 
     @Column(name = "description")
