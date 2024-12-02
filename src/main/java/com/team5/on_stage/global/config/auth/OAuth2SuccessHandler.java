@@ -21,6 +21,7 @@ import static com.team5.on_stage.global.config.jwt.AuthConstants.*;
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final JwtUtil jwtUtil;
+    public final String REDIRECT = "http://localhost:3000/management";
 
 
     // Todo: 예외처리
@@ -59,6 +60,6 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         }
 
         //super.onAuthenticationSuccess(request, response, authentication);
-        response.sendRedirect(FRONT_DOMAIN);
+        response.sendRedirect(REDIRECT);
     }
 }

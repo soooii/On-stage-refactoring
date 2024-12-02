@@ -34,6 +34,7 @@ public class LinkService {
     }
 
     // UPDATE
+    @Transactional
     public LinkDTO updateLink(LinkDTO dto) {
         // 쿼리 메서드를 사용 -> DB 접근 최소화
         linkRepository.updateLink(
