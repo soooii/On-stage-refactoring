@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import org.joda.time.LocalDate;
+import java.time.LocalDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
@@ -20,7 +20,7 @@ public class ConcertInfo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name="mt20id", nullable = false)
+    @Column(name="mt20id", nullable = false, unique = true)
     private String mt20id;
 //    //유저 id
 //    @ManyToOne
