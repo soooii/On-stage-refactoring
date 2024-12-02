@@ -6,7 +6,7 @@ import lombok.Data;
 public class UpdateUserDto {
 
     // Todo: 제약 추가
-    private String description;
     private String nickname;
-    private String password;
+
+    private String description;
 }

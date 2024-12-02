@@ -2,6 +2,7 @@ package com.team5.on_stage.user.controller;
 
 import com.team5.on_stage.global.config.jwt.TokenUsername;
 import com.team5.on_stage.linklike.service.LinkLikeService;
+import com.team5.on_stage.user.dto.UpdateUserDto;
 import com.team5.on_stage.user.dto.UserProfileDto;
 import com.team5.on_stage.user.service.UserService;
 import lombok.AllArgsConstructor;
@@ -18,27 +19,45 @@ public class UserApiController {
     private final LinkLikeService linkLikeService;
 
 
-    // 닉네임 변경
-    @PatchMapping("/{nickname}")
-    public ResponseEntity<Boolean> updateUserNickname(@TokenUsername String username,
-                                                      @PathVariable String nickname) {
+    @PatchMapping
+    public ResponseEntity<String> updateUserProfile(@TokenUsername String username,
+                                                    @RequestParam String field,
+                                                    @RequestBody UpdateUserDto updateUserDto) {
 
-        if (userService.checkNicknameDuplicated(nickname)) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        if (field.equals("nickname") && userService.checkNicknameDuplicated(updateUserDto.getNickname())) {
+            userService.updateUserNickname(username, updateUserDto.getNickname());
+            return ResponseEntity.ok(field);
         }
-        else {
-            return ResponseEntity.ok(userService.updateUserNickname(username, nickname));
+        else if (field.equals("description")) {
+            userService.updateUserDescription(username, updateUserDto.getDescription());
+            return ResponseEntity.ok(field);
         }
+
+        return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
     }
+
+
+    // 닉네임 변경
+//    @PatchMapping("/{nickname}")
+//    public ResponseEntity<Boolean> updateUserNickname(@TokenUsername String username,
+//                                                      @PathVariable String nickname) {
+//
+//        if (userService.checkNicknameDuplicated(nickname)) {
+//            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+//        }
+//        else {
+//            return ResponseEntity.ok(userService.updateUserNickname(username, nickname));
+//        }
+//    }
 
 
     // 자기 소개글 수정
-    @PatchMapping("/{description}")
-    public ResponseEntity<Boolean> updateUserDescription(@TokenUsername String username,
-                                                         @PathVariable String description) {
-
-        return ResponseEntity.ok(userService.updateUserDescription(username, description));
-    }
+//    @PatchMapping("/{description}")
+//    public ResponseEntity<Boolean> updateUserDescription(@TokenUsername String username,
+//                                                         @PathVariable String description) {
+//
+//        return ResponseEntity.ok(userService.updateUserDescription(username, description));
+//    }
 
 
     // 좋아요 기능
