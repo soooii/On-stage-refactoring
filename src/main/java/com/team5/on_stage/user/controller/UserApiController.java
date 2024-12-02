@@ -2,6 +2,7 @@ package com.team5.on_stage.user.controller;
 
 import com.team5.on_stage.global.config.jwt.TokenUsername;
 import com.team5.on_stage.linklike.service.LinkLikeService;
+import com.team5.on_stage.user.dto.UserProfileDto;
 import com.team5.on_stage.user.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +38,14 @@ public class UserApiController {
 
         return ResponseEntity.ok(linkLikeService.likeLink(userId, linkId));
     }
+
+
+    @GetMapping
+    public ResponseEntity<UserProfileDto> getUserProfile(@TokenUsername String username) {
+
+        return ResponseEntity.ok(userService.getUserProfile(username));
+    }
+
 
 
     // 유저 삭제
