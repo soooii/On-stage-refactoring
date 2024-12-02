@@ -18,9 +18,9 @@ public class UserApiController {
     private final LinkLikeService linkLikeService;
 
 
-    @PatchMapping("/nickname")
+    @PatchMapping("/{nickname}")
     public ResponseEntity<Boolean> updateUserNickname(@TokenUsername String username,
-                                                      String nickname) {
+                                                      @PathVariable String nickname) {
 
         if (userService.checkNicknameDuplicated(nickname)) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
@@ -31,9 +31,9 @@ public class UserApiController {
     }
 
 
-    @PatchMapping("/description")
+    @PatchMapping("/{description}")
     public ResponseEntity<Boolean> updateUserDescription(@TokenUsername String username,
-                                                         String description) {
+                                                         @PathVariable String description) {
 
         return ResponseEntity.ok(userService.updateUserDescription(username, description));
     }
