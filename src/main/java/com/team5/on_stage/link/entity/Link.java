@@ -25,6 +25,8 @@ public class Link {
     // 소프트 딜리트 여부
     private boolean isDeleted = false;
 
+    private int liked;
+
 
     @Builder
     public Link(String username, Long prevLinkId, String title) {
@@ -32,6 +34,20 @@ public class Link {
         this.prevLinkId = prevLinkId;
         this.title = title;
         this.isDeleted = false;
+    }
+
+    public void Like() {
+        this.liked++;
+    }
+
+    // Todo: 예외처리
+    public void unLike() {
+        if (this.liked > 0) {
+            this.liked--;
+        }
+        else {
+            throw new IllegalStateException("Liked cannot be minus");
+        }
     }
 }
 

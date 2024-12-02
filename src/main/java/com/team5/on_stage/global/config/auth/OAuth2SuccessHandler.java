@@ -21,6 +21,7 @@ import static com.team5.on_stage.global.config.jwt.AuthConstants.*;
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final JwtUtil jwtUtil;
+    public final String REDIRECT = "http://localhost:3000/management";
 
 
     // Todo: 예외처리
@@ -33,17 +34,11 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             CustomOAuth2User oauth2User = (CustomOAuth2User) authentication.getPrincipal();
 
             String username = oauth2User.getUsername();
-            String role = oauth2User.getAuthorities().toString();
+            String role = oauth2User.getRole().toString();
 
-            String accessToken = jwtUtil.generateToken(TYPE_ACCESS,
-                                                       username,
-                                                       role,
-                                                       ACCESS_TOKEN_EXPIRED_MS);
+            String accessToken = jwtUtil.generateAccessToken(username, role);
 
-            String refreshToken = jwtUtil.generateToken(TYPE_REFRESH,
-                                                        username,
-                                                        role,
-                                                        REFRESH_TOKEN_EXPIRED_MS);
+            String refreshToken = jwtUtil.generateRefreshToken(username, role);
 
             jwtUtil.addRefresh(username, refreshToken);
 
@@ -57,14 +52,14 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 //
 //            response.addCookie(createCookie("token", encodedCookieValue));
 
-            response.addCookie(createCookie("access", accessToken));
-            response.addCookie(createCookie("refresh", refreshToken));
+            response.addCookie(createCookie("access", accessToken, false));
+            response.addCookie(createCookie("refresh", refreshToken, true));
             response.setStatus(HttpStatus.OK.value());
         } catch (Exception e) {
             throw new ServletException(e);
         }
 
         //super.onAuthenticationSuccess(request, response, authentication);
-        response.sendRedirect(FRONT_DOMAIN);
+        response.sendRedirect(REDIRECT);
     }
 }

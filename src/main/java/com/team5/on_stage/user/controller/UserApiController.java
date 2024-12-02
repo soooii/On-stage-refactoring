@@ -1,11 +1,11 @@
 package com.team5.on_stage.user.controller;
 
-import com.team5.on_stage.user.dto.SignUpDto;
-import com.team5.on_stage.user.dto.SignUpUserDto;
-import com.team5.on_stage.user.dto.UpdateUserDto;
+import com.team5.on_stage.global.config.jwt.TokenUsername;
+import com.team5.on_stage.linklike.service.LinkLikeService;
+import com.team5.on_stage.user.dto.UserProfileDto;
 import com.team5.on_stage.user.service.UserService;
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,39 +15,57 @@ import org.springframework.web.bind.annotation.*;
 public class UserApiController {
 
     private final UserService userService;
+    private final LinkLikeService linkLikeService;
 
 
-    // Todo: 아이디, 비밀번호 가입 방식의 필요성 재고.
-    @PostMapping
-    public ResponseEntity<Boolean> basicSignUp(@Valid @RequestBody SignUpDto signUpDto) {
+    @PatchMapping("/nickname")
+    public ResponseEntity<Boolean> updateUserNickname(@TokenUsername String username,
+                                                      String nickname) {
 
-        return ResponseEntity.ok(userService.signUp(signUpDto));
+        if (userService.checkNicknameDuplicated(nickname)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+        else {
+            return ResponseEntity.ok(userService.updateUserNickname(username, nickname));
+        }
     }
 
 
-    // TempUser -> User 회원가입
-    // Todo: 추후 인증 정보에서 username 뽑아서 파라미터로 전달할 것
-    @PostMapping("/{username}")
-    public ResponseEntity<Boolean> signUp(@Valid @PathVariable("username") String username, SignUpUserDto dto) {
+    @PatchMapping("/description")
+    public ResponseEntity<Boolean> updateUserDescription(@TokenUsername String username,
+                                                         String description) {
 
-        return ResponseEntity.ok(userService.signUpUser(username, dto));
+        return ResponseEntity.ok(userService.updateUserDescription(username, description));
     }
 
 
-    // 유저 정보 수정
-    // Todo: 수정 항목 별로 구분할 것
-    @PatchMapping("/{email}")
-    public ResponseEntity<Boolean> updateUserInformation(@PathVariable("email") String email,
-                                                         UpdateUserDto updateUserDto) {
+    @PostMapping("/like/{userId}")
+    public ResponseEntity<Boolean> likeLink(@PathVariable("userId") Long userId, Long linkId) {
 
-        return ResponseEntity.ok(userService.updateUserInformation(email, updateUserDto));
+        return ResponseEntity.ok(linkLikeService.likeLink(userId, linkId));
     }
+
+
+    @GetMapping
+    public ResponseEntity<UserProfileDto> getUserProfile(@TokenUsername String username) {
+
+        return ResponseEntity.ok(userService.getUserProfile(username));
+    }
+
 
 
     // 유저 삭제
-    @DeleteMapping("/{email}")
-    public ResponseEntity<Boolean> deleteUser(@PathVariable("email") String email) {
+    @DeleteMapping
+    public ResponseEntity<Boolean> deleteUser(@TokenUsername String username) {
 
-        return ResponseEntity.ok(userService.deleteUser(email));
+        return ResponseEntity.ok(userService.deleteUser(username));
     }
+
+
+//    @PostMapping("/{username}")
+//    public ResponseEntity<Void> likeUser(@TokenUsername String username,
+//                                         @PathVariable("linkId") Long linkId) {
+//
+//        return ResponseEntity.ok(userService.likeLink(username, linkId));
+//    }
 }

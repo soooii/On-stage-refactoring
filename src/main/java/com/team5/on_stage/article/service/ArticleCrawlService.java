@@ -18,7 +18,7 @@ public class ArticleCrawlService {
 
     public List<ArticleRequestDTO> crawlArticles(String keyword) {
         List<ArticleRequestDTO> articles = new ArrayList<>();
-        String url = "https://m.search.naver.com/search.naver?ssc=tab.m_news.all&where=m_news&sm=tab_jum&query=" + keyword;
+        String url = "https://m.search.naver.com/search.naver?ssc=tab.m_news.all&where=m_news&sm=tab_jum&query=" + keyword + "신곡";
 
         try {
             Document doc = Jsoup.connect(url).get();

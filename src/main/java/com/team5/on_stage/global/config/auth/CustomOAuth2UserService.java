@@ -1,9 +1,11 @@
 package com.team5.on_stage.global.config.auth;
 
 import com.team5.on_stage.global.config.auth.dto.*;
-import com.team5.on_stage.user.entity.Role;
-import com.team5.on_stage.user.entity.TempUser;
-import com.team5.on_stage.user.repository.TempUserRepository;
+import com.team5.on_stage.socialLink.entity.SocialLink;
+import com.team5.on_stage.socialLink.repository.SocialLinkRepository;
+import com.team5.on_stage.theme.entity.Theme;
+import com.team5.on_stage.theme.repository.ThemeRepository;
+import com.team5.on_stage.user.entity.*;
 import com.team5.on_stage.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -17,10 +19,12 @@ import org.springframework.stereotype.Service;
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private final UserRepository userRepository;
-    private final TempUserRepository tempUserRepository;
+    private final ThemeRepository themeRepository;
+    private final SocialLinkRepository socialLinkRepository;
 
 
     // 사용자 정보를 확인하기 위한 메서드
+    // Todo: 유저 저장 로직을 SuccessHandler에 넣을지 고민
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 
@@ -30,65 +34,81 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
         OAuth2Response oAuth2Response = null;
 
-        if (registrationId.equals("google")) {
-
-            oAuth2Response = new GoogleResponse(oAuth2User.getAttributes());
-        }
-        else if (registrationId.equals("naver")) {
-
-            oAuth2Response = new NaverResponse(oAuth2User.getAttributes());
-        }
-        else if (registrationId.equals("github")) {
-
-            oAuth2Response = new GithubResponse(oAuth2User.getAttributes());
-        }
-        else if (registrationId.equals("kakao")) {
-
-            oAuth2Response = new KakaoResponse(oAuth2User.getAttributes());
-        }
-        else {
-            return null;
+        switch(registrationId) {
+            case "google" -> oAuth2Response = new GoogleResponse(oAuth2User.getAttributes());
+            case "naver" -> oAuth2Response = new NaverResponse(oAuth2User.getAttributes());
+            case "github" -> oAuth2Response = new GithubResponse(oAuth2User.getAttributes());
+            case "kakao" -> oAuth2Response = new KakaoResponse(oAuth2User.getAttributes());
         }
 
         // 리소스 서버에서 발급 받은 정보로 사용자를 특정하는 아이디 값을 만든다.
         String username = oAuth2Response.getProvider() + " " + oAuth2Response.getProviderId();
 
-        TempUser existData = tempUserRepository.findByUsername(username);
+        User existUser = userRepository.findByUsername(username);
 
-        if (existData == null) {
+        if (existUser == null) {
             // 사용자 정보가 없는 경우, DB에 정보를 새로이 저장한다.
-            TempUser tempUser = TempUser.builder()
+            User newUser = User.builder()
+                    .nickname(getTempNickname())
                     .username(username)
                     .email(oAuth2Response.getEmail())
+                    .OAuth2Domain(OAuth2Domain.valueOf(registrationId.toUpperCase()))
                     .name(oAuth2Response.getName())
-                    .role(Role.valueOf("ROLE_TEMP"))
+                    .verified(Verified.UNVERIFIED)
+                    .role(Role.ROLE_USER)
+                    .picture("Default Image") // Todo: 기본 이미지 설정
                     .build();
 
-            tempUserRepository.save(tempUser);
+            userRepository.save(newUser);
+
+            Theme theme = Theme.builder()
+                    .username(username)
+                    .build();
+            themeRepository.save(theme);
+
+            SocialLink socialLink = SocialLink.builder()
+                    .username(username)
+                    .build();
+            socialLinkRepository.save(socialLink);
 
             UserDto userDto = new UserDto();
             userDto.setUsername(username);
             userDto.setName(oAuth2Response.getName());
-            userDto.setRole(Role.ROLE_TEMP);
+            userDto.setRole(Role.ROLE_USER);
 
             return new CustomOAuth2User(userDto);
         }
         else {
             // DB에 사용자 정보가 있는 경우, 정보를 업데이트한다.
-            existData.updateTempUser(oAuth2User.getName(), oAuth2Response.getEmail());
+            existUser.updateOAuthUser(oAuth2User.getName(), oAuth2Response.getEmail());
 
-            tempUserRepository.save(existData);
+            userRepository.save(existUser);
 
             UserDto userDto = new UserDto();
-            userDto.setUsername(existData.getUsername());
+            userDto.setUsername(existUser.getUsername());
             userDto.setName(oAuth2Response.getName());
-            userDto.setRole(existData.getRole());
+            userDto.setRole(existUser.getRole());
 
             return new CustomOAuth2User(userDto);
         }
 
 
+    }
 
 
+    // Todo: 중복 검사
+    public String getTempNickname() {
+
+        char[] charSet = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F',
+                'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
+
+        String tempNickname = "";
+
+        int idx = 0;
+        for (int i = 0; i < 10; i++) {
+            idx = (int) (charSet.length * Math.random());
+            tempNickname += charSet[idx];
+        }
+        return tempNickname;
     }
 }
