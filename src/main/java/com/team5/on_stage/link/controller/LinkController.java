@@ -24,6 +24,11 @@ public class LinkController {
         return ResponseEntity.status(HttpStatus.OK).body(linkService.getLink(userService.getUsername())); // 수정예정
     }
 
+    @GetMapping("/{username}")
+    public ResponseEntity<LinkResponseDTO> getLink(@PathVariable String username) {
+        return ResponseEntity.status(HttpStatus.OK).body(linkService.getLink(username));
+    }
+
     @PostMapping
     public ResponseEntity<LinkDTO> createLink(@RequestBody LinkDTO link) {
         return ResponseEntity.status(HttpStatus.CREATED).body(linkService.createLink(link));
