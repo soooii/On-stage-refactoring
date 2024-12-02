@@ -13,5 +13,5 @@ public class UserProfileDto {
 
     private String description;
 
-    private String picture;
+    private String profileImage;
 }

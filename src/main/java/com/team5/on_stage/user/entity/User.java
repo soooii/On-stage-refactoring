@@ -63,8 +63,8 @@ public class User {
     @Column(name = "role", nullable = false)
     private Role role;
 
-    @Column(name = "image")
-    private String picture;
+    @Column(name = "profile_image")
+    private String profileImage;
 
     @Column(name = "created_at", nullable = false)
     private LocalDate createdAt;
@@ -77,8 +77,8 @@ public class User {
             this.description = "나를 소개하는 문장을 입력해주세요.";
         }
 
-        if (this.picture == null) {
-            this.picture = "";
+        if (this.profileImage == null) {
+            this.profileImage = "";
         }
 
         this.createdAt = LocalDate.now();
