@@ -5,9 +5,10 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.NaturalId;
 
-@DynamicUpdate
+import java.time.LocalDate;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter @Setter
@@ -42,6 +43,7 @@ public class User {
     private String name;
 
     // 소셜 로그인 도메인 + 소셜 로그인 ID 문자열
+    @NaturalId
     @NotNull
     @Column(name = "username", nullable = false, unique = true)
     private String username;
@@ -53,8 +55,8 @@ public class User {
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(name = "email_domain", nullable = false)
-    private EmailDomain emailDomain;
+    @Column(name = "oauth2_domain", nullable = false)
+    private OAuth2Domain OAuth2Domain;
 
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -63,6 +65,9 @@ public class User {
 
     @Column(name = "image")
     private String image;
+
+    @Column(name = "created_at", nullable = false)
+    private LocalDate createdAt;
 
 
     @PrePersist
@@ -75,6 +80,8 @@ public class User {
         if (this.image == null) {
             this.image = "";
         }
+
+        this.createdAt = LocalDate.now();
     }
 
     public void updateOAuthUser(String name, String email) {
