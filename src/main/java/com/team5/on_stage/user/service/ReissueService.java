@@ -42,7 +42,7 @@ public class ReissueService {
             throw new JwtException("Refresh token is expired");
         }
 
-        String tokenType = jwtUtil.getType(refreshToken);
+        String tokenType = jwtUtil.getClaim(refreshToken, "type");
         if (!tokenType.equals("refresh")) {
             throw new JwtException("Refresh token is not a refresh token");
         }
@@ -51,8 +51,8 @@ public class ReissueService {
             throw new JwtException("Refresh token does not exist");
         }
 
-        String username = jwtUtil.getUsername(refreshToken);
-        String role = jwtUtil.getRole(refreshToken);
+        String username = jwtUtil.getClaim(refreshToken, "username");
+        String role = jwtUtil.getClaim(refreshToken, "role");
 
         String newAccessToken = jwtUtil.generateAccessToken(username, role);
 

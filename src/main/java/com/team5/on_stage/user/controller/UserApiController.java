@@ -18,9 +18,10 @@ public class UserApiController {
     private final LinkLikeService linkLikeService;
 
 
-    @PatchMapping("/nickname")
+    // 닉네임 변경
+    @PatchMapping("/{nickname}")
     public ResponseEntity<Boolean> updateUserNickname(@TokenUsername String username,
-                                                      String nickname) {
+                                                      @PathVariable String nickname) {
 
         if (userService.checkNicknameDuplicated(nickname)) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
@@ -31,14 +32,16 @@ public class UserApiController {
     }
 
 
-    @PatchMapping("/description")
+    // 자기 소개글 수정
+    @PatchMapping("/{description}")
     public ResponseEntity<Boolean> updateUserDescription(@TokenUsername String username,
-                                                         String description) {
+                                                         @PathVariable String description) {
 
         return ResponseEntity.ok(userService.updateUserDescription(username, description));
     }
 
 
+    // 좋아요 기능
     @PostMapping("/like/{userId}")
     public ResponseEntity<Boolean> likeLink(@PathVariable("userId") Long userId, Long linkId) {
 
@@ -46,10 +49,27 @@ public class UserApiController {
     }
 
 
+    // 본인 프로필 정보 조회
     @GetMapping
-    public ResponseEntity<UserProfileDto> getUserProfile(@TokenUsername String username) {
+    public ResponseEntity<UserProfileDto> getMyProfile(@TokenUsername String username) {
 
         return ResponseEntity.ok(userService.getUserProfile(username));
+    }
+
+
+    // 타인 방문 시 프로필 조회
+    @GetMapping("/{username}")
+    public ResponseEntity<UserProfileDto> getOtherProfiles(@PathVariable String username) {
+
+        return ResponseEntity.ok(userService.getUserProfile(username));
+    }
+
+
+    // nickname -> username 변환
+    @GetMapping("/convert/{nickname}")
+    public ResponseEntity<String> convertNicknameToUsername(@PathVariable("nickname") String nickname) {
+
+        return ResponseEntity.ok(userService.convertNicknameToUsername(nickname));
     }
 
 
