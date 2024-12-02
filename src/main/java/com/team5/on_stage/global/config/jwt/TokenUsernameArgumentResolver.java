@@ -1,5 +1,6 @@
 package com.team5.on_stage.global.config.jwt;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
@@ -8,8 +9,6 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
-
-import javax.crypto.SecretKey;
 
 @RequiredArgsConstructor
 @Component
@@ -32,11 +31,15 @@ public class TokenUsernameArgumentResolver implements HandlerMethodArgumentResol
 
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
 
-        // 헤더 추출
-        String authorizationHeader = request.getHeader("Authorization");
+        String accessToken = null;
 
-        // 토큰 추출
-        String accessToken = authorizationHeader.split(" ")[1];
+        Cookie[] cookies = request.getCookies();
+
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("access")) {
+                accessToken = cookie.getValue();
+            }
+        }
 
         return jwtUtil.getUsername(accessToken);
     }
