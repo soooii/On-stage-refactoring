@@ -1,24 +1,47 @@
 package com.team5.on_stage.concert.service;
 
+import com.team5.on_stage.concert.dto.ConcertInfoDto;
+import com.team5.on_stage.concert.entity.ConcertInfo;
+import com.team5.on_stage.concert.mapper.ConcertInfoMapper;
 import com.team5.on_stage.concert.repository.ConcertDetailRepository;
+import com.team5.on_stage.concert.repository.ConcertInfoRepository;
 import com.team5.on_stage.concert.repository.ConcertPlaceRepository;
 import com.team5.on_stage.concert.repository.RelateRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ConcertService {
     private final ConcertInfoRequestService concertInfoRequestService;
 
+    private final ConcertInfoRepository concertInfoRepository;
     private final ConcertDetailRepository concertDetailRepository;
     private final ConcertPlaceRepository concertPlaceRepository;
     private final RelateRepository relateRepository;
+
+    private final ConcertInfoMapper concertInfoMapper;
 
 
     //저장작업(레포와 연결), 벌크인서트 사용
     //C
     public void saveConcertList() {
+         /*
+        User user = userRepository.findById(userId).orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
+        String keyword = user.getNickname();
+        */
+        List<ConcertInfoDto> concertInfoDtos = concertInfoRequestService.concertInfoRequest();
+
+        //bulk insert
+        List<ConcertInfo> concertInfos = concertInfoDtos.stream()
+                .map(concertInfoMapper::toEntity)
+                .collect(Collectors.toList());
+
+        concertInfoRepository.saveAll(concertInfos);
+        System.out.println(concertInfos);
     }
 
     //R

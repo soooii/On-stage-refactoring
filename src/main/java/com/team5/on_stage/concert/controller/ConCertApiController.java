@@ -17,7 +17,7 @@ public class ConCertApiController {
     public void getConcertUpdatedDate(){
 
     }
-    @PostMapping("/info/{userId}")
+    @PostMapping("/info")
     public ResponseEntity<String> saveConcertList(){
         concertService.saveConcertList();
         return ResponseEntity.ok("ok");
