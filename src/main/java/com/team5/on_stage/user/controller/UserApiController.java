@@ -5,6 +5,7 @@ import com.team5.on_stage.linklike.service.LinkLikeService;
 import com.team5.on_stage.user.dto.UserProfileDto;
 import com.team5.on_stage.user.service.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +22,12 @@ public class UserApiController {
     public ResponseEntity<Boolean> updateUserNickname(@TokenUsername String username,
                                                       String nickname) {
 
-        return ResponseEntity.ok(userService.updateUserNickname(username, nickname));
+        if (userService.checkNicknameDuplicated(nickname)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+        else {
+            return ResponseEntity.ok(userService.updateUserNickname(username, nickname));
+        }
     }
 
 

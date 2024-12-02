@@ -15,13 +15,18 @@ public class UserService {
     private final UserRepository userRepository;
 
 
+    public Boolean checkNicknameDuplicated(String nickname) {
+
+        return userRepository.existsByNickname(nickname);
+    }
+
+
     public Boolean updateUserNickname(String username,
                                       String nickname) {
 
         User user = userRepository.findByUsername(username);
 
         if (user == null) {
-
             throw new GlobalException(ErrorCode.USER_NOT_FOUND);
         }
 
@@ -39,7 +44,6 @@ public class UserService {
         User user = userRepository.findByUsername(username);
 
         if (user == null) {
-
             throw new GlobalException(ErrorCode.USER_NOT_FOUND);
         }
 
