@@ -1,17 +1,15 @@
 package com.team5.on_stage.concert.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import nonapi.io.github.classgraph.json.Id;
-import org.hibernate.annotations.Table;
 import org.joda.time.LocalDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 
+// URL 가장 우선적인 id값
 @Entity
 @Getter
 @Builder
@@ -19,6 +17,9 @@ import java.time.LocalDateTime;
 @Table(name = "concert_info")
 public class ConcertInfo {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @Column(name="mt20id", nullable = false)
     private String mt20id;
 //    //유저 id
@@ -43,6 +44,7 @@ public class ConcertInfo {
     @Column(name="prfstate")
     private String prfstate;
     //TODO ConcertDetail onetoone 연결
+    @OneToOne(mappedBy = "concertInfo") // concert_info => concertInfo 변경
     private ConcertDetail concertDetail;
 
     //업데이트 날짜

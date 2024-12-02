@@ -1,12 +1,9 @@
 package com.team5.on_stage.concert.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import nonapi.io.github.classgraph.json.Id;
 
 @Entity
 @Getter
@@ -14,9 +11,15 @@ import nonapi.io.github.classgraph.json.Id;
 @AllArgsConstructor
 @Table(name = "concert_place")
 public class ConcertPlace {
+    //1:1 연결
     @Id
-    @Column(name="mt10id", nullable = false)
-    private String mt10id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @OneToOne
+    @JoinColumn(name = "mt10id")
+    private ConcertDetail concertDetail;
+
 
     @Column(name="fcltynm", nullable = false)
     private String fcltynm;
@@ -25,6 +28,6 @@ public class ConcertPlace {
     @Column(name="latitude", nullable = false)
     private double latitude;
     // 경도
-    @Column(name="longtitude")
+    @Column(name="longtitude", nullable = false)
     private double longtitude;
 }

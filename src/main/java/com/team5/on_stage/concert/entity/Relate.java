@@ -1,13 +1,23 @@
 package com.team5.on_stage.concert.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 
 @Entity
+@Getter
+@Builder
+@AllArgsConstructor
 public class Relate {
     //concertDetail 1:다 연결
     @Id
-    @Column(name="mt20id", nullable = false)
-    private String mt20id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name="mt20id", nullable = false)
+    private ConcertDetail concertDetail;
     
     @Column(name="relate_nm", nullable = false)
     private String relatenm;

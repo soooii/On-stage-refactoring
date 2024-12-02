@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.w3c.dom.NodeList;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 @Service
 public class ConcertInfoRequestService {
@@ -53,7 +52,6 @@ public class ConcertInfoRequestService {
 
 
 //            System.out.println(concertInfo);
-            System.out.println(token);
             Document concertDetail = Jsoup.connect(url).get();
             System.out.println(concertDetail);
         } catch (

@@ -7,6 +7,7 @@ import lombok.Getter;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -17,8 +18,12 @@ public class ConcertDetail{
 
     //1:1 연결
     @Id
-    @Column(name="mt20id", nullable = false)
-    private String mt20id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @OneToOne
+    @JoinColumn(name = "mt20id")
+    private ConcertInfo concertInfo;
 
     @Column(name="prfcast")
     private String prfcast;
@@ -26,11 +31,14 @@ public class ConcertDetail{
     private String prfcrew;
     @Column(name="poster")
     private String poster;
+
     @Column(name="mt10id", nullable = false)
     private String mt10id;
     //TODO onetomany
-    private Relate relate;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Relate> relate;
     //TODO onetoone
+    @OneToOne(mappedBy = "concertDetail")  // concert_detail => concertDetail로 수정
     private ConcertPlace concertPlace;
 
     //업데이트 날짜
