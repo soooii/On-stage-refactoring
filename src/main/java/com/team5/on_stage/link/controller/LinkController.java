@@ -19,11 +19,12 @@ public class LinkController {
     private final LinkService linkService;
     private final UserService userService;
 
+    /*
     @GetMapping
     public ResponseEntity<LinkResponseDTO> getLink() {
         return ResponseEntity.status(HttpStatus.OK).body(linkService.getLink(userService.getUsername())); // 수정예정
     }
-
+*/
     @GetMapping("/{username}")
     public ResponseEntity<LinkResponseDTO> getLink(@PathVariable String username) {
         return ResponseEntity.status(HttpStatus.OK).body(linkService.getLink(username));
