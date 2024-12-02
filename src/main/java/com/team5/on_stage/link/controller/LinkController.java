@@ -1,10 +1,9 @@
 package com.team5.on_stage.link.controller;
 
-import com.team5.on_stage.global.config.jwt.JwtUtil;
+import com.team5.on_stage.global.config.jwt.TokenUsername;
 import com.team5.on_stage.link.dto.LinkDTO;
 import com.team5.on_stage.link.dto.LinkResponseDTO;
 import com.team5.on_stage.link.service.LinkService;
-import com.team5.on_stage.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -17,16 +16,14 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/link")
 public class LinkController {
     private final LinkService linkService;
-    private final UserService userService;
 
-    /*
     @GetMapping
-    public ResponseEntity<LinkResponseDTO> getLink() {
-        return ResponseEntity.status(HttpStatus.OK).body(linkService.getLink(userService.getUsername())); // 수정예정
+    public ResponseEntity<LinkResponseDTO> getLink(@TokenUsername String username) {
+        return ResponseEntity.status(HttpStatus.OK).body(linkService.getLink(username)); // 수정예정
     }
-*/
+
     @GetMapping("/{username}")
-    public ResponseEntity<LinkResponseDTO> getLink(@PathVariable String username) {
+    public ResponseEntity<LinkResponseDTO> getLinkForVisitors(@PathVariable String username) {
         return ResponseEntity.status(HttpStatus.OK).body(linkService.getLink(username));
     }
 
