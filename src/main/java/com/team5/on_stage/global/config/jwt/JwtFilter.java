@@ -39,7 +39,7 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
-        // 3. 'Bearer ' 문자열을 제거한 순수한 토큰을 획득한다.
+        // 'Bearer ' 문자열을 제거한 순수한 토큰을 획득
         String accessToken = authorizationHeader.split(" ")[1];
 
         // 4. 토큰이 존재하는지 확인한다.
@@ -50,7 +50,7 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
-        // 5. 토큰 만료 여부 확인. 만료시 오류를 출력하고 다음 필터로 넘기지 않는다.
+        // 토큰 만료 여부 확인
         try {
             jwtUtil.isExpired(accessToken);
         } catch (ExpiredJwtException e) {
@@ -63,8 +63,8 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
-        // 6. 토큰이 access인지 확인한다. (페이로드에 명시되어 있다.)
-        String category = jwtUtil.getType(accessToken);
+        // 토큰이 access인지 확인
+        String category = jwtUtil.getClaim(accessToken, "type");
 
         // Todo: 예외처리
         if (!category.equals("access")) {
@@ -72,20 +72,20 @@ public class JwtFilter extends OncePerRequestFilter {
             throw new ServletException("Not access");
         }
 
-        // 토큰에서 email, role 값을 가져온다.
-        String username = jwtUtil.getUsername(accessToken);
-        String role = jwtUtil.getRole(accessToken);
+        // 토큰에서 email, role 값을 획득
+        String username = jwtUtil.getClaim(accessToken, "username");
+        String role = jwtUtil.getClaim(accessToken, "role");
 
-        // UserDetails에 유저 정보를 담는다.
+        // UserDetails에 유저 정보 저장
         UserDto userDto = new UserDto();
         userDto.setUsername(username);
         userDto.setRole(Role.valueOf(role));
         CustomOAuth2User customOAuth2User = new CustomOAuth2User(userDto);
 
-        // Spring Security 인증 토큰을 생성한다.
+        // Spring Security 인증 토큰을 생성
         Authentication authToken = new UsernamePasswordAuthenticationToken(customOAuth2User, null, customOAuth2User.getAuthorities());
 
-        // SecurityContextHolder에 사용자를 등록한다.
+        // SecurityContextHolder에 사용자 등록
         SecurityContextHolder.getContext().setAuthentication(authToken);
 
         filterChain.doFilter(request, response);

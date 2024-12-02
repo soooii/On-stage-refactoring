@@ -94,7 +94,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
 
         // Todo: 예외처리
         // 토큰 타입 검증
-        if (!jwtUtil.getType(refreshToken).equals("refresh")) {
+        if (!jwtUtil.getClaim(refreshToken, "type").equals("refresh")) {
             throw new ServletException("Invalid refresh token");
         }
 

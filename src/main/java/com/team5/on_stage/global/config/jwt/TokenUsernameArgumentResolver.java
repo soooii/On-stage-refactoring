@@ -41,6 +41,6 @@ public class TokenUsernameArgumentResolver implements HandlerMethodArgumentResol
             }
         }
 
-        return jwtUtil.getUsername(accessToken);
+        return jwtUtil.getClaim(accessToken, "username");
     }
 }

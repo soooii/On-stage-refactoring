@@ -67,37 +67,15 @@ public class JwtUtil {
         refreshRepository.save(newRefreshToken);
     }
 
-    // username 추출
-    public String getUsername(String token) {
+
+    public String getClaim(String token, String claim) {
 
         return Jwts.parser()
                 .verifyWith(secretKey)
                 .build()
                 .parseSignedClaims(token)
                 .getPayload()
-                .get("username", String.class);
-    }
-
-    // role 추출
-    public String getRole(String token) {
-
-        return Jwts.parser()
-                .verifyWith(secretKey)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload()
-                .get("role", String.class);
-    }
-
-    // type 추출 (access / refresh)
-    public String getType(String token) {
-
-        return Jwts.parser()
-                .verifyWith(secretKey)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload()
-                .get("type", String.class);
+                .get(claim, String.class);
     }
 
     // 만료 시간 추출
