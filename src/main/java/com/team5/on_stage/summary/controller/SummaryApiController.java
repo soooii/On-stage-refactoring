@@ -18,34 +18,26 @@ import java.util.List;
 public class SummaryApiController {
     private final SummaryService summaryService;
 
-    @PostMapping("/{userId}")
-    public ResponseEntity<String> saveSummary(@PathVariable Long userId) {
-        summaryService.saveSummary(userId);
+    @PostMapping("/{username}")
+    public ResponseEntity<String> saveSummary(@PathVariable String username) {
+        summaryService.saveSummary(username);
         return ResponseEntity.ok("뉴스 요약이 저장되었습니다.");
     }
 
-    /*
-    @GetMapping("/{userId}")
-    public ResponseEntity<List<SummaryResponseDTO>> getSummary(@PathVariable Long userId) {
-        List<SummaryResponseDTO> summaryResponseDTO = summaryService.getSummary(userId,);
-        return ResponseEntity.ok(summaryResponseDTO);
-    }*/
-
-
     //해당하는 페이지의 아티스트 뉴스 가져오기
-    @GetMapping("/{userId}")
+    @GetMapping("/{username}")
     public ResponseEntity<Page<SummaryResponseDTO>> getSummary(
-            @PathVariable Long userId,
+            @PathVariable String username,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "2") int size) {
 
-        SummaryRequestDTO request = new SummaryRequestDTO(userId, page, size);
+        SummaryRequestDTO request = new SummaryRequestDTO(username, page, size);
         Page<SummaryResponseDTO> response = summaryService.getSummary(request);
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/{userId}")
-    public ResponseEntity<String> deleteSummary(@PathVariable Long userId){
+    @DeleteMapping("/{username}")
+    public ResponseEntity<String> deleteSummary(@PathVariable String username){
         return ResponseEntity.ok("뉴스 요약 삭제가 완료되었습니다.");
     }
 

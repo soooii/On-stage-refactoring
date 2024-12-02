@@ -21,7 +21,6 @@ public class Article {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //유저 id
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
