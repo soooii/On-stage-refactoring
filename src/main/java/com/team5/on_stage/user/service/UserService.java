@@ -130,13 +130,4 @@ public class UserService {
     }
 
 
-    // Context에서 메인 파라미터 username 추출
-//    public String getUsername() {
-//
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//
-//        CustomOAuth2User oauth2User = (CustomOAuth2User) authentication.getPrincipal();
-//
-//        return oauth2User.getUsername();
-//    }
 }

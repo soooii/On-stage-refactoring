@@ -22,6 +22,7 @@ public class JwtUtil {
 
     // JWT 생성
     public String generateAccessToken(String username,
+                                      String nickname,
                                       String role) {
 
         LocalDateTime now = LocalDateTime.now();
@@ -29,6 +30,7 @@ public class JwtUtil {
         return Jwts.builder()
                 .claim("type", TYPE_ACCESS)
                 .claim("username", username)
+                .claim("nickname", nickname)
                 .claim("role", role)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRED_MS))
@@ -38,6 +40,7 @@ public class JwtUtil {
 
 
     public String generateRefreshToken(String username,
+                                       String nickname,
                                        String role) {
 
         LocalDateTime now = LocalDateTime.now();
@@ -45,6 +48,7 @@ public class JwtUtil {
         return Jwts.builder()
                 .claim("type", TYPE_REFRESH)
                 .claim("username", username)
+                .claim("nickname", nickname)
                 .claim("role", role)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRED_MS))
