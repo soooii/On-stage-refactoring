@@ -8,6 +8,7 @@ import com.team5.on_stage.user.dto.UserProfileDto;
 import com.team5.on_stage.user.entity.*;
 import com.team5.on_stage.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -17,21 +18,18 @@ import java.io.IOException;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class UserService {
 
     private final UserRepository userRepository;
     private final S3Uploader s3Uploader;
 
 
-    public Boolean checkNicknameDuplicated(String nickname) {
-
+    public void checkNicknameDuplicated(String nickname) {
         if (userRepository.existsByNickname(nickname)) {
             throw new GlobalException(ErrorCode.NICKNAME_DUPLICATED);
         }
-
-        return true;
     }
-
 
     public void updateUserNickname(String username,
                                    String nickname) {
@@ -46,15 +44,10 @@ public class UserService {
             throw new GlobalException(ErrorCode.NOT_MODIFIED);
         }
 
-        if (checkNicknameDuplicated(nickname)) {
-            throw new GlobalException(ErrorCode.NICKNAME_DUPLICATED);
-        }
-
+        checkNicknameDuplicated(nickname);
         user.setNickname(nickname);
-
         userRepository.save(user);
     }
-
 
     public void updateUserDescription(String username,
                                       String description) {
