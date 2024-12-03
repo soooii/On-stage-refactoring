@@ -13,31 +13,31 @@ public class UserQueryDslRepositoryImpl implements UserQueryDslRepository {
 
     private final JPAQueryFactory jpaQueryFactory;
 
-    @Override
-    public User findByUsername(String username) {
-        return jpaQueryFactory
-                .select(user)
-                .from(user)
-                .where(user.username.eq(username))
-                .fetchOne();
-    }
-
-    @Override
-    public User findByNickname(String nickname) {
-        return jpaQueryFactory
-                .select(user)
-                .from(user)
-                .where(user.nickname.eq(nickname))
-                .fetchOne();
-    }
-
-    @Override
-    public Boolean deleteUserByUsername(String username) {
-        return null;
-    }
-
-    @Override
-    public Boolean existsByNickname(String nickname) {
-        return null;
-    }
+//    @Override
+//    public User findByUsername(String username) {
+//        return jpaQueryFactory
+//                .select(user)
+//                .from(user)
+//                .where(user.username.eq(username))
+//                .fetchOne();
+//    }
+//
+//    @Override
+//    public User findByNickname(String nickname) {
+//        return jpaQueryFactory
+//                .select(user)
+//                .from(user)
+//                .where(user.nickname.eq(nickname))
+//                .fetchOne();
+//    }
+//
+//    @Override
+//    public Boolean deleteUserByUsername(String username) {
+//        return null;
+//    }
+//
+//    @Override
+//    public Boolean existsByNickname(String nickname) {
+//        return null;
+//    }
 }
