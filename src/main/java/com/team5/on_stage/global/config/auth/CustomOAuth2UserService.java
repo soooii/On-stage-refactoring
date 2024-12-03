@@ -52,9 +52,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                     .email(oAuth2Response.getEmail())
                     .OAuth2Domain(OAuth2Domain.valueOf(registrationId.toUpperCase()))
                     .name(oAuth2Response.getName())
-                    .verified(Verified.UNVERIFIED)
-                    .role(Role.ROLE_USER)
-                    .profileImage("/img/imgbin_music-notes-.png")
                     .build();
 
             userRepository.save(newUser);
