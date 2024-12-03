@@ -46,7 +46,9 @@ public class UserService {
             throw new GlobalException(ErrorCode.NOT_MODIFIED);
         }
 
-        checkNicknameDuplicated(nickname);
+        if (checkNicknameDuplicated(nickname)) {
+            throw new GlobalException(ErrorCode.NICKNAME_DUPLICATED);
+        }
 
         user.setNickname(nickname);
 

@@ -2,7 +2,6 @@ package com.team5.on_stage.user.controller;
 
 import com.team5.on_stage.global.config.jwt.TokenUsername;
 import com.team5.on_stage.linklike.service.LinkLikeService;
-import com.team5.on_stage.user.dto.UpdateUserDto;
 import com.team5.on_stage.user.dto.UserProfileDto;
 import com.team5.on_stage.user.service.UserService;
 import lombok.AllArgsConstructor;
@@ -22,14 +21,14 @@ public class UserApiController {
     @PatchMapping
     public ResponseEntity<String> updateUserProfile(@TokenUsername String username,
                                                     @RequestParam String field,
-                                                    @RequestBody UpdateUserDto updateUserDto) {
+                                                    @RequestParam String value) {
 
-        if (field.equals("nickname") && userService.checkNicknameDuplicated(updateUserDto.getNickname())) {
-            userService.updateUserNickname(username, updateUserDto.getNickname());
+        if (field.equals("nickname")) {
+            userService.updateUserNickname(username, value);
             return ResponseEntity.ok(field);
         }
         else if (field.equals("description")) {
-            userService.updateUserDescription(username, updateUserDto.getDescription());
+            userService.updateUserDescription(username, value);
             return ResponseEntity.ok(field);
         }
 
