@@ -1,7 +1,6 @@
 package com.team5.on_stage.link.entity;
 
 import com.team5.on_stage.global.constants.BlockType;
-import com.team5.on_stage.global.constants.BorderType;
 import jakarta.persistence.*;
 import lombok.*;
 

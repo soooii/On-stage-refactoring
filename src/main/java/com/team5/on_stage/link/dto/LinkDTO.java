@@ -1,7 +1,6 @@
 package com.team5.on_stage.link.dto;
 
 import com.team5.on_stage.global.constants.BlockType;
-import com.team5.on_stage.global.constants.BorderType;
 import com.team5.on_stage.linkDetail.dto.LinkDetailDTO;
 import lombok.*;
 import java.util.List;
