@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.team5.on_stage.summary.entity.QSummary.summary1;
@@ -44,5 +45,16 @@ public class SummaryQueryDslRepositoryImpl implements SummaryQueryDslRepository 
                 .from(summary1)
                 .where(summary1.user.name.eq(username))
                 .fetchOne();
+    }
+
+    @Override
+    public List<String> findUsernamesWithOldSummaries(LocalDateTime threeMonthsAgo) {
+        return queryFactory
+                .select(summary1.user.username)
+                .from(summary1)
+                .join(summary1.user)
+                .where(summary1.createdAt.loe(threeMonthsAgo))
+                .groupBy(summary1.user.username)
+                .fetch();
     }
 }
