@@ -8,11 +8,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/analytics")
+@RequestMapping("/analytics")
 public class AnalyticController {
 
     @Autowired
@@ -24,11 +24,12 @@ public class AnalyticController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping("/event/dashboard")
-    public ResponseEntity<List<AnalyticResponseDto>> getEventCountsByDate(
-            @RequestParam LocalDateTime startDate,
-            @RequestParam LocalDateTime endDate) {
-        List<AnalyticResponseDto> analytics = analyticService.getEventCountsByDateAndLocation(startDate, endDate);
+    @GetMapping("/dashboard/{pageId}")
+    public ResponseEntity<List<AnalyticResponseDto>> getEventCountsByPageId(
+            @PathVariable Long pageId,
+            @RequestParam LocalDate startDate,
+            @RequestParam LocalDate endDate) {
+        List<AnalyticResponseDto> analytics = analyticService.getEventCountsByPageIdAndDateRange(pageId, startDate, endDate);
         return ResponseEntity.ok(analytics);
     }
 }
