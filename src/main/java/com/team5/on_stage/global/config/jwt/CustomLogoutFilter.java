@@ -15,6 +15,8 @@ import org.springframework.web.filter.GenericFilterBean;
 import java.io.IOException;
 import java.util.Map;
 
+import static com.team5.on_stage.global.config.auth.cookie.CookieUtil.deleteCookie;
+
 @RequiredArgsConstructor
 public class CustomLogoutFilter extends GenericFilterBean {
 
@@ -92,7 +94,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
 
         // Todo: 예외처리
         // 토큰 타입 검증
-        if (!jwtUtil.getType(refreshToken).equals("refresh")) {
+        if (!jwtUtil.getClaim(refreshToken, "type").equals("refresh")) {
             throw new ServletException("Invalid refresh token");
         }
 
@@ -107,11 +109,16 @@ public class CustomLogoutFilter extends GenericFilterBean {
         refreshRepository.deleteByRefresh(refreshToken);
 
         // Todo: 쿠키의 토큰 삭제는 프론트에서 처리하면 안될까?
-        Cookie cookie = new Cookie("refresh", null);
-        cookie.setMaxAge(0);
-        cookie.setPath("/");
+        Cookie deleteRefreshCookie = deleteCookie("refresh");
+        Cookie deleteAccessCookie = deleteCookie("access");
+        Cookie deleteJSessionCookie = deleteCookie("JSESSIONID");
 
-        response.addCookie(cookie);
+        response.addCookie(deleteRefreshCookie);
+        response.addCookie(deleteAccessCookie);
+        response.addCookie(deleteJSessionCookie);
+
+        request.getSession().invalidate();
+
         response.setStatus(HttpServletResponse.SC_OK);
     }
 }

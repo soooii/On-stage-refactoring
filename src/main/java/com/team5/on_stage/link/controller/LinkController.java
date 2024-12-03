@@ -1,6 +1,6 @@
 package com.team5.on_stage.link.controller;
 
-import com.team5.on_stage.global.config.jwt.JwtUtil;
+import com.team5.on_stage.global.config.jwt.TokenUsername;
 import com.team5.on_stage.link.dto.LinkDTO;
 import com.team5.on_stage.link.dto.LinkResponseDTO;
 import com.team5.on_stage.link.service.LinkService;
@@ -18,8 +18,13 @@ public class LinkController {
     private final LinkService linkService;
 
     @GetMapping
-    public ResponseEntity<LinkResponseDTO> getLink() {
-        return ResponseEntity.status(HttpStatus.OK).body(linkService.getLink("1")); // 수정예정
+    public ResponseEntity<LinkResponseDTO> getLink(@TokenUsername String username) {
+        return ResponseEntity.status(HttpStatus.OK).body(linkService.getLink(username)); // 수정예정
+    }
+
+    @GetMapping("/{username}")
+    public ResponseEntity<LinkResponseDTO> getLinkForVisitors(@PathVariable String username) {
+        return ResponseEntity.status(HttpStatus.OK).body(linkService.getLink(username));
     }
 
     @PostMapping

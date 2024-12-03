@@ -1,129 +1,142 @@
 package com.team5.on_stage.user.service;
 
-import com.team5.on_stage.global.config.auth.dto.CustomOAuth2User;
+import com.team5.on_stage.global.config.s3.S3Uploader;
 import com.team5.on_stage.global.constants.ErrorCode;
 import com.team5.on_stage.global.exception.GlobalException;
-import com.team5.on_stage.user.dto.SignUpDto;
-import com.team5.on_stage.user.dto.SignUpUserDto;
 import com.team5.on_stage.user.dto.UpdateUserDto;
+import com.team5.on_stage.user.dto.UserProfileDto;
 import com.team5.on_stage.user.entity.*;
-import com.team5.on_stage.user.repository.TempUserRepository;
 import com.team5.on_stage.user.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RequiredArgsConstructor
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final TempUserRepository tempUserRepository;
+    private final S3Uploader s3Uploader;
 
 
-    public Boolean signUp(SignUpDto signUpDto) {
+    public Boolean checkNicknameDuplicated(String nickname) {
 
-//      1. 중복 이메일 검증
-        if (userRepository.existsByEmail(signUpDto.getEmail())) {
-            throw new GlobalException(ErrorCode.EMAIL_DUPLICATED);
+        if (userRepository.existsByNickname(nickname)) {
+            throw new GlobalException(ErrorCode.NICKNAME_DUPLICATED);
         }
-
-        String encodedPassword = bCryptPasswordEncoder.encode(signUpDto.getPassword());
-
-        signUpDto.setPassword(encodedPassword);
-
-        User user = User.builder()
-                .nickname(signUpDto.getNickname())
-                .description(signUpDto.getDescription())
-                .email(signUpDto.getEmail())
-                .emailDomain(EmailDomain.valueOf(extractDomain(signUpDto.getEmail())))
-                .build();
-
-        userRepository.save(user);
 
         return true;
     }
 
 
-    @Transactional
-    public Boolean signUpUser(String username,
-                              SignUpUserDto signUpUserDto) {
+    public void updateUserNickname(String username,
+                                   String nickname) {
 
-        if (tempUserRepository.findByUsername(username) == null) {
+        User user = userRepository.findByUsername(username);
+
+        if (user == null) {
             throw new GlobalException(ErrorCode.USER_NOT_FOUND);
         }
 
-        TempUser tempUser = tempUserRepository.findByUsername(username);
+        if (nickname.equals(user.getNickname())) {
+            throw new GlobalException(ErrorCode.NOT_MODIFIED);
+        }
 
-        User user = User.builder()
-                .nickname(signUpUserDto.getNickname())
-                .description(signUpUserDto.getDescription())
-                .email(tempUser.getEmail())
-                .emailDomain(EmailDomain.valueOf(extractDomain(tempUser.getEmail())))
-                .name(tempUser.getName())
-                .username(tempUser.getUsername())
-                .verified(Verified.UNVERIFIED)
-                .role(Role.ROLE_USER)
-                .image(null)
-                .build();
+        if (checkNicknameDuplicated(nickname)) {
+            throw new GlobalException(ErrorCode.NICKNAME_DUPLICATED);
+        }
+
+        user.setNickname(nickname);
 
         userRepository.save(user);
-
-        tempUserRepository.deleteByUsername(username);
-
-        return true;
     }
 
 
-    @Transactional
-    public Boolean updateUserInformation(String email,
-                                         UpdateUserDto updateUserDto) {
+    public void updateUserDescription(String username,
+                                      String description) {
 
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
+        User user = userRepository.findByUsername(username);
 
-        // description 수정
-        if (updateUserDto.getDescription() != null) {
-            user.setDescription(updateUserDto.getDescription());
+        if (user == null) {
+            throw new GlobalException(ErrorCode.USER_NOT_FOUND);
         }
 
-        // nickname 수정
-        if (updateUserDto.getNickname() != null) {
-            user.setNickname(updateUserDto.getNickname());
+        if (description.equals(user.getDescription())) {
+            throw new GlobalException(ErrorCode.NOT_MODIFIED);
         }
 
-        return true;
+        user.setDescription(description);
+
+        userRepository.save(user);
     }
 
 
-    public Boolean deleteUser(String email) {
+    public Boolean deleteUser(String username) {
 
-        userRepository.findByEmail(email)
-                .orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
+        if (userRepository.findByUsername(username) == null) {
 
-        userRepository.deleteUserByEmail(email);
+            throw new GlobalException(ErrorCode.USER_NOT_FOUND);
+        }
 
-        return true;
+        return userRepository.deleteUserByUsername(username);
     }
 
 
-    public static String extractDomain(String email) {
+    public UserProfileDto getUserProfile(String username) {
 
-        return email.substring(email.indexOf("@") + 1, email.lastIndexOf(".")).toUpperCase();
+        User user = userRepository.findByUsername(username);
+
+        if (user == null) {
+            throw new GlobalException(ErrorCode.USER_NOT_FOUND);
+        }
+
+        UserProfileDto userProfileDto = UserProfileDto.builder()
+                .username(user.getUsername())
+                .nickname(user.getNickname())
+                .description(user.getDescription())
+                .profileImage(user.getProfileImage())
+                .build();
+
+        return userProfileDto;
+    }
+
+
+    // Todo: 구현 중
+    public UserProfileDto updateUserProfileImage(String username, MultipartFile profileImage) throws IOException {
+
+        User user = userRepository.findByUsername(username);
+
+        if (user == null) {
+            throw new GlobalException(ErrorCode.USER_NOT_FOUND);
+        }
+
+        String imageUrl = s3Uploader.upload(profileImage, "profileImages");
+        user.setProfileImage(imageUrl);
+        userRepository.save(user);
+
+        return getUserProfile(username);
+    }
+
+
+    public String convertNicknameToUsername(String nickname) {
+
+        User user = userRepository.findByNickname(nickname);
+
+        return user.getUsername();
     }
 
 
     // Context에서 메인 파라미터 username 추출
-    public String getUsername() {
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        CustomOAuth2User oauth2User = (CustomOAuth2User) authentication.getPrincipal();
-
-        return oauth2User.getUsername();
-    }
+//    public String getUsername() {
+//
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//
+//        CustomOAuth2User oauth2User = (CustomOAuth2User) authentication.getPrincipal();
+//
+//        return oauth2User.getUsername();
+//    }
 }

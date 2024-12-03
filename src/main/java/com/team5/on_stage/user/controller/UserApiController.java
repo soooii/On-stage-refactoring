@@ -1,11 +1,11 @@
 package com.team5.on_stage.user.controller;
 
-import com.team5.on_stage.user.dto.SignUpDto;
-import com.team5.on_stage.user.dto.SignUpUserDto;
-import com.team5.on_stage.user.dto.UpdateUserDto;
+import com.team5.on_stage.global.config.jwt.TokenUsername;
+import com.team5.on_stage.linklike.service.LinkLikeService;
+import com.team5.on_stage.user.dto.UserProfileDto;
 import com.team5.on_stage.user.service.UserService;
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,39 +15,95 @@ import org.springframework.web.bind.annotation.*;
 public class UserApiController {
 
     private final UserService userService;
+    private final LinkLikeService linkLikeService;
 
 
-    // Todo: 아이디, 비밀번호 가입 방식의 필요성 재고.
-    @PostMapping
-    public ResponseEntity<Boolean> basicSignUp(@Valid @RequestBody SignUpDto signUpDto) {
+    @PatchMapping
+    public ResponseEntity<String> updateUserProfile(@TokenUsername String username,
+                                                    @RequestParam String field,
+                                                    @RequestParam String value) {
 
-        return ResponseEntity.ok(userService.signUp(signUpDto));
+        if (field.equals("nickname")) {
+            userService.updateUserNickname(username, value);
+            return ResponseEntity.ok(field);
+        }
+        else if (field.equals("description")) {
+            userService.updateUserDescription(username, value);
+            return ResponseEntity.ok(field);
+        }
+
+        return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
     }
 
 
-    // TempUser -> User 회원가입
-    // Todo: 추후 인증 정보에서 username 뽑아서 파라미터로 전달할 것
-    @PostMapping("/{username}")
-    public ResponseEntity<Boolean> signUp(@Valid @PathVariable("username") String username, SignUpUserDto dto) {
+    // 닉네임 변경
+//    @PatchMapping("/{nickname}")
+//    public ResponseEntity<Boolean> updateUserNickname(@TokenUsername String username,
+//                                                      @PathVariable String nickname) {
+//
+//        if (userService.checkNicknameDuplicated(nickname)) {
+//            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+//        }
+//        else {
+//            return ResponseEntity.ok(userService.updateUserNickname(username, nickname));
+//        }
+//    }
 
-        return ResponseEntity.ok(userService.signUpUser(username, dto));
+
+    // 자기 소개글 수정
+//    @PatchMapping("/{description}")
+//    public ResponseEntity<Boolean> updateUserDescription(@TokenUsername String username,
+//                                                         @PathVariable String description) {
+//
+//        return ResponseEntity.ok(userService.updateUserDescription(username, description));
+//    }
+
+
+    // 좋아요 기능
+    @PostMapping("/like/{userId}")
+    public ResponseEntity<Boolean> likeLink(@PathVariable("userId") Long userId, Long linkId) {
+
+        return ResponseEntity.ok(linkLikeService.likeLink(userId, linkId));
     }
 
 
-    // 유저 정보 수정
-    // Todo: 수정 항목 별로 구분할 것
-    @PatchMapping("/{email}")
-    public ResponseEntity<Boolean> updateUserInformation(@PathVariable("email") String email,
-                                                         UpdateUserDto updateUserDto) {
+    // 본인 프로필 정보 조회
+    @GetMapping
+    public ResponseEntity<UserProfileDto> getMyProfile(@TokenUsername String username) {
 
-        return ResponseEntity.ok(userService.updateUserInformation(email, updateUserDto));
+        return ResponseEntity.ok(userService.getUserProfile(username));
     }
+
+
+    // 타인 방문 시 프로필 조회
+    @GetMapping("/{username}")
+    public ResponseEntity<UserProfileDto> getOtherProfiles(@PathVariable String username) {
+
+        return ResponseEntity.ok(userService.getUserProfile(username));
+    }
+
+
+    // nickname -> username 변환
+    @GetMapping("/convert/{nickname}")
+    public ResponseEntity<String> convertNicknameToUsername(@PathVariable("nickname") String nickname) {
+
+        return ResponseEntity.ok(userService.convertNicknameToUsername(nickname));
+    }
+
 
 
     // 유저 삭제
-    @DeleteMapping("/{email}")
-    public ResponseEntity<Boolean> deleteUser(@PathVariable("email") String email) {
+    @DeleteMapping
+    public ResponseEntity<Boolean> deleteUser(@TokenUsername String username) {
 
-        return ResponseEntity.ok(userService.deleteUser(email));
+        return ResponseEntity.ok(userService.deleteUser(username));
     }
+
+
+//    @PostMapping("/{username}")
+//    public ResponseEntity<Void> likeUser(@TokenUsername String username,
+//                                         @PathVariable("linkId") Long linkId) {
+//
+//        return ResponseEntity.ok(userService.likeLink(username, linkId));
+//    }
 }

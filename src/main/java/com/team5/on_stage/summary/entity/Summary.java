@@ -15,7 +15,6 @@ import org.hibernate.annotations.Where;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name="summary")
-@SQLDelete(sql = "UPDATE summary SET is_deleted = true WHERE id = ?")
 @Where(clause = "is_deleted = false")
 public class Summary {
 
@@ -28,7 +27,12 @@ public class Summary {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    //요약 제목
+    private String title;
+
     //요약 뉴스
+    @Lob
+    @Column(name="summary", columnDefinition = "TEXT", nullable = false)
     private String summary;
 
     //삭제 여부
