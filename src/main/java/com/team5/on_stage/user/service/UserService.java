@@ -68,14 +68,14 @@ public class UserService {
     }
 
 
-    public Boolean deleteUser(String username) {
+    public void deleteUser(String username) {
 
         if (userRepository.findByUsername(username) == null) {
 
             throw new GlobalException(ErrorCode.USER_NOT_FOUND);
         }
 
-        return userRepository.deleteUserByUsername(username);
+        userRepository.softDeleteUserByUsername(username);
     }
 
 
