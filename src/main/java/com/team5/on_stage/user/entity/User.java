@@ -53,8 +53,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Verified verified;
 
-    @Column(name = "deactivated_at", nullable = false)
-    @NotNull
+    @Column(name = "deactivated_at")
     private LocalDateTime deactivatedAt;
 
     @NotNull
