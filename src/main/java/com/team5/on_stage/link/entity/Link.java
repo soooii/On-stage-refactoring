@@ -1,5 +1,7 @@
 package com.team5.on_stage.link.entity;
 
+import com.team5.on_stage.global.constants.BlockType;
+import com.team5.on_stage.global.constants.BorderType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,6 +22,11 @@ public class Link {
     // LinkedList
     private Long prevLinkId;
 
+    @Enumerated(EnumType.STRING)
+    private BlockType blockType;
+
+    private int padding;
+
     private boolean active = true;
 
     // 소프트 딜리트 여부
@@ -27,12 +34,13 @@ public class Link {
 
     private int liked;
 
-
     @Builder
-    public Link(String username, Long prevLinkId, String title) {
+    public Link(String username, Long prevLinkId, String title, BlockType blockType, int padding) {
         this.username = username;
         this.prevLinkId = prevLinkId;
         this.title = title;
+        this.blockType = blockType;
+        this.padding = padding;
         this.isDeleted = false;
     }
 
