@@ -45,5 +45,6 @@ public class Summary {
     private boolean isDeleted;
 
     @CreatedDate
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 }
