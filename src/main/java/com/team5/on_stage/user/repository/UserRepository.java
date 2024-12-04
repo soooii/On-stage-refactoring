@@ -7,13 +7,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long>, UserQueryDslRepository {
-
-    User findByUsername(String username);
-
-    User findByNickname(String nickname);
-
-    @Transactional
-    Boolean deleteUserByUsername(String username);
-
-    Boolean existsByNickname(String nickname);
 }

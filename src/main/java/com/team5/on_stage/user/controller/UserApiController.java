@@ -82,9 +82,11 @@ public class UserApiController {
 
     // 유저 삭제
     @DeleteMapping
-    public ResponseEntity<Boolean> deleteUser(@TokenUsername String username) {
+    public ResponseEntity<Void> deleteUser(@TokenUsername String username) {
 
-        return ResponseEntity.ok(userService.deleteUser(username));
+        userService.deleteUser(username);
+
+        return ResponseEntity.ok().build();
     }
 
 
