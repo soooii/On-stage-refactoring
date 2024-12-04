@@ -1,7 +1,7 @@
 package com.team5.on_stage.user.controller;
 
 import com.team5.on_stage.global.config.jwt.TokenUsername;
-import com.team5.on_stage.linklike.service.LinkLikeService;
+import com.team5.on_stage.subscribe.service.SubscribeService;
 import com.team5.on_stage.user.dto.UserProfileDto;
 import com.team5.on_stage.user.service.UserService;
 import lombok.AllArgsConstructor;
@@ -18,7 +18,7 @@ import java.io.IOException;
 public class UserApiController {
 
     private final UserService userService;
-    private final LinkLikeService linkLikeService;
+    private final SubscribeService subscribeService;
 
 
     @PatchMapping
@@ -41,17 +41,18 @@ public class UserApiController {
 
     @PatchMapping("/profile")
     public ResponseEntity<UserProfileDto> updateUserProfileImage(@TokenUsername String username,
-                                                         MultipartFile profileImage) throws IOException {
+                                                                 MultipartFile profileImage) throws IOException {
 
         return ResponseEntity.ok(userService.updateUserProfileImage(username, profileImage));
     }
 
 
     // 좋아요 기능
-    @PostMapping("/like/{userId}")
-    public ResponseEntity<Boolean> likeLink(@PathVariable("userId") Long userId, Long linkId) {
+    @PostMapping("/subscribe/{linkId}")
+    public ResponseEntity<Boolean> subscribeLink(@TokenUsername String username,
+                                                 @PathVariable Long linkId) {
 
-        return ResponseEntity.ok(linkLikeService.likeLink(userId, linkId));
+        return ResponseEntity.ok(subscribeService.subscribeLink(username, linkId));
     }
 
 

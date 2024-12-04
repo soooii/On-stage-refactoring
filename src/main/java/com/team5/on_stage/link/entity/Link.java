@@ -31,7 +31,7 @@ public class Link {
     // 소프트 딜리트 여부
     private boolean isDeleted = false;
 
-    private int liked;
+    private int subscribed;
 
     @Builder
     public Link(String username, Long prevLinkId, String title, BlockType blockType, int padding) {
@@ -43,17 +43,17 @@ public class Link {
         this.isDeleted = false;
     }
 
-    public void Like() {
-        this.liked++;
+    public void subscribe() {
+        this.subscribed++;
     }
 
     // Todo: 예외처리
-    public void unLike() {
-        if (this.liked > 0) {
-            this.liked--;
+    public void unsubscribe() {
+        if (this.subscribed > 0) {
+            this.subscribed--;
         }
         else {
-            throw new IllegalStateException("Liked cannot be minus");
+            throw new IllegalStateException("Subscribed cannot be minus");
         }
     }
 }
