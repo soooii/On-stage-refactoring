@@ -90,7 +90,7 @@ public class User {
         this.verified = Verified.UNVERIFIED;
         this.deactivatedAt = null;
         this.createdAt = LocalDate.now();
-        this.description = "나를 소개하는 문장을 입력해주세요.";
+        this.description = "나를 소개하는 한마디";
         this.profileImage = "/img/imgbin_music-notes-.png";
     }
 

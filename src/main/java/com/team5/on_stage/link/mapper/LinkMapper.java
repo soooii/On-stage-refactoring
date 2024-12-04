@@ -33,6 +33,7 @@ public class LinkMapper {
                 .prevLinkId(link.getPrevLinkId())
                 .blockType(link.getBlockType())
                 .padding(link.getPadding())
+                .url(link.getUrl())
                 .active(link.isActive())
                 .details(linkDetailService.getDetail(link.getId()))
                 .build();
