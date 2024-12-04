@@ -24,8 +24,6 @@ public class SubscribeService {
     @Transactional
     public Boolean subscribeLink(String username, Long linkId) {
 
-        Subscribe isExist = subscribeRepository.findSubscribeByUsernameAndLinkId(username, linkId);
-
         User user = userRepository.findByUsername(username);
 
         if (user == null) {
@@ -35,22 +33,22 @@ public class SubscribeService {
         Link link = linkRepository.findById(linkId)
                 .orElseThrow(() -> new GlobalException(ErrorCode.LINK_NOT_FOUND));
 
-        if (isExist == null) {
+        // Subscribe 기록이 없으면 추가, 있으면 삭제
+        if (!subscribeRepository.existsSubscribeByUsernameAndLinkId(username, linkId)) {
 
             Subscribe subscribe = new Subscribe(user, link);
             subscribeRepository.save(subscribe);
 
             link.subscribe();
 
-            return true;
         } else {
 
             subscribeRepository.deleteSubscribeByUsernameAndLinkId(username, linkId);
 
             link.unsubscribe();
 
-            return true;
         }
+        return true;
     }
 
 }
