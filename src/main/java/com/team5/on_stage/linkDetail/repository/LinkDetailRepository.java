@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface LinkDetailRepository extends JpaRepository<LinkDetail, Long> {
@@ -37,4 +38,6 @@ public interface LinkDetailRepository extends JpaRepository<LinkDetail, Long> {
     void updateLinkDetail(@Param("platform")Platform platform, @Param("url") String url, @Param("id") Long id);
 
     //void deleteAllByLinkId(Long linkId);
+
+    Optional<LinkDetail> findById(Long id);
 }

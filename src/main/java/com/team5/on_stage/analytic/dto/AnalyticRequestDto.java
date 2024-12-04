@@ -8,9 +8,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AnalyticRequestDto {
-    private String eventType;  // "PAGE_VIEW", "BUTTON_CLICK" 등
     private String ipAddress;   // 사용자 IP
-    private Long linkId;       // 페이지 ID
-    private Long userId;       // 사용자 ID
-    private Long linkDetailId; // 링크 세부 정보
+    private String username;       // 사용자 이름
+    private Long linkId;    // 링크 ID
+    private Long linkDetailId; // 링크 세부 ID
+    private String socialLinkType;  // 소셜 링크 ID
 }

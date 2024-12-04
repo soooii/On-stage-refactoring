@@ -11,12 +11,14 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/concert")
-public class ConCertApiController {
+public class ConcertApiController {
     private final ConcertService concertService;
+    // 필요 없나?
     @GetMapping("/info/{userId}")
     public void getConcertUpdatedDate(){
 
     }
+    // 배치 하루
     @PostMapping("/info")
     public ResponseEntity<String> saveConcertList(){
         concertService.saveConcertList();
