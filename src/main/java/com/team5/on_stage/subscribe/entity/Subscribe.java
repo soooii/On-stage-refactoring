@@ -1,4 +1,4 @@
-package com.team5.on_stage.linklike.entity;
+package com.team5.on_stage.subscribe.entity;
 
 import com.team5.on_stage.link.entity.Link;
 import com.team5.on_stage.user.entity.User;
@@ -15,14 +15,14 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class LinkLike {
+public class Subscribe {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "username", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
@@ -32,15 +32,15 @@ public class LinkLike {
     private Link link;
 
     @Column(name = "liked_at",nullable = false)
-    private LocalDateTime likedAt;
+    private LocalDateTime subscribedAt;
 
     @PrePersist
     public void setDefaultValue() {
-        this.likedAt = LocalDateTime.now();
+        this.subscribedAt = LocalDateTime.now();
     }
 
     @Builder
-    public LinkLike(User user, Link link) {
+    public Subscribe(User user, Link link) {
         this.user = user;
         this.link = link;
     }
