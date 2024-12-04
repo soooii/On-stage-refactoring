@@ -29,7 +29,7 @@ public class Summary {
 
     //유저 id
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "username", nullable = false)
     private User user;
 
     //요약 제목
