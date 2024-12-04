@@ -28,6 +28,8 @@ public class LinkService {
                 .username(dto.getUsername())
                 .title(dto.getTitle())
                 .prevLinkId(dto.getPrevLinkId())
+                .blockType(dto.getBlockType())
+                .padding(dto.getPadding())
                 .build();
         dto.setId(linkRepository.save(link).getId());
         return dto;
@@ -41,6 +43,7 @@ public class LinkService {
                 dto.getTitle(),
                 dto.getPrevLinkId(),
                 dto.isActive(),
+                dto.getPadding(),
                 dto.getId()
         );
         return dto;

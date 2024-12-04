@@ -34,11 +34,12 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             CustomOAuth2User oauth2User = (CustomOAuth2User) authentication.getPrincipal();
 
             String username = oauth2User.getUsername();
+            String nickname = oauth2User.getNickname();
             String role = oauth2User.getRole().toString();
 
-            String accessToken = jwtUtil.generateAccessToken(username, role);
+            String accessToken = jwtUtil.generateAccessToken(username, nickname, role);
 
-            String refreshToken = jwtUtil.generateRefreshToken(username, role);
+            String refreshToken = jwtUtil.generateRefreshToken(username, nickname, role);
 
             jwtUtil.addRefresh(username, refreshToken);
 

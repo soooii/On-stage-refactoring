@@ -8,6 +8,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @AllArgsConstructor
 @RequestMapping("/api/user")
@@ -18,26 +21,29 @@ public class UserApiController {
     private final LinkLikeService linkLikeService;
 
 
-    // 닉네임 변경
-    @PatchMapping("/{nickname}")
-    public ResponseEntity<Boolean> updateUserNickname(@TokenUsername String username,
-                                                      @PathVariable String nickname) {
+    @PatchMapping
+    public ResponseEntity<String> updateUserProfile(@TokenUsername String username,
+                                                    @RequestParam String field,
+                                                    @RequestParam String value) {
 
-        if (userService.checkNicknameDuplicated(nickname)) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        if (field.equals("nickname")) {
+            userService.updateUserNickname(username, value);
+            return ResponseEntity.ok(field);
         }
-        else {
-            return ResponseEntity.ok(userService.updateUserNickname(username, nickname));
+        else if (field.equals("description")) {
+            userService.updateUserDescription(username, value);
+            return ResponseEntity.ok(field);
         }
+
+        return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
     }
 
 
-    // 자기 소개글 수정
-    @PatchMapping("/{description}")
-    public ResponseEntity<Boolean> updateUserDescription(@TokenUsername String username,
-                                                         @PathVariable String description) {
+    @PatchMapping("/profile")
+    public ResponseEntity<UserProfileDto> updateUserProfileImage(@TokenUsername String username,
+                                                         MultipartFile profileImage) throws IOException {
 
-        return ResponseEntity.ok(userService.updateUserDescription(username, description));
+        return ResponseEntity.ok(userService.updateUserProfileImage(username, profileImage));
     }
 
 

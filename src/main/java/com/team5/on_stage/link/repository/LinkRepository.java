@@ -28,11 +28,12 @@ public interface LinkRepository extends JpaRepository<Link, Long> {
 
     // UPDATE 쿼리 메서드
     @Modifying
-    @Query("UPDATE Link l SET l.title = :title, l.prevLinkId = :prevLinkId, l.active = :active WHERE l.id = :id")
+    @Query("UPDATE Link l SET l.title = :title, l.prevLinkId = :prevLinkId, l.active = :active, l.padding = :padding WHERE l.id = :id")
     void updateLink(
             @Param("title") String title,
             @Param("prevLinkId") Long prevLinkId,
             @Param("active") boolean active,
+            @Param("padding") int padding,
             @Param("id") Long id
     );
 }
