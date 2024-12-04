@@ -4,30 +4,33 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "concert_place")
 public class ConcertPlace {
-    //1:1 연결
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "mt10id", nullable = false, unique = true)
+    private String mt10id; // PK로 변경
 
     @OneToOne
-    @JoinColumn(name = "mt10id")
+    @JoinColumn(name = "mt10id", referencedColumnName = "mt10id")
     private ConcertDetail concertDetail;
 
+    @Column(name = "adres", nullable = false)
+    private String adres;
 
-    @Column(name="fcltynm", nullable = false)
+    @Column(name = "fcltynm", nullable = false)
     private String fcltynm;
-    //TODO bigdecimal 계획
-    // 위도
-    @Column(name="latitude", nullable = false)
+
+    @Column(name = "latitude", nullable = false)
     private double latitude;
-    // 경도
-    @Column(name="longtitude", nullable = false)
-    private double longtitude;
+
+    @Column(name = "longtitude", nullable = false)
+    private double longitude; // 이름 수정 (오타 수정)
 }
