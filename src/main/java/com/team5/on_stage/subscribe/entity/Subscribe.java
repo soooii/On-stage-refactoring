@@ -31,7 +31,7 @@ public class Subscribe {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Link link;
 
-    @Column(name = "liked_at",nullable = false)
+    @Column(name = "subscribed_at",nullable = false)
     private LocalDateTime subscribedAt;
 
     @PrePersist
