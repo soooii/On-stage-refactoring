@@ -2,10 +2,12 @@ package com.team5.on_stage.summary.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.team5.on_stage.summary.entity.Summary;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
+
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -14,12 +16,13 @@ import static com.team5.on_stage.summary.entity.QSummary.summary1;
 
 @Repository
 @RequiredArgsConstructor
+@Transactional
 public class SummaryQueryDslRepositoryImpl implements SummaryQueryDslRepository {
 
     private final JPAQueryFactory queryFactory;
 
     @Override
-    @Transactional
+    //@Transactional
     public void softDeleteByUsername(String username) {
         queryFactory
                 .update(summary1)
@@ -43,17 +46,17 @@ public class SummaryQueryDslRepositoryImpl implements SummaryQueryDslRepository 
         return queryFactory
                 .select(summary1.count())
                 .from(summary1)
-                .where(summary1.user.name.eq(username))
+                .where(summary1.user.username.eq(username))
                 .fetchOne();
     }
 
     @Override
-    public List<String> findUsernamesWithOldSummaries(LocalDateTime threeMonthsAgo) {
+    public List<String> findUsernamesWithOldSummaries(LocalDateTime tenMinutesAgo) {
         return queryFactory
                 .select(summary1.user.username)
                 .from(summary1)
                 .join(summary1.user)
-                .where(summary1.createdAt.loe(threeMonthsAgo))
+                .where(summary1.createdAt.loe(tenMinutesAgo))
                 .groupBy(summary1.user.username)
                 .fetch();
     }

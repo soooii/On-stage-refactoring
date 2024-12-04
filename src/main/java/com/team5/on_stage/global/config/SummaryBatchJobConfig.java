@@ -58,10 +58,15 @@ public class SummaryBatchJobConfig {
     }
 
     private List<String> getUsersWithOldSummaries() {
-        LocalDateTime threeMonthsAgo = LocalDateTime.now().minusMonths(3);
-
+        //LocalDateTime threeMonthsAgo = LocalDateTime.now().minusMonths(3);
+        LocalDateTime tenMinutesAgo = LocalDateTime.now().minusMinutes(10);
+        //log.info(String.valueOf(threeMonthsAgo));
         // DB에서 3개월 이상 업데이트되지 않은 사용자 목록 조회
-        return summaryRespository.findUsernamesWithOldSummaries(threeMonthsAgo);
+        //return summaryRespository.findUsernamesWithOldSummaries(threeMonthsAgo);
+        List<String> usernames = summaryRespository.findUsernamesWithOldSummaries(tenMinutesAgo);
+        log.info("조회된 사용자: {}", usernames);
+
+        return usernames;
     }
 }
 

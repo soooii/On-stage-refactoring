@@ -23,7 +23,7 @@ public class BatchScheduler {
     private final Job saveSummaryJob;
 
     // 매일 배치 작업 실행 (현재 시간 기준 3개월 지난 summary 새로 저장)
-    @Scheduled(cron = "0 0 0 * * *")
+    @Scheduled(cron = "0 31 0 * * *")
     public void runSummaryCheck() throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
         jobLauncher.run(saveSummaryJob, new JobParameters());
         log.info("runSummaryCheck 실행 완료");
