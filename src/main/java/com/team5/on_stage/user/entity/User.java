@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.hibernate.annotations.NaturalId;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -16,11 +15,6 @@ import java.time.LocalDateTime;
 @Table(name = "user")
 @Entity
 public class User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
 
     // 서비스에서 사용할 이름
     @NotNull
@@ -43,7 +37,7 @@ public class User {
     private String name;
 
     // 소셜 로그인 도메인 + 소셜 로그인 ID 문자열
-    @NaturalId
+    @Id
     @NotNull
     @Column(name = "username", nullable = false, unique = true, updatable = false)
     private String username;
