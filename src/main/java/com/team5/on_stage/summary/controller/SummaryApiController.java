@@ -38,6 +38,7 @@ public class SummaryApiController {
 
     @DeleteMapping("/{username}")
     public ResponseEntity<String> deleteSummary(@PathVariable String username){
+        summaryService.deleteSummary(username);
         return ResponseEntity.ok("뉴스 요약 삭제가 완료되었습니다.");
     }
 
