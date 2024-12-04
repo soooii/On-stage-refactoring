@@ -8,6 +8,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -16,6 +20,7 @@ import org.hibernate.annotations.Where;
 @AllArgsConstructor
 @Table(name="summary")
 @Where(clause = "is_deleted = false")
+@EntityListeners(AuditingEntityListener.class)
 public class Summary {
 
     @Id
@@ -38,4 +43,8 @@ public class Summary {
     //삭제 여부
     @Column(name="is_deleted", nullable = false)
     private boolean isDeleted;
+
+    @CreatedDate
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
 }
