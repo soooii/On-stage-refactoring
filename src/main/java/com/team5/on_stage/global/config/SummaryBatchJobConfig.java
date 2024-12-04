@@ -15,6 +15,7 @@ import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.interceptor.DefaultTransactionAttribute;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -32,6 +33,7 @@ public class SummaryBatchJobConfig {
     // Save Summary Job 정의
     @Bean
     public Job saveSummaryJob(Step saveSummaryStep) {
+        log.info("saveSummaryJob 실행");
         return new JobBuilder("saveSummaryJob", jobRepository)
                 .incrementer(new RunIdIncrementer())
                 .start(saveSummaryStep)
@@ -51,19 +53,16 @@ public class SummaryBatchJobConfig {
 
             return RepeatStatus.FINISHED;
         };
-
+        log.info("saveSummaryStep 실행");
         return new StepBuilder("saveSummaryStep", jobRepository)
                 .tasklet(saveSummaryTasklet, transactionManager)
                 .build();
     }
 
     private List<String> getUsersWithOldSummaries() {
-        //LocalDateTime threeMonthsAgo = LocalDateTime.now().minusMonths(3);
-        LocalDateTime tenMinutesAgo = LocalDateTime.now().minusMinutes(10);
-        //log.info(String.valueOf(threeMonthsAgo));
-        // DB에서 3개월 이상 업데이트되지 않은 사용자 목록 조회
-        //return summaryRespository.findUsernamesWithOldSummaries(threeMonthsAgo);
-        List<String> usernames = summaryRespository.findUsernamesWithOldSummaries(tenMinutesAgo);
+        LocalDateTime timeToCompare = LocalDateTime.now().minusMonths(3);
+        log.info(String.valueOf(timeToCompare));
+        List<String> usernames = summaryRespository.findUsernamesWithOldSummaries(timeToCompare);
         log.info("조회된 사용자: {}", usernames);
 
         return usernames;

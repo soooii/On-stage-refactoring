@@ -55,7 +55,9 @@ public class DataSourceConfig {
     @Bean(name = "batchTransactionManager")
     public PlatformTransactionManager batchTransactionManager(
             @Qualifier("batchDataSource") DataSource batchDataSource) {
-        return new JdbcTransactionManager(batchDataSource);
+        JpaTransactionManager transactionManager = new JpaTransactionManager();
+        transactionManager.setDataSource(batchDataSource);
+        return transactionManager;
     }
 
     @Bean(name = "serviceTransactionManager")
