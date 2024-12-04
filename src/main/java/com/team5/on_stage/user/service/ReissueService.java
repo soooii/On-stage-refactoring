@@ -52,11 +52,12 @@ public class ReissueService {
         }
 
         String username = jwtUtil.getClaim(refreshToken, "username");
+        String nickname = jwtUtil.getClaim(refreshToken, "nickname");
         String role = jwtUtil.getClaim(refreshToken, "role");
 
-        String newAccessToken = jwtUtil.generateAccessToken(username, role);
+        String newAccessToken = jwtUtil.generateAccessToken(username, nickname, role);
 
-        String newRefreshToken = jwtUtil.generateRefreshToken(username, role);
+        String newRefreshToken = jwtUtil.generateRefreshToken(username, nickname, role);
 
         refreshRepository.deleteByRefresh(refreshToken);
         jwtUtil.addRefresh(username, newRefreshToken);

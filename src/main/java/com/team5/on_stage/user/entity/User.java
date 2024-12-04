@@ -5,22 +5,16 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.hibernate.annotations.NaturalId;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter @Setter
-@Builder
 @Table(name = "user")
 @Entity
 public class User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
 
     // 서비스에서 사용할 이름
     @NotNull
@@ -43,9 +37,9 @@ public class User {
     private String name;
 
     // 소셜 로그인 도메인 + 소셜 로그인 ID 문자열
-    @NaturalId
+    @Id
     @NotNull
-    @Column(name = "username", nullable = false, unique = true)
+    @Column(name = "username", nullable = false, unique = true, updatable = false)
     private String username;
 
     // 아티스트 인증 여부
@@ -53,9 +47,12 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Verified verified;
 
+    @Column(name = "deactivated_at")
+    private LocalDateTime deactivatedAt;
+
     @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(name = "oauth2_domain", nullable = false)
+    @Column(name = "oauth2_domain", nullable = false, updatable = false)
     private OAuth2Domain OAuth2Domain;
 
     @NotNull
@@ -66,22 +63,35 @@ public class User {
     @Column(name = "profile_image")
     private String profileImage;
 
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDate createdAt;
 
+
+    @Builder
+    public User(String nickname,
+                String username,
+                String email,
+                Role role,
+                String name,
+                OAuth2Domain OAuth2Domain) {
+
+        this.nickname = nickname;
+        this.username = username;
+        this.email = email;
+        this.role = role;
+        this.OAuth2Domain = OAuth2Domain;
+        this.name = name;
+    }
 
     @PrePersist
     public void setDefaultValue() {
 
-        if (this.description == null) {
-            this.description = "나를 소개하는 문장을 입력해주세요.";
-        }
-
-        if (this.profileImage == null) {
-            this.profileImage = "";
-        }
-
+        this.role = Role.ROLE_USER;
+        this.verified = Verified.UNVERIFIED;
+        this.deactivatedAt = null;
         this.createdAt = LocalDate.now();
+        this.description = "나를 소개하는 한마디";
+        this.profileImage = "/img/imgbin_music-notes-.png";
     }
 
     public void updateOAuthUser(String name, String email) {

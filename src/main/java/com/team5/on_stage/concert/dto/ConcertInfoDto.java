@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 public class ConcertInfoDto {
-    private Long id;
     private String mt20id;
     private String prfnm;
     private LocalDate prfpdfrom;
@@ -27,9 +26,8 @@ public class ConcertInfoDto {
     private LocalDateTime updatedAt;
 
     @Builder
-    public ConcertInfoDto(Long id, String mt20id, String prfnm, LocalDate prfpdfrom, LocalDate prfpdto, String fcltynm,
+    public ConcertInfoDto(String mt20id, String prfnm, LocalDate prfpdfrom, LocalDate prfpdto, String fcltynm,
                           String poster, String area, String prfstate, ConcertDetail concertDetail, LocalDateTime updatedAt) {
-        this.id = id;
         this.mt20id = mt20id;
         this.prfnm = prfnm;
         this.prfpdfrom = prfpdfrom;
@@ -45,7 +43,6 @@ public class ConcertInfoDto {
     // Method to convert Entity to DTO
     public static ConcertInfoDto fromEntity(ConcertInfo concertInfo) {
         return ConcertInfoDto.builder()
-                .id(concertInfo.getId())
                 .mt20id(concertInfo.getMt20id())
                 .prfnm(concertInfo.getPrfnm())
                 .prfpdfrom(concertInfo.getPrfpdfrom())
@@ -62,7 +59,6 @@ public class ConcertInfoDto {
     // Method to convert DTO to Entity
     public ConcertInfo toEntity() {
         return ConcertInfo.builder()
-                .id(this.id)
                 .mt20id(this.mt20id)
                 .prfnm(this.prfnm)
                 .prfpdfrom(this.prfpdfrom)

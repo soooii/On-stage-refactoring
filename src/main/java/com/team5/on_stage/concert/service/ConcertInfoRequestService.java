@@ -21,19 +21,17 @@ public class ConcertInfoRequestService {
     // DateTimeFormatter 설정 (Jsoup의 문자열 형식에 맞게)
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
 
-//    private static String getTagValue(String tag, Element){
-//        NodeList nlList = eElement.getElementsByTagName();
-//    }
     public List<ConcertInfoDto> concertInfoRequest(){
-        String searchKeyword = "NCT";
+//        String searchKeyword = "NCT";
         //kopis api 이용 url
         String url = "http://www.kopis.or.kr/openApi/restful/pblprfr"
                 +"?service="+serviceKey
-                +"&stdate=20220101"
+                +"&stdate=20241201"
                 +"&eddate=20241231"
                 +"&cpage=1"
-                +"&rows=10"
-                +"&shprfnm="+searchKeyword;
+                +"&rows=100";
+        //100건 제한, 조회 31일 제한 => 1일마다 갱신
+//                +"&shprfnm="+searchKeyword;
         System.out.println(url);
         List<ConcertInfoDto> concertInfoDtos = new ArrayList<>();
         try{
@@ -44,8 +42,12 @@ public class ConcertInfoRequestService {
                 String mt20id = db.select("mt20id").text();
                 //DB 저장
                 String prfnm = db.select("prfnm").text();
-                LocalDate prfpdfrom = LocalDate.parse(db.select("prfpdfrom").text(), formatter);
-                LocalDate prfpdto =  LocalDate.parse(db.select("prfpdto").text(), formatter);
+                // 날짜 필드 값 처리
+                String prfpdfromText = db.select("prfpdfrom").text();
+                LocalDate prfpdfrom = LocalDate.parse(prfpdfromText, formatter);
+                String prfpdtoText = db.select("prfpdto").text();
+                LocalDate prfpdto = LocalDate.parse(prfpdtoText, formatter);
+
                 String  fcltynm = db.select("fcltynm").text();
                 String  poster = db.select("poster").text();
                 String area = db.select("area").text();
@@ -65,7 +67,6 @@ public class ConcertInfoRequestService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return concertInfoDtos;
     }
 

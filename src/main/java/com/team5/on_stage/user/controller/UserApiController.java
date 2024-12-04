@@ -1,13 +1,16 @@
 package com.team5.on_stage.user.controller;
 
 import com.team5.on_stage.global.config.jwt.TokenUsername;
-import com.team5.on_stage.linklike.service.LinkLikeService;
+import com.team5.on_stage.subscribe.service.SubscribeService;
 import com.team5.on_stage.user.dto.UserProfileDto;
 import com.team5.on_stage.user.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @AllArgsConstructor
 @RequestMapping("/api/user")
@@ -15,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserApiController {
 
     private final UserService userService;
-    private final LinkLikeService linkLikeService;
+    private final SubscribeService subscribeService;
 
 
     @PatchMapping
@@ -36,34 +39,20 @@ public class UserApiController {
     }
 
 
-    // 닉네임 변경
-//    @PatchMapping("/{nickname}")
-//    public ResponseEntity<Boolean> updateUserNickname(@TokenUsername String username,
-//                                                      @PathVariable String nickname) {
-//
-//        if (userService.checkNicknameDuplicated(nickname)) {
-//            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-//        }
-//        else {
-//            return ResponseEntity.ok(userService.updateUserNickname(username, nickname));
-//        }
-//    }
+    @PatchMapping("/profile")
+    public ResponseEntity<UserProfileDto> updateUserProfileImage(@TokenUsername String username,
+                                                                 MultipartFile profileImage) throws IOException {
 
-
-    // 자기 소개글 수정
-//    @PatchMapping("/{description}")
-//    public ResponseEntity<Boolean> updateUserDescription(@TokenUsername String username,
-//                                                         @PathVariable String description) {
-//
-//        return ResponseEntity.ok(userService.updateUserDescription(username, description));
-//    }
+        return ResponseEntity.ok(userService.updateUserProfileImage(username, profileImage));
+    }
 
 
     // 좋아요 기능
-    @PostMapping("/like/{userId}")
-    public ResponseEntity<Boolean> likeLink(@PathVariable("userId") Long userId, Long linkId) {
+    @PostMapping("/subscribe/{linkId}")
+    public ResponseEntity<Boolean> subscribeLink(@TokenUsername String username,
+                                                 @PathVariable Long linkId) {
 
-        return ResponseEntity.ok(linkLikeService.likeLink(userId, linkId));
+        return ResponseEntity.ok(subscribeService.subscribeLink(username, linkId));
     }
 
 
@@ -94,9 +83,11 @@ public class UserApiController {
 
     // 유저 삭제
     @DeleteMapping
-    public ResponseEntity<Boolean> deleteUser(@TokenUsername String username) {
+    public ResponseEntity<Void> deleteUser(@TokenUsername String username) {
 
-        return ResponseEntity.ok(userService.deleteUser(username));
+        userService.deleteUser(username);
+
+        return ResponseEntity.ok().build();
     }
 
 
