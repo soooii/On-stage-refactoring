@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "subscribe")
 @Entity
 public class Subscribe {
 
