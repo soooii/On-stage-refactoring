@@ -26,6 +26,8 @@ public class Link {
 
     private int padding;
 
+    private String url;
+
     private boolean active = true;
 
     // 소프트 딜리트 여부
@@ -34,12 +36,13 @@ public class Link {
     private int liked;
 
     @Builder
-    public Link(String username, Long prevLinkId, String title, BlockType blockType, int padding) {
+    public Link(String username, Long prevLinkId, String title, BlockType blockType, int padding , String url) {
         this.username = username;
         this.prevLinkId = prevLinkId;
         this.title = title;
         this.blockType = blockType;
         this.padding = padding;
+        this.url = url;
         this.isDeleted = false;
     }
 
