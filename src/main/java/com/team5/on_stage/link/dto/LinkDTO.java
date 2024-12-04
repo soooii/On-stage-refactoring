@@ -21,13 +21,15 @@ public class LinkDTO {
 
     private int padding;
 
+    private String url;
+
     private boolean active;
 
     private List<LinkDetailDTO> details;
 
 
     @Builder
-    public LinkDTO(boolean active, Long id, String username, String title, Long prevLinkId, BlockType blockType, int padding, List<LinkDetailDTO> details) {
+    public LinkDTO(boolean active, Long id, String username, String title, Long prevLinkId, BlockType blockType, int padding, String url, List<LinkDetailDTO> details) {
         this.active = active;
         this.id = id;
         this.username = username;
@@ -35,6 +37,7 @@ public class LinkDTO {
         this.prevLinkId = prevLinkId;
         this.blockType = blockType;
         this.padding = padding;
+        this.url = url;
         this.details = details;
     }
 }

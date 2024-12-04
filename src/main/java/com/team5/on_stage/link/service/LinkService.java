@@ -30,6 +30,7 @@ public class LinkService {
                 .prevLinkId(dto.getPrevLinkId())
                 .blockType(dto.getBlockType())
                 .padding(dto.getPadding())
+                .url(dto.getUrl())
                 .build();
         dto.setId(linkRepository.save(link).getId());
         return dto;
@@ -44,6 +45,7 @@ public class LinkService {
                 dto.getPrevLinkId(),
                 dto.isActive(),
                 dto.getPadding(),
+                dto.getUrl(),
                 dto.getId()
         );
         return dto;

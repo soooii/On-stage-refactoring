@@ -4,23 +4,30 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Entity
 @Getter
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
+@Table(name = "relate")
 public class Relate {
-    //concertDetail 1:다 연결
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "mt20id", nullable = false)
+    private String mt20id; // ConcertDetail의 mt20id를 PK로 사용
 
     @ManyToOne
-    @JoinColumn(name="mt20id", nullable = false)
+    @JoinColumn(name = "mt20id", referencedColumnName = "mt20id", insertable = false, updatable = false)
     private ConcertDetail concertDetail;
-    
-    @Column(name="relate_nm", nullable = false)
-    private String relatenm;
-    @Column(name="relate_url", nullable = false)
+
+    @Column(name = "relate_nm", nullable = false)
+    private String relateNm;
+
+    @Column(name = "relate_url", nullable = false)
     private String relateUrl;
 }
+

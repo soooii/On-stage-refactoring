@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 // pk타입 적기
 public interface ConcertPlaceRepository extends JpaRepository<ConcertPlace,Long> {
+    boolean existsByMt10id(String mt10id);  // 유니크 키 확인 메서드
 }
