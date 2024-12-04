@@ -15,6 +15,13 @@ public enum ErrorCode {
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USER-02", "유저를 찾을 수 없습니다."),
     NOT_MODIFIED(HttpStatus.NOT_MODIFIED, "USER-03", "변경 사항이 없습니다."),
 
+    // JWT
+    UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "AUTH-01", "인증되지 않은 사용자입니다."),
+    FORBIDDEN(HttpStatus.FORBIDDEN, "AUTH-02", "접근 권한이 없습니다."),
+    INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "AUTH-03", "유효한 토큰이 아닙니다."),
+    TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "AUTH-04", "토큰이 만료되었습니다."),
+    INVALID_AUTH_HEADER(HttpStatus.UNAUTHORIZED, "AUTH-05", "유효한 인증 헤더가 아닙니다."),
+
     // Link
     LINK_NOT_FOUND(HttpStatus.NOT_FOUND, "LINK-01","link not found"),
     LINK_DETAIL_NOT_FOUND(HttpStatus.NOT_FOUND, "LINK-02","link detail not found"),

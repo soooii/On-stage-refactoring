@@ -1,5 +1,6 @@
 package com.team5.on_stage.global.config.jwt;
 
+import com.team5.on_stage.global.constants.ErrorCode;
 import com.team5.on_stage.global.exception.GlobalException;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -37,7 +38,7 @@ public class TokenUsernameArgumentResolver implements HandlerMethodArgumentResol
 
         // Todo: 예외처리
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-            throw new JwtException("Invalid token");
+            throw new GlobalException(ErrorCode.INVALID_AUTH_HEADER);
         }
 
         // 토큰 추출

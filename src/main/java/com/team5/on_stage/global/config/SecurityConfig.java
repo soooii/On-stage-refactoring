@@ -7,6 +7,8 @@ import com.team5.on_stage.global.config.auth.OAuth2SuccessHandler;
 import com.team5.on_stage.global.config.jwt.CustomLogoutFilter;
 import com.team5.on_stage.global.config.jwt.JwtFilter;
 import com.team5.on_stage.global.config.jwt.JwtUtil;
+import com.team5.on_stage.global.exception.JwtAccessDeniedHandler;
+import com.team5.on_stage.global.exception.JwtAuthenticationEntryPointHandler;
 import com.team5.on_stage.user.repository.RefreshRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +18,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
@@ -62,7 +63,9 @@ public class SecurityConfig {
                 .anyRequest().authenticated());
 
         http
-//                .addFilterBefore(new JwtFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class)
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint(new JwtAuthenticationEntryPointHandler(jwtUtil))
+                        .accessDeniedHandler(new JwtAccessDeniedHandler()))
                 .addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class);
 
