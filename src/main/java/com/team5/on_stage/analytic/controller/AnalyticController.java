@@ -12,24 +12,36 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/analytics")
+@RequestMapping("/api/analytics")
 public class AnalyticController {
 
     @Autowired
     private AnalyticService analyticService;
 
-    @PostMapping("/event")
-    public ResponseEntity<AnalyticResponseDto> logEvent(@RequestBody AnalyticRequestDto requestDto) {
-        analyticService.logEvent(requestDto);
+    @PostMapping("/page")
+    public ResponseEntity<AnalyticResponseDto> pageEvent(@RequestBody AnalyticRequestDto requestDto) {
+        analyticService.pageEvent(requestDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping("/dashboard/{pageId}")
-    public ResponseEntity<List<AnalyticResponseDto>> getEventCountsByPageId(
-            @PathVariable Long pageId,
+    @PostMapping("/link")
+    public ResponseEntity<AnalyticResponseDto> linkEvent(@RequestBody AnalyticRequestDto requestDto){
+        analyticService.linkEvent(requestDto);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @PostMapping("/socialLink")
+    public ResponseEntity<AnalyticResponseDto> socialLinkEvent(@RequestBody AnalyticRequestDto requestDto){
+        analyticService.socialLinkEvent(requestDto);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @GetMapping("/dashboard/{userName}")
+    public ResponseEntity<List<AnalyticResponseDto>> getEventCountsByUserName(
+            @PathVariable String userName,
             @RequestParam LocalDate startDate,
             @RequestParam LocalDate endDate) {
-        List<AnalyticResponseDto> analytics = analyticService.getEventCountsByPageIdAndDateRange(pageId, startDate, endDate);
+        List<AnalyticResponseDto> analytics = analyticService.getEventCountsByPageIdAndDateRange(userName, startDate, endDate);
         return ResponseEntity.ok(analytics);
     }
 }
