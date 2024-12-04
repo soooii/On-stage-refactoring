@@ -12,5 +12,5 @@ public interface SummaryQueryDslRepository {
     void softDeleteByUsername(String username);
     List<Summary> getSummaryByUsername(String username, Pageable pageable);
     long countSummaryByUsername(String username);
-    List<String> findUsernamesWithOldSummaries(LocalDateTime threeMonthsAgo);
+    List<String> findUsernamesWithOldSummaries(LocalDateTime timeToCompare);
 }
