@@ -1,8 +1,14 @@
 package com.team5.on_stage.concert.service;
 
+import com.team5.on_stage.concert.dto.ConcertDetailDto;
 import com.team5.on_stage.concert.dto.ConcertInfoDto;
+import com.team5.on_stage.concert.dto.ConcertPlaceDto;
+import com.team5.on_stage.concert.entity.ConcertDetail;
 import com.team5.on_stage.concert.entity.ConcertInfo;
+import com.team5.on_stage.concert.entity.ConcertPlace;
+import com.team5.on_stage.concert.mapper.ConcertDetailMapper;
 import com.team5.on_stage.concert.mapper.ConcertInfoMapper;
+import com.team5.on_stage.concert.mapper.ConcertPlaceMapper;
 import com.team5.on_stage.concert.repository.ConcertDetailRepository;
 import com.team5.on_stage.concert.repository.ConcertInfoRepository;
 import com.team5.on_stage.concert.repository.ConcertPlaceRepository;
@@ -17,6 +23,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ConcertService {
     private final ConcertInfoRequestService concertInfoRequestService;
+    private final ConcertDetailRequestService concertDetailRequestService;
+    private final ConcertPlaceRequestService concertPlaceRequestService;
 
     private final ConcertInfoRepository concertInfoRepository;
     private final ConcertDetailRepository concertDetailRepository;
@@ -24,6 +32,8 @@ public class ConcertService {
     private final RelateRepository relateRepository;
 
     private final ConcertInfoMapper concertInfoMapper;
+    private final ConcertDetailMapper concertDetailMapper;
+    private final ConcertPlaceMapper concertPlaceMapper;
 
 
     //저장작업(레포와 연결), 벌크인서트 사용
@@ -34,14 +44,38 @@ public class ConcertService {
         String keyword = user.getNickname();
         */
         List<ConcertInfoDto> concertInfoDtos = concertInfoRequestService.concertInfoRequest();
-
         //bulk insert
+        //TODO 만약 DB에 중복키가 존재한다면 패스
         List<ConcertInfo> concertInfos = concertInfoDtos.stream()
                 .map(concertInfoMapper::toEntity)
+                .filter(concertInfo -> !concertInfoRepository.existsByMt20id(concertInfo.getMt20id()))
                 .collect(Collectors.toList());
-
         concertInfoRepository.saveAll(concertInfos);
         System.out.println(concertInfos);
+        List<String> mt20ids = concertInfoDtos.stream()
+                .map(dto -> dto.getMt20id())
+                .collect(Collectors.toList());
+
+        List<ConcertDetailDto> concertDetailDtos = concertDetailRequestService.concertDetailRequest(mt20ids);
+        //bulk insert
+        List<ConcertDetail> concertDetails = concertDetailDtos.stream()
+                .map(concertDetailMapper::toEntity)
+                .collect(Collectors.toList());
+        concertInfoRepository.saveAll(concertInfos);
+        System.out.println(concertInfos);
+        List<String> mt10ids = concertDetailDtos.stream()
+                .map(dto -> dto.getMt10id())
+                .collect(Collectors.toList());
+        concertDetailRepository.saveAll(concertDetails);
+        System.out.println(concertDetails);
+        List<ConcertPlaceDto> concertPlaceDtos = concertPlaceRequestService.concertPlaceRequest(mt10ids);
+        //bulk insert
+        List<ConcertPlace> concertPlaces = concertPlaceDtos.stream()
+                .map(concertPlaceMapper::toEntity)
+                .collect(Collectors.toList());
+        concertPlaceRepository.saveAll(concertPlaces);
+        System.out.println(concertPlaces);
+
     }
 
     //R
