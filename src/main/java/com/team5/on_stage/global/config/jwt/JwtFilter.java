@@ -2,6 +2,7 @@ package com.team5.on_stage.global.config.jwt;
 
 import com.team5.on_stage.global.config.auth.dto.CustomOAuth2User;
 import com.team5.on_stage.global.config.auth.dto.UserDto;
+import com.team5.on_stage.global.constants.ErrorCode;
 import com.team5.on_stage.user.entity.Role;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
@@ -18,6 +19,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import static com.team5.on_stage.global.config.jwt.JwtUtil.setErrorResponse;
+
 @Slf4j
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
@@ -29,50 +32,36 @@ public class JwtFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
+        /* Access Token 검증 */
+
         String authorizationHeader = request.getHeader("Authorization");
 
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-
             filterChain.doFilter(request, response);
-
-            // 조건에 해당되면 검증에 문제가 있는 것이므로, 메서드를 종료한다.
             return;
         }
 
-        // 'Bearer ' 문자열을 제거한 순수한 토큰을 획득
         String accessToken = authorizationHeader.split(" ")[1];
 
-        // 4. 토큰이 존재하는지 확인한다.
         if (accessToken == null) {
-
-            filterChain.doFilter(request, response);
-
+            setErrorResponse(response, ErrorCode.INVALID_TOKEN);
             return;
         }
 
-        // 토큰 만료 여부 확인
-        try {
-            jwtUtil.isExpired(accessToken);
-        } catch (ExpiredJwtException e) {
+        String type = jwtUtil.getClaim(accessToken, "type");
 
-            SecurityContextHolder.clearContext();
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            PrintWriter writer = response.getWriter();
-            writer.write("{\"error\": \"토큰이 만료되었습니다.\"}");
-            writer.flush();
+        if (type == null || !type.equals("access")) {
+            setErrorResponse(response, ErrorCode.TYPE_NOT_MATCHED);
             return;
         }
 
-        // 토큰이 access인지 확인
-        String category = jwtUtil.getClaim(accessToken, "type");
-
-        // Todo: 예외처리
-        if (!category.equals("access")) {
-
-            throw new ServletException("Not access");
+        if (jwtUtil.isExpired(accessToken)) {
+            setErrorResponse(response, ErrorCode.TOKEN_EXPIRED);
+            return;
         }
 
-        // 토큰에서 email, role 값을 획득
+        /* 정보 획득 및 저장 */
+
         String username = jwtUtil.getClaim(accessToken, "username");
         String role = jwtUtil.getClaim(accessToken, "role");
 

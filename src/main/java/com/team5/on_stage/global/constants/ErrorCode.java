@@ -21,6 +21,7 @@ public enum ErrorCode {
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "AUTH-03", "유효한 토큰이 아닙니다."),
     TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "AUTH-04", "토큰이 만료되었습니다."),
     INVALID_AUTH_HEADER(HttpStatus.UNAUTHORIZED, "AUTH-05", "유효한 인증 헤더가 아닙니다."),
+    TYPE_NOT_MATCHED(HttpStatus.UNAUTHORIZED, "AUTH-06", "토큰 타입이 일치하지 않습니다."),
 
     // Link
     LINK_NOT_FOUND(HttpStatus.NOT_FOUND, "LINK-01","link not found"),
