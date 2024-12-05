@@ -2,7 +2,7 @@ package com.team5.on_stage.global.config.jwt;
 
 import com.team5.on_stage.global.constants.ErrorCode;
 import com.team5.on_stage.global.exception.GlobalException;
-import com.team5.on_stage.user.repository.RefreshRepository;
+import com.team5.on_stage.global.config.auth.refresh.RefreshRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;

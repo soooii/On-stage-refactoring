@@ -1,10 +1,8 @@
-package com.team5.on_stage.user.service;
+package com.team5.on_stage.global.config.auth.refresh;
 
 import com.team5.on_stage.global.config.jwt.JwtUtil;
 import com.team5.on_stage.global.constants.ErrorCode;
 import com.team5.on_stage.global.exception.GlobalException;
-import com.team5.on_stage.user.repository.RefreshRepository;
-import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

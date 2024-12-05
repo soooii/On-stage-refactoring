@@ -9,7 +9,7 @@ import com.team5.on_stage.global.config.jwt.JwtFilter;
 import com.team5.on_stage.global.config.jwt.JwtUtil;
 import com.team5.on_stage.global.exception.JwtAccessDeniedHandler;
 import com.team5.on_stage.global.exception.JwtAuthenticationEntryPointHandler;
-import com.team5.on_stage.user.repository.RefreshRepository;
+import com.team5.on_stage.global.config.auth.refresh.RefreshRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
