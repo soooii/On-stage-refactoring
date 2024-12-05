@@ -18,7 +18,7 @@ public class ConcertApiController {
     public void getConcertUpdatedDate(){
 
     }
-    // 배치 하루
+    // 정보 집어넣는 post url => 배치일정 하루, batch 집어넣기
     @PostMapping("/info")
     public ResponseEntity<String> saveConcertList(){
         concertService.saveConcertList();
@@ -33,7 +33,7 @@ public class ConcertApiController {
     @PatchMapping("/info/{userId}")
     public void patchConcertList(){
     }
-    //하루 주기 정도로 db 스케쥴링
+    //하루 주기 정도로 db 스케쥴링, 일정 끝난거 지워버리기
     @DeleteMapping("/delete")
     public void deleteConcertInfo(){
     }

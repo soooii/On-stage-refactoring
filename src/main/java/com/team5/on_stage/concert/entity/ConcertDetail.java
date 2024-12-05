@@ -19,20 +19,20 @@ import java.util.List;
 public class ConcertDetail {
 
     @Id
-    @Column(name = "mt20id", nullable = false, unique = true)
+    @Column(name = "concert_id", nullable = false, unique = true)
     private String mt20id; // PK로 변경
 
     @OneToOne
-    @JoinColumn(name = "mt20id", referencedColumnName = "mt20id") // ConcertInfo와 연결
+    @JoinColumn(name = "concert_id", referencedColumnName = "concert_id") // ConcertInfo와 연결
     private ConcertInfo concertInfo;
 
-    @Column(name = "prfcast")
+    @Column(name = "performer")
     private String prfcast;
 
-    @Column(name = "prfcrew")
+    @Column(name = "director")
     private String prfcrew;
 
-    @Column(name = "mt10id", nullable = false)
+    @Column(name = "place_id", nullable = false)
     private String mt10id;
 
     @OneToMany(mappedBy = "concertDetail", cascade = CascadeType.ALL, orphanRemoval = true)
