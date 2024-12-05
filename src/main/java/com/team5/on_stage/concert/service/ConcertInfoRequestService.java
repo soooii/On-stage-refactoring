@@ -24,11 +24,14 @@ public class ConcertInfoRequestService {
     public List<ConcertInfoDto> concertInfoRequest(){
 //        String searchKeyword = "NCT";
         //kopis api 이용 url
+        //TODO String format 사용하기
         String url = "http://www.kopis.or.kr/openApi/restful/pblprfr"
                 +"?service="+serviceKey
                 +"&stdate=20241201"
+                //TODO localdate +30
                 +"&eddate=20241231"
                 +"&cpage=1"
+                //TODO 내용물이 없을떄까지 반복
                 +"&rows=100";
         //100건 제한, 조회 31일 제한 => 1일마다 갱신
 //                +"&shprfnm="+searchKeyword;

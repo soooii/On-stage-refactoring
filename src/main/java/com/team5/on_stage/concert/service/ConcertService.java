@@ -43,6 +43,7 @@ public class ConcertService {
         User user = userRepository.findById(userId).orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
         String keyword = user.getNickname();
         */
+        //TODO transaction save < 여러 개 인서트
         List<ConcertInfoDto> concertInfoDtos = concertInfoRequestService.concertInfoRequest();
         //bulk insert
         //TODO 만약 DB에 중복키가 존재한다면 패스
