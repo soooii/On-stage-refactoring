@@ -21,28 +21,28 @@ import java.time.LocalDateTime;
 public class ConcertInfo {
 
     @Id
-    @Column(name = "mt20id", nullable = false, unique = true)
+    @Column(name = "concert_id", nullable = false, unique = true)
     private String mt20id; // PK로 변경
 
-    @Column(name = "prfnm", nullable = false)
+    @Column(name = "concert_nm", nullable = false)
     private String prfnm;
 
-    @Column(name = "prfpdfrom", nullable = false)
+    @Column(name = "startfrom", nullable = false)
     private LocalDate prfpdfrom;
 
-    @Column(name = "prfpdto", nullable = false)
+    @Column(name = "endto", nullable = false)
     private LocalDate prfpdto;
 
-    @Column(name = "fcltynm", nullable = false)
+    @Column(name = "place_name", nullable = false)
     private String fcltynm;
 
-    @Column(name = "poster")
+    @Column(name = "poster_url")
     private String poster;
 
     @Column(name = "area")
     private String area;
 
-    @Column(name = "prfstate")
+    @Column(name = "concert_state")
     private String prfstate;
 
     @OneToOne(mappedBy = "concertInfo", cascade = CascadeType.ALL, orphanRemoval = true)
