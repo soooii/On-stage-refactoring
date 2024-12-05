@@ -31,7 +31,7 @@ public class JwtAuthenticationEntryPointHandler implements AuthenticationEntryPo
 
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
             log.error("유효하지 않은 인증입니다.");
-            ErrorCode errorCode = ErrorCode.INVALID_TOKEN;
+            ErrorCode errorCode = ErrorCode.INVALID_ACCESS_TOKEN;
             setErrorResponse(response, errorCode);
 
             return;
@@ -41,7 +41,7 @@ public class JwtAuthenticationEntryPointHandler implements AuthenticationEntryPo
 
         if (jwtUtil.isExpired(accessToken)) {
             log.error("토큰이 만료되었습니다.");
-            ErrorCode errorCode = ErrorCode.TOKEN_EXPIRED;
+            ErrorCode errorCode = ErrorCode.ACCESS_TOKEN_EXPIRED;
             setErrorResponse(response, errorCode);
         }
     }

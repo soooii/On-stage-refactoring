@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 @RestController
@@ -18,7 +20,7 @@ public class UserAuthController {
 
     @PostMapping("/reissue")
     public ResponseEntity<Void> reissue(HttpServletRequest request,
-                                          HttpServletResponse response) {
+                                        HttpServletResponse response) throws IOException {
 
         reissueService.reissueRefreshToken(request, response);
 
