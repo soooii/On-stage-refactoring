@@ -4,7 +4,6 @@ import com.team5.on_stage.global.config.auth.dto.CustomOAuth2User;
 import com.team5.on_stage.global.config.auth.dto.UserDto;
 import com.team5.on_stage.global.constants.ErrorCode;
 import com.team5.on_stage.user.entity.Role;
-import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,7 +16,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
 import static com.team5.on_stage.global.config.jwt.JwtUtil.setErrorResponse;
 
@@ -44,7 +42,7 @@ public class JwtFilter extends OncePerRequestFilter {
         String accessToken = authorizationHeader.split(" ")[1];
 
         if (accessToken == null) {
-            setErrorResponse(response, ErrorCode.INVALID_TOKEN);
+            setErrorResponse(response, ErrorCode.INVALID_ACCESS_TOKEN);
             return;
         }
 
@@ -56,7 +54,7 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         if (jwtUtil.isExpired(accessToken)) {
-            setErrorResponse(response, ErrorCode.TOKEN_EXPIRED);
+            setErrorResponse(response, ErrorCode.ACCESS_TOKEN_EXPIRED);
             return;
         }
 

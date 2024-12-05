@@ -1,6 +1,8 @@
 package com.team5.on_stage.user.service;
 
 import com.team5.on_stage.global.config.jwt.JwtUtil;
+import com.team5.on_stage.global.constants.ErrorCode;
+import com.team5.on_stage.global.exception.GlobalException;
 import com.team5.on_stage.user.repository.RefreshRepository;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.Cookie;
@@ -9,9 +11,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+
 import static com.team5.on_stage.global.config.auth.cookie.CookieUtil.createCookie;
 import static com.team5.on_stage.global.config.auth.cookie.CookieUtil.deleteCookie;
 import static com.team5.on_stage.global.config.jwt.AuthConstants.*;
+import static com.team5.on_stage.global.config.jwt.JwtUtil.setErrorResponse;
 
 @RequiredArgsConstructor
 @Service
@@ -21,7 +26,7 @@ public class ReissueService {
     private final RefreshRepository refreshRepository;
 
     public void reissueRefreshToken(HttpServletRequest request,
-                                      HttpServletResponse response) {
+                                    HttpServletResponse response) throws IOException {
 
         String refreshToken = null;
 
@@ -34,21 +39,27 @@ public class ReissueService {
         }
 
         // Todo: 예외처리
-        if (refreshToken == null) {
-            throw new JwtException("Refresh token is empty");
-        }
+        try {
+            if (refreshToken == null) {
+                throw new GlobalException(ErrorCode.INVALID_REFRESH_TOKEN);
+            }
 
-        if (jwtUtil.isExpired(refreshToken)) {
-            throw new JwtException("Refresh token is expired");
-        }
+            if (jwtUtil.isExpired(refreshToken)) {
+                throw new GlobalException(ErrorCode.REFRESH_TOKEN_EXPIRED);
+            }
 
-        String tokenType = jwtUtil.getClaim(refreshToken, "type");
-        if (!tokenType.equals("refresh")) {
-            throw new JwtException("Refresh token is not a refresh token");
-        }
+            String tokenType = jwtUtil.getClaim(refreshToken, "type");
 
-        if (!refreshRepository.existsByRefresh(refreshToken)) {
-            throw new JwtException("Refresh token does not exist");
+            if (!tokenType.equals("refresh")) {
+                throw new GlobalException(ErrorCode.TYPE_NOT_MATCHED);
+            }
+
+            if (!refreshRepository.existsByRefresh(refreshToken)) {
+                throw new GlobalException(ErrorCode.REFRESH_TOKEN_NOT_EXISTS);
+            }
+        } catch (GlobalException e) {
+            setErrorResponse(response, ErrorCode.FAILED_TO_REISSUE);
+            throw new GlobalException(ErrorCode.FAILED_TO_REISSUE);
         }
 
         String username = jwtUtil.getClaim(refreshToken, "username");

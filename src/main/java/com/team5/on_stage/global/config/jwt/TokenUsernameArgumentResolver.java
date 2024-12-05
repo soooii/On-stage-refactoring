@@ -33,16 +33,17 @@ public class TokenUsernameArgumentResolver implements HandlerMethodArgumentResol
 
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
 
-        // 헤더 추출
         String authorizationHeader = request.getHeader("Authorization");
 
-        // Todo: 예외처리
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
             throw new GlobalException(ErrorCode.INVALID_AUTH_HEADER);
         }
 
-        // 토큰 추출
         String accessToken = authorizationHeader.split(" ")[1];
+
+        if (jwtUtil.isExpired(accessToken)) {
+            throw new GlobalException(ErrorCode.ACCESS_TOKEN_EXPIRED);
+        }
 
         return jwtUtil.getClaim(accessToken, "username");
     }

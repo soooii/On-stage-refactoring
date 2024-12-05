@@ -1,6 +1,7 @@
 package com.team5.on_stage.global.config.jwt;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.team5.on_stage.global.constants.ErrorCode;
+import com.team5.on_stage.global.exception.GlobalException;
 import com.team5.on_stage.user.repository.RefreshRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -13,9 +14,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.filter.GenericFilterBean;
 
 import java.io.IOException;
-import java.util.Map;
 
 import static com.team5.on_stage.global.config.auth.cookie.CookieUtil.deleteCookie;
+import static com.team5.on_stage.global.config.jwt.JwtUtil.setErrorResponse;
 
 @RequiredArgsConstructor
 public class CustomLogoutFilter extends GenericFilterBean {
@@ -35,37 +36,26 @@ public class CustomLogoutFilter extends GenericFilterBean {
                          HttpServletResponse response,
                          FilterChain filterChain) throws IOException, ServletException {
 
-        // URI 검증
+        /* Request 검증 */
+
         if (!request.getRequestURI().startsWith("/logout")) {
 
             filterChain.doFilter(request, response);
             return;
         }
 
-        // Http Method 검증
         if (!request.getMethod().equals("POST")) {
 
             filterChain.doFilter(request, response);
             return;
         }
 
+        /* 토큰 검증 */
+
         String refreshToken = null;
 
-        // Todo: 예외처리
         try {
             Cookie[] cookies = request.getCookies();
-
-//            for (Cookie cookie : cookies) {
-//                if (cookie.getName().equals("token")) {
-//                    String decodedTokens = cookie.getValue();
-//
-//                    ObjectMapper mapper = new ObjectMapper();
-//
-//                    Map<String, String> tokens = mapper.readValue(decodedTokens, Map.class);
-//
-//                    refreshToken = tokens.get("refresh");
-//                }
-//            }
 
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals("refresh")) {
@@ -73,42 +63,36 @@ public class CustomLogoutFilter extends GenericFilterBean {
                 }
             }
 
-
         } catch (Exception e) {
-            throw new ServletException("Failed to refresh token", e);
+            setErrorResponse(response, ErrorCode.BAD_REQUEST);
+            throw new GlobalException(ErrorCode.BAD_REQUEST);
         }
 
-        // Todo: 예외처리
-        // 토큰 존재 여부 확인
         if (refreshToken == null) {
-            throw new ServletException("Invalid refresh token");
+            setErrorResponse(response, ErrorCode.BAD_REQUEST);
+            throw new GlobalException(ErrorCode.INVALID_REFRESH_TOKEN);
         }
 
-        // Todo: 예외처리, 필요성
-        // 토큰 만료 여부 검증
-        try {
-            jwtUtil.isExpired(refreshToken);
-        } catch (Exception e) {
-            throw new ServletException("Expired refresh token", e);
+        // Todo: 필요성
+        if (jwtUtil.isExpired(refreshToken)) {
+            setErrorResponse(response, ErrorCode.REFRESH_TOKEN_EXPIRED);
+            throw new GlobalException(ErrorCode.REFRESH_TOKEN_EXPIRED);
         }
 
-        // Todo: 예외처리
-        // 토큰 타입 검증
         if (!jwtUtil.getClaim(refreshToken, "type").equals("refresh")) {
-            throw new ServletException("Invalid refresh token");
+            setErrorResponse(response, ErrorCode.TYPE_NOT_MATCHED);
+            throw new GlobalException(ErrorCode.TYPE_NOT_MATCHED);
         }
 
-        // Todo: 예외처리
-        // 토큰 DB 존재 여부 확인
         if (!refreshRepository.existsByRefresh(refreshToken)) {
-            throw new ServletException("Refresh token does not exist");
+            setErrorResponse(response, ErrorCode.REFRESH_TOKEN_NOT_EXISTS);
+            throw new GlobalException(ErrorCode.REFRESH_TOKEN_NOT_EXISTS);
         }
 
         /* 로그아웃 */
 
         refreshRepository.deleteByRefresh(refreshToken);
 
-        // Todo: 쿠키의 토큰 삭제는 프론트에서 처리하면 안될까?
         Cookie deleteRefreshCookie = deleteCookie("refresh");
         Cookie deleteAccessCookie = deleteCookie("access");
         Cookie deleteJSessionCookie = deleteCookie("JSESSIONID");
