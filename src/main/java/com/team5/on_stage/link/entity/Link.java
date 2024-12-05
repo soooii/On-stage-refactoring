@@ -33,8 +33,6 @@ public class Link {
     // 소프트 딜리트 여부
     private boolean isDeleted = false;
 
-    private int subscribed;
-
     @Builder
     public Link(String username, Long prevLinkId, String title, BlockType blockType, int padding , String url) {
         this.username = username;
@@ -46,19 +44,6 @@ public class Link {
         this.isDeleted = false;
     }
 
-    public void subscribe() {
-        this.subscribed++;
-    }
-
-    // Todo: 예외처리
-    public void unsubscribe() {
-        if (this.subscribed > 0) {
-            this.subscribed--;
-        }
-        else {
-            throw new IllegalStateException("Subscribed cannot be minus");
-        }
-    }
 }
 
 

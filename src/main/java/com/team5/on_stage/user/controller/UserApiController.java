@@ -48,11 +48,11 @@ public class UserApiController {
 
 
     // 좋아요 기능
-    @PostMapping("/subscribe/{linkId}")
-    public ResponseEntity<Boolean> subscribeLink(@TokenUsername String username,
-                                                 @PathVariable Long linkId) {
+    @PostMapping("/subscribe/{username}")
+    public ResponseEntity<Boolean> subscribeLink(@TokenUsername String subscriber,
+                                                 @PathVariable("username") String subscribed) {
 
-        return ResponseEntity.ok(subscribeService.subscribeLink(username, linkId));
+        return ResponseEntity.ok(subscribeService.subscribeLink(subscriber, subscribed));
     }
 
 
