@@ -15,13 +15,11 @@ import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class ThemeService {
     private final ThemeRepository themeRepository;
     private final S3Uploader s3Uploader;
 
     // READ
-    @Transactional(readOnly = true)
     public ThemeDTO getTheme(String username) {
         return themeRepository.getTheme(username)
                 .orElseThrow(() -> new GlobalException(ErrorCode.THEME_NOT_FOUND));
@@ -33,6 +31,7 @@ public class ThemeService {
     }
 
     // UPDATE
+    @Transactional
     public ThemeDTO updateTheme(ThemeDTO dto) {
         themeRepository.updateTheme(
                 dto.getUsername(),
@@ -46,6 +45,7 @@ public class ThemeService {
     }
 
     // IMAGE UPDATE
+    @Transactional
     public ThemeDTO updateBackgroundImage(String username, MultipartFile backgroundImage) throws IOException {
         Theme theme = themeRepository.findByUsername(username)
                 .orElseThrow(() -> new GlobalException(ErrorCode.THEME_NOT_FOUND));

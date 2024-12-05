@@ -39,6 +39,7 @@ public class LinkDetailService {
     }
 
     // UPDATE
+    @Transactional
     public LinkDetailDTO updateDetail(LinkDetailDTO dto) {
         linkDetailRepository.updateLinkDetail(
                 dto.getPlatform(),
@@ -49,6 +50,7 @@ public class LinkDetailService {
     }
 
     // DELETE
+    @Transactional
     public void deleteDetail(Long id) {
         linkDetailRepository.softDeleteById(id);
     }
