@@ -23,6 +23,10 @@ public class SubscribeService {
     @Transactional
     public Boolean subscribeLink(String subscriber, String subscribed) {
 
+        if (subscriber.equals(subscribed)) {
+            throw new GlobalException(ErrorCode.CANNOT_SUBSCRIBE_SELF);
+        }
+
         User user = userRepository.findByUsername(subscriber);
 
         if (user == null) {
