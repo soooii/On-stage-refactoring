@@ -1,17 +1,12 @@
 package com.team5.on_stage.analytic.service;
 
-import com.querydsl.core.types.Projections;
-import com.querydsl.jpa.JPAExpressions;
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.team5.on_stage.analytic.constants.EventType;
 import com.team5.on_stage.analytic.constants.SocialLinkType;
-import com.team5.on_stage.analytic.dto.AnalyticRequestDto;
-import com.team5.on_stage.analytic.dto.AnalyticResponseDto;
+import com.team5.on_stage.analytic.dto.*;
 import com.team5.on_stage.analytic.entity.Analytic;
 import com.team5.on_stage.analytic.entity.LocationInfo;
-import com.team5.on_stage.analytic.entity.QAnalytic;
-import com.team5.on_stage.analytic.entity.QLocationInfo;
 import com.team5.on_stage.analytic.repository.AnalyticRepository;
+import com.team5.on_stage.analytic.repository.AnalyticRepositoryCustom;
 import com.team5.on_stage.analytic.repository.LocationRepository;
 import com.team5.on_stage.global.constants.ErrorCode;
 import com.team5.on_stage.global.exception.GlobalException;
@@ -38,21 +33,20 @@ public class AnalyticService {
     private final UserRepository userRepository;
     private final LinkRepository linkRepository;
     private final LinkDetailRepository linkDetailRepository;
-    private final JPAQueryFactory queryFactory; // QueryDSL을 위한 JPAQueryFactory
-
+    private final AnalyticRepositoryCustom analyticRepositoryCustom;
     @Autowired
     public AnalyticService(AnalyticRepository analyticRepository,
                            LocationRepository locationRepository,
                            UserRepository userRepository,
                            LinkRepository linkRepository,
                            LinkDetailRepository linkDetailRepository,
-                           JPAQueryFactory queryFactory) {
+                           AnalyticRepositoryCustom analyticRepositoryCustom) {
         this.analyticRepository = analyticRepository;
         this.locationRepository = locationRepository;
         this.userRepository = userRepository;
         this.linkRepository = linkRepository;
         this.linkDetailRepository = linkDetailRepository;
-        this.queryFactory = queryFactory; // 주입
+        this.analyticRepositoryCustom = analyticRepositoryCustom;
     }
 
     @Value("${api.geolocation.url}")
@@ -131,32 +125,22 @@ public class AnalyticService {
     }
 
     @Transactional
-    public List<AnalyticResponseDto> getEventCountsByPageIdAndDateRange(String userName, LocalDate startDate, LocalDate endDate) {
-        QAnalytic analytic = QAnalytic.analytic; // QueryDSL Q 클래스
-        QLocationInfo locationInfo = QLocationInfo.locationInfo; // 위치 정보 Q 클래스
+    public List<PageViewStatsDto> getPageViewStats(String userName, LocalDate startDate, LocalDate endDate) {
+        return analyticRepositoryCustom.getPageViewStats(userName, startDate, endDate);
+    }
 
-        User user = userRepository.findByUsername(userName);
+    @Transactional
+    public List<SocialLinkClickStatsDto> getSocialLinkClickStats(String userName, LocalDate startDate, LocalDate endDate) {
+        return analyticRepositoryCustom.getSocialLinkClickStats(userName, startDate, endDate);
+    }
 
-        // QueryDSL을 사용하여 이벤트 수 집계
-        return queryFactory
-                .select(Projections.constructor(AnalyticResponseDto.class, // DTO의 생성자
-                        analytic.date, // 날짜
-                        JPAExpressions.select(analytic.count()) // 페이지 조회수
-                                .from(analytic)
-                                .where(analytic.eventType.eq(EventType.PAGE_VIEW)
-                                        .and(analytic.user.eq(user))),
-                        JPAExpressions.select(analytic.count()) // 링크 클릭 수
-                                .from(analytic)
-                                .where(analytic.eventType.eq(EventType.LINK_CLICK)
-                                        .and(analytic.user.eq(user))),
-                        locationInfo.country, // 국가
-                        locationInfo.region // 지역
-                ))
-                .from(analytic)
-                .join(analytic.locationInfo, locationInfo)
-                .where(analytic.date.between(startDate, endDate)
-                        .and(analytic.user.eq(user)))
-                .groupBy(analytic.date, locationInfo.country, locationInfo.region) // 그룹화에 국가와 지역 추가
-                .fetch();
+    @Transactional
+    public List<LinkClickStatsDto> getLickClickStats(String userName, LocalDate startDate, LocalDate endDate) {
+        return analyticRepositoryCustom.getLinkClickStats(userName, startDate, endDate);
+    }
+
+    @Transactional
+    public List<LocationStatsDto> getLocationStats(String userName, LocalDate startDate, LocalDate endDate) {
+        return analyticRepositoryCustom.getLocationStats(userName, startDate, endDate);
     }
 }

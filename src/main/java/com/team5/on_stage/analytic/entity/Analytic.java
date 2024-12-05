@@ -4,7 +4,6 @@ import com.team5.on_stage.analytic.constants.EventType;
 import com.team5.on_stage.analytic.constants.SocialLinkType;
 import com.team5.on_stage.link.entity.Link;
 import com.team5.on_stage.linkDetail.entity.LinkDetail;
-import com.team5.on_stage.socialLink.entity.SocialLink;
 import com.team5.on_stage.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -31,7 +30,7 @@ public class Analytic {
     @Enumerated(EnumType.STRING)
     private SocialLinkType socialLinkType;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "location_id") // 외래 키 설정
     private LocationInfo locationInfo; // 위치 정보 참조
 
