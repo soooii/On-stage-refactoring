@@ -98,7 +98,7 @@ public class UserService {
     }
 
 
-    // Todo: 구현 중
+    // Todo: 기본 이미지 설정할 수 있도록 보완
     public UserProfileDto updateUserProfileImage(String username, MultipartFile profileImage) throws IOException {
 
         User user = userRepository.findByUsername(username);

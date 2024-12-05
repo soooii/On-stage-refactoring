@@ -1,5 +1,8 @@
 package com.team5.on_stage.global.config.jwt;
 
+import com.team5.on_stage.global.constants.ErrorCode;
+import com.team5.on_stage.global.exception.GlobalException;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
@@ -32,6 +35,11 @@ public class TokenUsernameArgumentResolver implements HandlerMethodArgumentResol
 
         // 헤더 추출
         String authorizationHeader = request.getHeader("Authorization");
+
+        // Todo: 예외처리
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            throw new GlobalException(ErrorCode.INVALID_AUTH_HEADER);
+        }
 
         // 토큰 추출
         String accessToken = authorizationHeader.split(" ")[1];

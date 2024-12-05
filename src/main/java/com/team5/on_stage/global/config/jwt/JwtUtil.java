@@ -1,12 +1,17 @@
 package com.team5.on_stage.global.config.jwt;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.team5.on_stage.global.constants.ErrorCode;
+import com.team5.on_stage.global.exception.ErrorResponse;
 import com.team5.on_stage.user.entity.Refresh;
 import com.team5.on_stage.user.repository.RefreshRepository;
 import io.jsonwebtoken.Jwts;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -102,5 +107,23 @@ public class JwtUtil {
                 .getPayload()
                 .getExpiration()
                 .before(new Date());
+    }
+
+    public static void setErrorResponse(HttpServletResponse response, ErrorCode errorCode) throws IOException {
+        response.setContentType("application/json;charset=UTF-8");
+        response.setStatus(errorCode.getHttpStatus().value());
+
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .status(errorCode.getHttpStatus().value())
+                .name(errorCode.name())
+                .code(errorCode.getCode())
+                .message(errorCode.getMessage())
+                .build();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonResponse = objectMapper.writeValueAsString(errorResponse);
+
+        response.getWriter().write(jsonResponse);
+        response.getWriter().flush();
     }
 }
