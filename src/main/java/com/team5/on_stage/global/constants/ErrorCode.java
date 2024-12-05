@@ -36,7 +36,8 @@ public enum ErrorCode {
     THEME_NOT_FOUND(HttpStatus.NOT_FOUND, "LINK-04","theme not found"),
 
     // Subscribe
-    SUBSCRIBE_NOT_FOUND(HttpStatus.NOT_FOUND, "SUBSCRIBE-01", "subscribe not found"),;
+    SUBSCRIBED_NOT_FOUND(HttpStatus.NOT_FOUND, "SUBSCRIBE-01", "즐겨찾기 대상을 찾을 수 없습니다."),
+    CANNOT_SUBSCRIBE_SELF(HttpStatus.BAD_REQUEST, "SUBSCRIBE-02", "잘못된 즐겨찾기 요청입니다.");
 
     // ANALYSIS
 

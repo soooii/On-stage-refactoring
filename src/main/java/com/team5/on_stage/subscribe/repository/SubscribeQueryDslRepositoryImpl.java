@@ -14,22 +14,22 @@ public class SubscribeQueryDslRepositoryImpl implements SubscribeQueryDslReposit
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public Boolean existsSubscribeByUsernameAndLinkId(String username, Long linkId) {
+    public Boolean existsSubscribeBySubscriberAndSubscribed(String subscriber, String subscribed) {
         return jpaQueryFactory
                 .selectOne()
                 .from(subscribe)
-                .where(subscribe.user.username.eq(username)
-                        .and(subscribe.link.id.eq(linkId))
+                .where(subscribe.subscriber.username.eq(subscriber)
+                        .and(subscribe.subscribed.username.eq(subscribed))
                 )
                 .fetchFirst() != null;
     }
 
     @Override
-    public void deleteSubscribeByUsernameAndLinkId(String username, Long linkId) {
+    public void deleteSubscribeBySubscriberAndSubscribed(String subscriber, String subscribed) {
         jpaQueryFactory
                 .delete(subscribe)
-                .where(subscribe.user.username.eq(username)
-                        .and(subscribe.link.id.eq(linkId))
+                .where(subscribe.subscriber.username.eq(subscriber)
+                        .and(subscribe.subscribed.username.eq(subscribed))
                 )
                 .execute();
     }
