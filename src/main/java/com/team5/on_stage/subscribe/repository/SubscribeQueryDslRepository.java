@@ -4,7 +4,7 @@ import com.team5.on_stage.subscribe.entity.Subscribe;
 
 public interface SubscribeQueryDslRepository {
 
-    Boolean existsSubscribeByUsernameAndLinkId(String username, Long linkId);
+    Boolean existsSubscribeBySubscriberAndSubscribed(String subscriber, String subscribed);
 
-    void deleteSubscribeByUsernameAndLinkId(String username, Long linkId);
+    void deleteSubscribeBySubscriberAndSubscribed(String subscriber, String subscribed);
 }

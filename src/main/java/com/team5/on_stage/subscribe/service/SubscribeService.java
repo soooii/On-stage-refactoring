@@ -18,34 +18,40 @@ public class SubscribeService {
 
     private final SubscribeRepository subscribeRepository;
     private final UserRepository userRepository;
-    private final LinkRepository linkRepository;
 
 
     @Transactional
-    public Boolean subscribeLink(String username, Long linkId) {
+    public Boolean subscribeLink(String subscriber, String subscribed) {
 
-        User user = userRepository.findByUsername(username);
+        if (subscriber.equals(subscribed)) {
+            throw new GlobalException(ErrorCode.CANNOT_SUBSCRIBE_SELF);
+        }
+
+        User user = userRepository.findByUsername(subscriber);
 
         if (user == null) {
             throw new GlobalException(ErrorCode.USER_NOT_FOUND);
         }
 
-        Link link = linkRepository.findById(linkId)
-                .orElseThrow(() -> new GlobalException(ErrorCode.LINK_NOT_FOUND));
+        User subscribedUser = userRepository.findByUsername(subscribed);
+
+        if (subscribedUser == null) {
+            throw new GlobalException(ErrorCode.USER_NOT_FOUND);
+        }
 
         // Subscribe 기록이 없으면 추가, 있으면 삭제
-        if (!subscribeRepository.existsSubscribeByUsernameAndLinkId(username, linkId)) {
+        if (!subscribeRepository.existsSubscribeBySubscriberAndSubscribed(subscriber, subscribed)) {
 
-            Subscribe subscribe = new Subscribe(user, link);
+            Subscribe subscribe = new Subscribe(user, subscribedUser);
             subscribeRepository.save(subscribe);
 
-            link.subscribe();
+            subscribedUser.subscribe();
 
         } else {
 
-            subscribeRepository.deleteSubscribeByUsernameAndLinkId(username, linkId);
+            subscribeRepository.deleteSubscribeBySubscriberAndSubscribed(subscriber, subscribed);
 
-            link.unsubscribe();
+            subscribedUser.unsubscribe();
 
         }
         return true;

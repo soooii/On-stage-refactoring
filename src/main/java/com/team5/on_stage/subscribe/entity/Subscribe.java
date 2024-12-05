@@ -22,15 +22,17 @@ public class Subscribe {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // 구독자
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "username", nullable = false)
+    @JoinColumn(name = "subscriber_username", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private User user;
+    private User subscriber;
 
+    // 구독 대상자
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "link_id")
+    @JoinColumn(name = "subscribed_username", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private Link link;
+    private User subscribed;
 
     @Column(name = "subscribed_at",nullable = false)
     private LocalDateTime subscribedAt;
@@ -41,13 +43,9 @@ public class Subscribe {
     }
 
     @Builder
-    public Subscribe(User user, Link link) {
-        this.user = user;
-        this.link = link;
+    public Subscribe(User subscriber, User subscribed) {
+        this.subscriber = subscriber;
+        this.subscribed = subscribed;
     }
 
-//    public void setLink(Link link) {
-//        this.link = link;
-//        link.getLinkLikes().add(this);
-//    }
 }

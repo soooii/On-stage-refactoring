@@ -16,6 +16,12 @@ import java.time.LocalDateTime;
 @Entity
 public class User {
 
+    // 소셜 로그인 도메인 + 소셜 로그인 ID 문자열
+    @Id
+    @NotNull
+    @Column(name = "username", nullable = false, unique = true, updatable = false)
+    private String username;
+
     // 서비스에서 사용할 이름
     @NotNull
     @Column(name = "nickname", nullable = false, unique = true)
@@ -23,6 +29,24 @@ public class User {
 
     @Column(name = "description")
     private String description;
+
+    @Column(name = "profile_image")
+    private String profileImage;
+
+    // 아티스트 인증 여부
+    @Column(name = "verified", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Verified verified;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private Role role;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "oauth2_domain", nullable = false, updatable = false)
+    private OAuth2Domain OAuth2Domain;
 
     // 소셜 로그인 정보에서 가져온 이메일
     // Todo: 이메일이 없을 수도 있다. (ex: 깃허브)
@@ -36,35 +60,14 @@ public class User {
     @Column(name = "name", nullable = false)
     private String name;
 
-    // 소셜 로그인 도메인 + 소셜 로그인 ID 문자열
-    @Id
-    @NotNull
-    @Column(name = "username", nullable = false, unique = true, updatable = false)
-    private String username;
-
-    // 아티스트 인증 여부
-    @Column(name = "verified", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Verified verified;
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDate createdAt;
 
     @Column(name = "deactivated_at")
     private LocalDateTime deactivatedAt;
 
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    @Column(name = "oauth2_domain", nullable = false, updatable = false)
-    private OAuth2Domain OAuth2Domain;
 
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false)
-    private Role role;
-
-    @Column(name = "profile_image")
-    private String profileImage;
-
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDate createdAt;
+    private int subscribed;
 
 
     @Builder
@@ -91,12 +94,26 @@ public class User {
         this.deactivatedAt = null;
         this.createdAt = LocalDate.now();
         this.description = "나를 소개하는 한마디";
-        this.profileImage = "/img/imgbin_music-notes-.png";
+        this.profileImage = "https://s3-on-stage.s3.ap-northeast-2.amazonaws.com/profileImages/profile.jpg";
     }
 
     public void updateOAuthUser(String name, String email) {
 
         this.name = name;
         this.email = email;
+    }
+
+    public void subscribe() {
+        this.subscribed++;
+    }
+
+    // Todo: 예외처리
+    public void unsubscribe() {
+        if (this.subscribed > 0) {
+            this.subscribed--;
+        }
+        else {
+            throw new IllegalStateException("Subscribed cannot be minus");
+        }
     }
 }

@@ -17,11 +17,11 @@ import java.util.List;
 public class Relate {
 
     @Id
-    @Column(name = "mt20id", nullable = false)
+    @Column(name = "concert_id", nullable = false)
     private String mt20id; // ConcertDetail의 mt20id를 PK로 사용
 
     @ManyToOne
-    @JoinColumn(name = "mt20id", referencedColumnName = "mt20id", insertable = false, updatable = false)
+    @JoinColumn(name = "concert_id", referencedColumnName = "concert_id", insertable = false, updatable = false)
     private ConcertDetail concertDetail;
 
     @Column(name = "relate_nm", nullable = false)

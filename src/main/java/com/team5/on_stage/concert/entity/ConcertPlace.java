@@ -15,22 +15,22 @@ import lombok.NoArgsConstructor;
 public class ConcertPlace {
 
     @Id
-    @Column(name = "mt10id", nullable = false, unique = true)
+    @Column(name = "place_id", nullable = false, unique = true)
     private String mt10id; // PK로 변경
 
     @OneToOne
-    @JoinColumn(name = "mt10id", referencedColumnName = "mt10id")
+    @JoinColumn(name = "place_id", referencedColumnName = "place_id")
     private ConcertDetail concertDetail;
 
     @Column(name = "adres", nullable = false)
     private String adres;
 
-    @Column(name = "fcltynm", nullable = false)
+    @Column(name = "place_nm", nullable = false)
     private String fcltynm;
 
     @Column(name = "latitude", nullable = false)
     private double latitude;
 
     @Column(name = "longtitude", nullable = false)
-    private double longitude; // 이름 수정 (오타 수정)
+    private double longtitude; // 이름 수정 (오타 수정)
 }
