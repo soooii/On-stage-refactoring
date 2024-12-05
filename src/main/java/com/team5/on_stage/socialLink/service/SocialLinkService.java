@@ -7,6 +7,7 @@ import com.team5.on_stage.socialLink.entity.SocialLink;
 import com.team5.on_stage.socialLink.repository.SocialLinkRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +29,7 @@ public class SocialLinkService {
     }
 
     // UPDATE
+    @Transactional
     public SocialLinkDTO updateSocial(SocialLinkDTO dto) {
         socialLinkRepository.updateSocial(
                 dto.getUsername(),
