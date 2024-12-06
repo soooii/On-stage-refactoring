@@ -118,6 +118,20 @@ public class UserService {
     }
 
 
+    public void setUserProfileDefault(String username) {
+
+        User user = userRepository.findByUsername(username);
+
+        if (user == null) {
+            throw new GlobalException(ErrorCode.USER_NOT_FOUND);
+        }
+
+        user.setProfileImage("https://s3-on-stage.s3.ap-northeast-2.amazonaws.com/profileImages/defaultProfile.jpg");
+
+        userRepository.save(user);
+    }
+
+
     public String convertNicknameToUsername(String nickname) {
 
         User user = userRepository.findByNickname(nickname);

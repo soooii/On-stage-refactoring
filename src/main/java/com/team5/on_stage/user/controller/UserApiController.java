@@ -46,6 +46,15 @@ public class UserApiController {
     }
 
 
+    @PatchMapping("/profile/default")
+    public ResponseEntity<Void> updateUserProfileDefault(@TokenUsername String username) {
+
+        userService.setUserProfileDefault(username);
+
+        return ResponseEntity.ok().build();
+    }
+
+
     // 좋아요 기능
     @PostMapping("/subscribe/{username}")
     public ResponseEntity<Boolean> subscribeLink(@TokenUsername String subscriber,
