@@ -84,14 +84,14 @@ public class CustomLogoutFilter extends GenericFilterBean {
             throw new GlobalException(ErrorCode.TYPE_NOT_MATCHED);
         }
 
-        if (!refreshRepository.existsByRefresh(refreshToken)) {
+        if (refreshRepository.findByRefreshToken(refreshToken).isEmpty()) {
             setErrorResponse(response, ErrorCode.REFRESH_TOKEN_NOT_EXISTS);
             throw new GlobalException(ErrorCode.REFRESH_TOKEN_NOT_EXISTS);
         }
 
         /* 로그아웃 */
 
-        refreshRepository.deleteByRefresh(refreshToken);
+        refreshRepository.deleteByRefreshToken(refreshToken);
 
         Cookie deleteRefreshCookie = deleteCookie("refresh");
         Cookie deleteAccessCookie = deleteCookie("access");
