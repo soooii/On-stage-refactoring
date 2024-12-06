@@ -56,11 +56,9 @@ public class SecurityConfig {
                 .logout(logout -> logout.logoutUrl("/logout"));
 
         http.authorizeHttpRequests((auth) -> auth
-                .requestMatchers("/login", "/login/**").permitAll()
+                .requestMatchers("/login", "/login/**", "/api/auth/reissue").permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
-                .requestMatchers("/api/**").permitAll()
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll() /* Swagger */
-                .requestMatchers("/usertest").authenticated()
                 .anyRequest().permitAll());
 
         http
