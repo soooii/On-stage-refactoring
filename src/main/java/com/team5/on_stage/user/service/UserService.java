@@ -102,7 +102,6 @@ public class UserService {
     }
 
 
-    // Todo: 기본 이미지 설정할 수 있도록 보완
     public UserProfileDto updateUserProfileImage(String username, MultipartFile profileImage) throws IOException {
 
         User user = userRepository.findByUsername(username);
@@ -111,11 +110,25 @@ public class UserService {
             throw new GlobalException(ErrorCode.USER_NOT_FOUND);
         }
 
-        String imageUrl = s3Uploader.upload(profileImage, "profileImages");
+        String imageUrl = s3Uploader.upload(profileImage, "profileImages/" + username);
         user.setProfileImage(imageUrl);
         userRepository.save(user);
 
         return getUserProfile(username);
+    }
+
+
+    public void setUserProfileDefault(String username) {
+
+        User user = userRepository.findByUsername(username);
+
+        if (user == null) {
+            throw new GlobalException(ErrorCode.USER_NOT_FOUND);
+        }
+
+        user.setProfileImage("https://s3-on-stage.s3.ap-northeast-2.amazonaws.com/profileImages/defaultProfile.jpg");
+
+        userRepository.save(user);
     }
 
 

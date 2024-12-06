@@ -63,15 +63,14 @@ public class JwtUtil {
 
 
     // Refresh Token DB 저장
-    public void addRefresh(String username,
-                           String refreshToken) {
+    // DB에서의 만료 시간은 Redis TTL로 관리
+    public void addRefresh(String refreshToken,
+                           String username) {
 
-        Date date = new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRED_MS);
-
-        Refresh newRefreshToken = new Refresh();
-        newRefreshToken.setUsername(username);
-        newRefreshToken.setRefresh(refreshToken);
-        newRefreshToken.setExpiration(date.toString());
+        Refresh newRefreshToken = Refresh.builder()
+                .refreshToken(refreshToken)
+                .username(username)
+                .build();
 
         refreshRepository.save(newRefreshToken);
     }

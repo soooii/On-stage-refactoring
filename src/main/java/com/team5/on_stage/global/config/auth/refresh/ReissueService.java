@@ -52,9 +52,10 @@ public class ReissueService {
                 throw new GlobalException(ErrorCode.TYPE_NOT_MATCHED);
             }
 
-            if (!refreshRepository.existsByRefresh(refreshToken)) {
-                throw new GlobalException(ErrorCode.REFRESH_TOKEN_NOT_EXISTS);
-            }
+            Refresh oldRefreshToken = refreshRepository.findByRefreshToken(refreshToken)
+                    .orElseThrow(() -> new GlobalException(ErrorCode.REFRESH_TOKEN_NOT_EXISTS));
+
+
         } catch (GlobalException e) {
             setErrorResponse(response, ErrorCode.FAILED_TO_REISSUE);
             throw new GlobalException(ErrorCode.FAILED_TO_REISSUE);
@@ -68,7 +69,7 @@ public class ReissueService {
 
         String newRefreshToken = jwtUtil.generateRefreshToken(username, nickname, role);
 
-        refreshRepository.deleteByRefresh(refreshToken);
+        refreshRepository.deleteByRefreshToken(refreshToken);
         jwtUtil.addRefresh(username, newRefreshToken);
 
         Cookie deleteRefreshToken = deleteCookie("refresh");

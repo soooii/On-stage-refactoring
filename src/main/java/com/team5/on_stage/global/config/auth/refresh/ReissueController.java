@@ -1,6 +1,5 @@
-package com.team5.on_stage.user.controller;
+package com.team5.on_stage.global.config.auth.refresh;
 
-import com.team5.on_stage.global.config.auth.refresh.ReissueService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +13,7 @@ import java.io.IOException;
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 @RestController
-public class UserAuthController {
+public class ReissueController {
 
     private final ReissueService reissueService;
 
