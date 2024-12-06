@@ -71,6 +71,8 @@ public class ReissueService {
 
         String newRefreshToken = jwtUtil.generateRefreshToken(username, nickname, role);
 
+        // Todo: 원래 이 자리에 oldRefreshToken이 들어가야 한다.
+        // 예외처리 try 구문으로 인해 스코프에서 빠졌음.
         refreshRepository.deleteByRefreshToken(refreshToken);
         refreshService.saveRefreshToken(newRefreshToken, username);
 
