@@ -94,7 +94,7 @@ public class User {
         this.deactivatedAt = null;
         this.createdAt = LocalDate.now();
         this.description = "나를 소개하는 한마디";
-        this.profileImage = "https://s3-on-stage.s3.ap-northeast-2.amazonaws.com/profileImages/profile.jpg";
+        this.profileImage = "https://s3-on-stage.s3.ap-northeast-2.amazonaws.com/profileImages/defaultProfile.jpg";
     }
 
     public void updateOAuthUser(String name, String email) {
