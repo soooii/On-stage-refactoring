@@ -1,6 +1,6 @@
 package com.team5.on_stage.user.controller;
 
-import com.team5.on_stage.user.service.ReissueService;
+import com.team5.on_stage.global.config.auth.refresh.ReissueService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

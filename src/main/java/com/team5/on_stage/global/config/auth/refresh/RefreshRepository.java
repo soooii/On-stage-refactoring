@@ -1,6 +1,5 @@
-package com.team5.on_stage.user.repository;
+package com.team5.on_stage.global.config.auth.refresh;
 
-import com.team5.on_stage.user.entity.Refresh;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
