@@ -11,8 +11,23 @@ public class RefreshService {
 
     private final RefreshRepository refreshRepository;
 
+
+
+    // Refresh Token DB 저장
+    // DB에서의 만료 시간은 Redis TTL로 관리
+    public void addRefresh(String refreshToken,
+                           String username) {
+
+        Refresh newRefreshToken = Refresh.builder()
+                .refreshToken(refreshToken)
+                .username(username)
+                .build();
+
+        refreshRepository.save(newRefreshToken);
+    }
+
     @Transactional
-    public void saveRefreshToken(String username, String refreshToken) {
+    public void saveRefreshToken(String refreshToken, String username) {
 
         Refresh refresh = Refresh.builder()
                 .refreshToken(refreshToken)

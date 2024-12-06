@@ -22,6 +22,7 @@ public class ReissueService {
 
     private final JwtUtil jwtUtil;
     private final RefreshRepository refreshRepository;
+    private final RefreshService refreshService;
 
     public void reissueRefreshToken(HttpServletRequest request,
                                     HttpServletResponse response) throws IOException {
@@ -52,6 +53,7 @@ public class ReissueService {
                 throw new GlobalException(ErrorCode.TYPE_NOT_MATCHED);
             }
 
+            // Todo: 필요성. 누락된 코드가 있는 듯
             Refresh oldRefreshToken = refreshRepository.findByRefreshToken(refreshToken)
                     .orElseThrow(() -> new GlobalException(ErrorCode.REFRESH_TOKEN_NOT_EXISTS));
 
@@ -70,7 +72,7 @@ public class ReissueService {
         String newRefreshToken = jwtUtil.generateRefreshToken(username, nickname, role);
 
         refreshRepository.deleteByRefreshToken(refreshToken);
-        jwtUtil.addRefresh(username, newRefreshToken);
+        refreshService.saveRefreshToken(newRefreshToken, username);
 
         Cookie deleteRefreshToken = deleteCookie("refresh");
 
