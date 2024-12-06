@@ -19,7 +19,7 @@ public class ArticleApiController {
     }
 
     // 기사 모두 삭제
-    @DeleteMapping("/{userId}")
+    @DeleteMapping("/{username}")
     public ResponseEntity<String> deleteArticle(@PathVariable String username) {
         articleService.delete(username);
         return ResponseEntity.ok("삭제가 완료되었습니다.");

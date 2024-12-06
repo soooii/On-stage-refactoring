@@ -3,6 +3,8 @@ package com.team5.on_stage.user.service;
 import com.team5.on_stage.global.config.s3.S3Uploader;
 import com.team5.on_stage.global.constants.ErrorCode;
 import com.team5.on_stage.global.exception.GlobalException;
+import com.team5.on_stage.summary.repository.SummaryRespository;
+import com.team5.on_stage.summary.service.SummaryService;
 import com.team5.on_stage.user.dto.UpdateUserDto;
 import com.team5.on_stage.user.dto.UserProfileDto;
 import com.team5.on_stage.user.entity.*;
@@ -23,6 +25,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final S3Uploader s3Uploader;
+    private final SummaryService summaryService;
 
 
     public void checkNicknameDuplicated(String nickname) {
@@ -47,6 +50,7 @@ public class UserService {
         checkNicknameDuplicated(nickname);
         user.setNickname(nickname);
         userRepository.save(user);
+        summaryService.saveSummary(username);
     }
 
     public void updateUserDescription(String username,
