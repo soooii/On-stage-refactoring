@@ -38,20 +38,25 @@ public class SummaryService {
 
     //해당 username의 summary 저장
     public void saveSummary(String username) {
+
+        //기존 Summary soft delete
+        summaryRespository.softDeleteByUsername(username);
+
         articleService.save(username);
+
         List<Article> articles = articleRepository.findAllByUser_Username(username);
         User user = userRepository.findByUsername(username);
         String allArticles = articles.stream()
                 .map(article -> article.getContent())
                 .collect(Collectors.joining());
 
-        //기존 Summary soft delete
-        summaryRespository.softDeleteByUsername(username);
-
         String prompt = """
-                다음 문장을 부정적이거나 논란이 될 수 있는 주제는 배제하고,
-                아티스트를 소개할 수 있는 측면에서 제목에 숫자없이 4개의 각 요약을 최대한 다른 내용의 제목과 7문장의 내용으로 작성해줘:%s
-                """.formatted(allArticles);
+        다음 문장을 부정적이거나 논란이 될 수 있는 주제는 배제하고,
+        특히 '%s'와 직접적으로 관련된 뉴스만 포함하여,
+        제목에 번호없이 4개의 각 요약을 최대한 다른 내용의 제목과 7문장의 내용으로 작성해줘:
+        %s
+        """.formatted(username, allArticles);
+
 
         String summarizedNews = chatGPTService.sendMessage(prompt);
 
@@ -94,11 +99,12 @@ public class SummaryService {
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
         List<Summary> summaries = summaryRespository.getSummaryByUsername(username, pageable);
 
-        //저장된 뉴스가 없을 경우
+        /*
+        //저장된 뉴스가 없을 경우 ~~ 필요없지않나 -> 닉네임 변경 순간 저장되니까
         if(summaries.isEmpty()){
             saveSummary(request.getUsername());
             return getSummary(request);
-        }
+        }*/
 
         List<SummaryResponseDTO> summaryList = summaries.stream()
                 .map(s->summaryMapper.toDTO(s))
