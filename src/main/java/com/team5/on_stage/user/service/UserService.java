@@ -50,7 +50,6 @@ public class UserService {
         checkNicknameDuplicated(nickname);
         user.setNickname(nickname);
         userRepository.save(user);
-        summaryService.saveSummary(username);
     }
 
     public void updateUserDescription(String username,
