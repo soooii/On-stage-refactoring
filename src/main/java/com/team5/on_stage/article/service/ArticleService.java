@@ -22,6 +22,10 @@ public class ArticleService {
 
     //해당 username의 기사 저장
     public void save(String username){
+
+        //기존 article soft delete
+        articleRepository.softDeleteByUsername(username);
+
         User user = userRepository.findByUsername(username);
         String keyword = user.getNickname();
         List<ArticleRequestDTO> crawledArticles = articleCrawlService.crawlArticles(keyword);
