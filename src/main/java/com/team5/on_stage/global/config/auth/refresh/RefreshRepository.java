@@ -1,12 +1,13 @@
 package com.team5.on_stage.global.config.auth.refresh;
 
-import jakarta.transaction.Transactional;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.keyvalue.repository.KeyValueRepository;
+import org.springframework.data.repository.CrudRepository;
 
-public interface RefreshRepository extends JpaRepository<Refresh, Long> {
+import java.util.Optional;
 
-    Boolean existsByRefresh(String refresh);
+public interface RefreshRepository extends CrudRepository<Refresh, String>, KeyValueRepository<Refresh, String> {
 
-    @Transactional
-    void deleteByRefresh(String refresh);
+    Optional<Refresh> findByRefreshToken(String refreshToken);
+
+    void deleteByRefreshToken(String refreshToken);
 }

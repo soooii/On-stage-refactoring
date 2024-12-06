@@ -1,26 +1,36 @@
 package com.team5.on_stage.global.config.auth.refresh;
 
-import jakarta.persistence.*;
+//import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.TimeToLive;
+import org.springframework.data.redis.core.index.Indexed;
 
 @Getter @Setter
-@Table(name = "refresh")
-@Entity
+@NoArgsConstructor
+@RedisHash(value = "redis_refresh")
 public class Refresh {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Indexed
+    private String refreshToken;
 
     // 사용자 식별
-    @Column(nullable = false)
     private String username;
 
-    @Lob
-    @Column(nullable = false, columnDefinition = "BLOB")
-    private String refresh;
+    @TimeToLive
+    private Long timeToLive;
 
-    @Column(nullable = false)
-    private String expiration;
+    @Builder
+    public Refresh(String username,
+                   String refreshToken) {
+
+        this.username = username;
+        this.refreshToken = refreshToken;
+        this.timeToLive = 1000L * 60 * 60 * 24 * 1;
+    }
 }
