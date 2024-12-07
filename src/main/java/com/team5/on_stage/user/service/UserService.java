@@ -134,7 +134,7 @@ public class UserService {
 
 
     // Todo: 예외처리
-    public SingleMessageSentResponse sendSmsToFindEmail(UserVerifyDto userVerifyDto) {
+    public SingleMessageSentResponse sendSmsToVerify(UserVerifyDto userVerifyDto) {
 
         String username = userVerifyDto.getUsername();
 

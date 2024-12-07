@@ -92,7 +92,7 @@ public class UserApiController {
     @PostMapping("/send")
     public ResponseEntity<Void> sendSmsValidate(@RequestBody UserVerifyDto userVerifyDto) {
 
-        userService.sendSmsToFindEmail(userVerifyDto);
+        userService.sendSmsToVerify(userVerifyDto);
 
         return ResponseEntity.ok().build();
     }
