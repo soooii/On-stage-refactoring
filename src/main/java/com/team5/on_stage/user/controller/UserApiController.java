@@ -3,6 +3,7 @@ package com.team5.on_stage.user.controller;
 import com.team5.on_stage.global.config.jwt.TokenUsername;
 import com.team5.on_stage.subscribe.service.SubscribeService;
 import com.team5.on_stage.user.dto.UserProfileDto;
+import com.team5.on_stage.user.dto.UserVerifyDto;
 import com.team5.on_stage.user.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -88,6 +89,13 @@ public class UserApiController {
     }
 
 
+    @PostMapping("/send")
+    public ResponseEntity<Void> sendSmsValidate(@RequestBody UserVerifyDto userVerifyDto) {
+
+        userService.sendSmsToFindEmail(userVerifyDto);
+
+        return ResponseEntity.ok().build();
+    }
 
     // 유저 삭제
     @DeleteMapping
@@ -98,11 +106,4 @@ public class UserApiController {
         return ResponseEntity.ok().build();
     }
 
-
-//    @PostMapping("/{username}")
-//    public ResponseEntity<Void> likeUser(@TokenUsername String username,
-//                                         @PathVariable("linkId") Long linkId) {
-//
-//        return ResponseEntity.ok(userService.likeLink(username, linkId));
-//    }
 }

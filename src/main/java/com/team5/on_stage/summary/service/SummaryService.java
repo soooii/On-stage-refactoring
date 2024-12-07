@@ -99,12 +99,12 @@ public class SummaryService {
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
         List<Summary> summaries = summaryRespository.getSummaryByUsername(username, pageable);
 
-        /*
-        //저장된 뉴스가 없을 경우 ~~ 필요없지않나 -> 닉네임 변경 순간 저장되니까
+
+        //저장된 뉴스가 없을 경우  -> 닉네임 변경 순간 저장되도록 수정 필요
         if(summaries.isEmpty()){
             saveSummary(request.getUsername());
             return getSummary(request);
-        }*/
+        }
 
         List<SummaryResponseDTO> summaryList = summaries.stream()
                 .map(s->summaryMapper.toDTO(s))
