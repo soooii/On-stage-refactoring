@@ -71,7 +71,7 @@ public class ReissueService {
 
         String newAccessToken = jwtUtil.generateAccessToken(username, nickname, role);
 
-        String newRefreshToken = jwtUtil.generateRefreshToken(username, nickname, role);
+        String newRefreshToken = refreshService.generateRefreshToken(username, nickname, role);
 
 
         refreshService.deleteRefreshToken(oldRefreshToken);
