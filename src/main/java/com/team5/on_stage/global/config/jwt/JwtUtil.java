@@ -12,7 +12,7 @@ import javax.crypto.SecretKey;
 import java.io.IOException;
 import java.util.Date;
 
-import static com.team5.on_stage.global.config.jwt.AuthConstants.*;
+import static com.team5.on_stage.global.constants.AuthConstants.*;
 
 @RequiredArgsConstructor
 @Component

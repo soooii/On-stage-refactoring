@@ -13,7 +13,7 @@ import java.io.IOException;
 
 import static com.team5.on_stage.global.config.auth.cookie.CookieUtil.createCookie;
 import static com.team5.on_stage.global.config.auth.cookie.CookieUtil.deleteCookie;
-import static com.team5.on_stage.global.config.jwt.AuthConstants.*;
+import static com.team5.on_stage.global.constants.AuthConstants.*;
 import static com.team5.on_stage.global.config.jwt.JwtUtil.setErrorResponse;
 
 @RequiredArgsConstructor

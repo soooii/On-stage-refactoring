@@ -6,11 +6,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.crypto.SecretKey;
-import java.time.LocalDateTime;
 import java.util.Date;
 
-import static com.team5.on_stage.global.config.jwt.AuthConstants.REFRESH_TOKEN_EXPIRED_MS;
-import static com.team5.on_stage.global.config.jwt.AuthConstants.TYPE_REFRESH;
+import static com.team5.on_stage.global.constants.AuthConstants.REFRESH_TOKEN_EXPIRED_MS;
+import static com.team5.on_stage.global.constants.AuthConstants.TYPE_REFRESH;
 
 @Service
 @RequiredArgsConstructor

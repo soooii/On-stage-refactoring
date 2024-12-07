@@ -1,4 +1,4 @@
-package com.team5.on_stage.global.config.jwt;
+package com.team5.on_stage.global.constants;
 
 public class AuthConstants {
 
