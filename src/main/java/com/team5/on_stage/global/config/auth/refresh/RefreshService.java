@@ -1,5 +1,6 @@
 package com.team5.on_stage.global.config.auth.refresh;
 
+import com.team5.on_stage.global.config.redis.RedisRepository;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,7 @@ import static com.team5.on_stage.global.constants.AuthConstants.TYPE_REFRESH;
 public class RefreshService {
 
     private final SecretKey secretKey;
-    private final RefreshRepository refreshRepository;
+    private final RedisRepository redisRepository;
 
 
     public String generateRefreshToken(String username,
@@ -46,13 +47,13 @@ public class RefreshService {
                 .username(username)
                 .build();
 
-        refreshRepository.save(refresh);
+        redisRepository.save(refresh);
     }
 
     @Transactional
     public void deleteRefreshToken(String refreshToken) {
 
-        refreshRepository.findByRefreshToken(refreshToken)
-                .ifPresent(token -> refreshRepository.delete(token));
+        redisRepository.findByRefreshToken(refreshToken)
+                .ifPresent(token -> redisRepository.delete(token));
     }
 }

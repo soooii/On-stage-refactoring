@@ -10,7 +10,7 @@ import com.team5.on_stage.global.config.jwt.JwtFilter;
 import com.team5.on_stage.global.config.jwt.JwtUtil;
 import com.team5.on_stage.global.exception.JwtAccessDeniedHandler;
 import com.team5.on_stage.global.exception.JwtAuthenticationEntryPointHandler;
-import com.team5.on_stage.global.config.auth.refresh.RefreshRepository;
+import com.team5.on_stage.global.config.redis.RedisRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,7 +34,7 @@ public class SecurityConfig {
     private final JdbcTemplate jdbcTemplate;
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
     private final JwtUtil jwtUtil;
-    private final RefreshRepository refreshRepository;
+    private final RedisRepository redisRepository;
     private final RefreshService refreshService;
 
     @Bean
@@ -70,7 +70,7 @@ public class SecurityConfig {
                         .authenticationEntryPoint(new JwtAuthenticationEntryPointHandler(jwtUtil))
                         .accessDeniedHandler(new JwtAccessDeniedHandler()))
                 .addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository, refreshService), LogoutFilter.class);
+                .addFilterBefore(new CustomLogoutFilter(jwtUtil, redisRepository, refreshService), LogoutFilter.class);
 
         http.oauth2Login((oauth2) -> oauth2
                 //.loginPage("/login")
