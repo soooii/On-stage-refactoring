@@ -4,6 +4,7 @@ import com.team5.on_stage.global.config.auth.CustomClientRegistrationRepo;
 import com.team5.on_stage.global.config.auth.CustomOAuth2AuthorizedClientService;
 import com.team5.on_stage.global.config.auth.CustomOAuth2UserService;
 import com.team5.on_stage.global.config.auth.OAuth2SuccessHandler;
+import com.team5.on_stage.global.config.auth.refresh.RefreshService;
 import com.team5.on_stage.global.config.jwt.CustomLogoutFilter;
 import com.team5.on_stage.global.config.jwt.JwtFilter;
 import com.team5.on_stage.global.config.jwt.JwtUtil;
@@ -34,6 +35,7 @@ public class SecurityConfig {
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
     private final JwtUtil jwtUtil;
     private final RefreshRepository refreshRepository;
+    private final RefreshService refreshService;
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -68,7 +70,7 @@ public class SecurityConfig {
                         .authenticationEntryPoint(new JwtAuthenticationEntryPointHandler(jwtUtil))
                         .accessDeniedHandler(new JwtAccessDeniedHandler()))
                 .addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class);
+                .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository, refreshService), LogoutFilter.class);
 
         http.oauth2Login((oauth2) -> oauth2
                 //.loginPage("/login")

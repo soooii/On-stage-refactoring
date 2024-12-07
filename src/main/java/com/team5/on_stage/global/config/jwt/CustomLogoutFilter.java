@@ -1,5 +1,6 @@
 package com.team5.on_stage.global.config.jwt;
 
+import com.team5.on_stage.global.config.auth.refresh.RefreshService;
 import com.team5.on_stage.global.constants.ErrorCode;
 import com.team5.on_stage.global.exception.GlobalException;
 import com.team5.on_stage.global.config.auth.refresh.RefreshRepository;
@@ -23,6 +24,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
 
     private final JwtUtil jwtUtil;
     private final RefreshRepository refreshRepository;
+    private final RefreshService refreshService;
 
     @Override
     public void doFilter(ServletRequest request,
@@ -91,7 +93,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
 
         /* 로그아웃 */
 
-        refreshRepository.deleteByRefreshToken(refreshToken);
+        refreshService.deleteRefreshToken(refreshToken);
 
         Cookie deleteRefreshCookie = deleteCookie("refresh");
         Cookie deleteAccessCookie = deleteCookie("access");

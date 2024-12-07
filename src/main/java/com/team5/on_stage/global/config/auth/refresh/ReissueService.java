@@ -13,7 +13,7 @@ import java.io.IOException;
 
 import static com.team5.on_stage.global.config.auth.cookie.CookieUtil.createCookie;
 import static com.team5.on_stage.global.config.auth.cookie.CookieUtil.deleteCookie;
-import static com.team5.on_stage.global.config.jwt.AuthConstants.*;
+import static com.team5.on_stage.global.constants.AuthConstants.*;
 import static com.team5.on_stage.global.config.jwt.JwtUtil.setErrorResponse;
 
 @RequiredArgsConstructor
@@ -22,37 +22,39 @@ public class ReissueService {
 
     private final JwtUtil jwtUtil;
     private final RefreshRepository refreshRepository;
+    private final RefreshService refreshService;
 
     public void reissueRefreshToken(HttpServletRequest request,
                                     HttpServletResponse response) throws IOException {
 
-        String refreshToken = null;
+        /* Refresh Token 검증 */
+
+        String oldRefreshToken = null;
 
         Cookie[] cookies = request.getCookies();
         for (Cookie cookie : cookies) {
             if (cookie.getName().equals("refresh")) {
 
-                refreshToken = cookie.getValue();
+                oldRefreshToken = cookie.getValue();
             }
         }
 
-        // Todo: 예외처리
         try {
-            if (refreshToken == null) {
+            if (oldRefreshToken == null) {
                 throw new GlobalException(ErrorCode.INVALID_REFRESH_TOKEN);
             }
 
-            if (jwtUtil.isExpired(refreshToken)) {
+            if (jwtUtil.isExpired(oldRefreshToken)) {
                 throw new GlobalException(ErrorCode.REFRESH_TOKEN_EXPIRED);
             }
 
-            String tokenType = jwtUtil.getClaim(refreshToken, "type");
+            String tokenType = jwtUtil.getClaim(oldRefreshToken, "type");
 
             if (!tokenType.equals("refresh")) {
                 throw new GlobalException(ErrorCode.TYPE_NOT_MATCHED);
             }
 
-            Refresh oldRefreshToken = refreshRepository.findByRefreshToken(refreshToken)
+            refreshRepository.findByRefreshToken(oldRefreshToken)
                     .orElseThrow(() -> new GlobalException(ErrorCode.REFRESH_TOKEN_NOT_EXISTS));
 
 
@@ -61,16 +63,19 @@ public class ReissueService {
             throw new GlobalException(ErrorCode.FAILED_TO_REISSUE);
         }
 
-        String username = jwtUtil.getClaim(refreshToken, "username");
-        String nickname = jwtUtil.getClaim(refreshToken, "nickname");
-        String role = jwtUtil.getClaim(refreshToken, "role");
+        /* Refresh, Access Token 재발급 */
+
+        String username = jwtUtil.getClaim(oldRefreshToken, "username");
+        String nickname = jwtUtil.getClaim(oldRefreshToken, "nickname");
+        String role = jwtUtil.getClaim(oldRefreshToken, "role");
 
         String newAccessToken = jwtUtil.generateAccessToken(username, nickname, role);
 
-        String newRefreshToken = jwtUtil.generateRefreshToken(username, nickname, role);
+        String newRefreshToken = refreshService.generateRefreshToken(username, nickname, role);
 
-        refreshRepository.deleteByRefreshToken(refreshToken);
-        jwtUtil.addRefresh(username, newRefreshToken);
+
+        refreshService.deleteRefreshToken(oldRefreshToken);
+        refreshService.saveRefreshToken(newRefreshToken, username);
 
         Cookie deleteRefreshToken = deleteCookie("refresh");
 
