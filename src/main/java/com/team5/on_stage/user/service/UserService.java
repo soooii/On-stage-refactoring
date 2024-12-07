@@ -172,7 +172,7 @@ public class UserService {
         String verificationCode;
 
         StringBuilder codeBuilder = new StringBuilder();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 6; i++) {
             int idx = (int) (charSet.length * Math.random());
             codeBuilder.append(charSet[idx]);
         }
