@@ -1,18 +1,18 @@
 package com.team5.on_stage.user.service;
 
+import com.team5.on_stage.global.config.redis.RedisService;
 import com.team5.on_stage.global.config.s3.S3Uploader;
 import com.team5.on_stage.global.constants.ErrorCode;
 import com.team5.on_stage.global.exception.GlobalException;
-import com.team5.on_stage.summary.repository.SummaryRespository;
 import com.team5.on_stage.summary.service.SummaryService;
-import com.team5.on_stage.user.dto.UpdateUserDto;
 import com.team5.on_stage.user.dto.UserProfileDto;
+import com.team5.on_stage.user.dto.UserVerifyDto;
 import com.team5.on_stage.user.entity.*;
 import com.team5.on_stage.user.repository.UserRepository;
+import com.team5.on_stage.util.sms.SmsUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,6 +26,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final S3Uploader s3Uploader;
     private final SummaryService summaryService;
+    private final SmsUtil smsUtil;
+    private final RedisService redisService;
 
 
     public void checkNicknameDuplicated(String nickname) {
@@ -131,6 +133,29 @@ public class UserService {
     }
 
 
+    // Todo: 예외처리
+    public SingleMessageSentResponse sendSmsToFindEmail(UserVerifyDto userVerifyDto) {
+
+        String username = userVerifyDto.getUsername();
+
+        //수신번호 형태에 맞춰 "-"을 ""로 변환
+        String phoneNumber = userVerifyDto.getPhoneNumber().replaceAll("-","");
+
+        User foundUser = userRepository.findByUsername(username);
+
+        if (foundUser == null) {
+            throw new GlobalException(ErrorCode.USER_NOT_FOUND);
+        }
+
+        String verificationCode = generateVerificationCode();
+
+        //인증코드 유효기간 5분 설정
+        redisService.setVerificationCode(verificationCode, username, 60 * 5L);
+
+        return smsUtil.sendVerificationCode(phoneNumber, generateVerificationCode());
+    }
+
+
     public String convertNicknameToUsername(String nickname) {
 
         User user = userRepository.findByNickname(nickname);
@@ -138,5 +163,22 @@ public class UserService {
         return user.getUsername();
     }
 
+
+    // Todo: 인증코드 중복 검증
+    private String generateVerificationCode() {
+
+        char[] charSet = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+
+        String verificationCode;
+
+        StringBuilder codeBuilder = new StringBuilder();
+        for (int i = 0; i < 10; i++) {
+            int idx = (int) (charSet.length * Math.random());
+            codeBuilder.append(charSet[idx]);
+        }
+        verificationCode = codeBuilder.toString();
+
+        return verificationCode;
+    }
 
 }
