@@ -6,6 +6,7 @@ import com.team5.on_stage.user.dto.UserProfileDto;
 import com.team5.on_stage.user.dto.UserSendSmsDto;
 import com.team5.on_stage.user.service.UserService;
 import lombok.AllArgsConstructor;
+import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -90,11 +91,9 @@ public class UserApiController {
 
 
     @PostMapping("/send")
-    public ResponseEntity<Void> sendSmsValidate(@RequestBody UserSendSmsDto userSendSmsDto) {
+    public ResponseEntity<SingleMessageSentResponse> sendSmsValidate(@RequestBody UserSendSmsDto userSendSmsDto) {
 
-        userService.sendSmsToVerify(userSendSmsDto);
-
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(userService.sendSmsToVerify(userSendSmsDto));
     }
 
     // 유저 삭제

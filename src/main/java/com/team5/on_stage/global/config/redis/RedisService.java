@@ -21,9 +21,10 @@ public class RedisService {
     /* Refresh Token */
 
     // Todo: Transactional 어노테이션 필요성
-    public void setRefreshToken(String username, String refreshToken) {
+    // Todo: 현재 키와 값이 동일한 형태. 다른 저장 형태를 고민해볼 것
+    public void setRefreshToken(String refreshToken, String username) {
 
-        String key = "RefreshToken: " + username;
+        String key = "RefreshToken:" + refreshToken;
 
         ValueOperations<String, String> ops = redisTemplate.opsForValue();
 
@@ -32,7 +33,7 @@ public class RedisService {
 
     public String getRefreshToken(String refreshToken) {
 
-        String key = "RefreshToken: " + refreshToken;
+        String key = "RefreshToken:" + refreshToken;
 
         ValueOperations<String, String> ops = redisTemplate.opsForValue();
 
@@ -45,23 +46,28 @@ public class RedisService {
 
     public void deleteRefreshToken(String refreshToken) {
 
-        redisTemplate.delete(refreshToken);
+        String key = "RefreshToken:" + refreshToken;
+
+        redisTemplate.delete(key);
     }
 
     /* Verification Code */
 
-    public void setVerificationCode(String username, String verificationCode) {
+    // Todo: 검증 강화. key를 username + 만료 시간으로 할까?
+    // Todo: 위의 토큰과 같은 문제. 키값 설정, username을 키로 넣었더니 value 저장이 안 된다.
+    public void setSmsVerificationCode(String username,
+                                       String verificationData) {
 
-        String key = "VerificationCode: " + verificationCode;
+        String key = "SMS:VerificationData:" + verificationData;
 
         ValueOperations<String, String> ops = redisTemplate.opsForValue();
 
-        ops.set(key, username, Duration.ofMinutes(5));
+        ops.set(key, verificationData, Duration.ofMinutes(5));
     }
 
-    public String getVerificationCode(String verificationCode) {
+    public String getVerificationCode(String username) {
 
-        String key =  "VerificationCode: " + verificationCode;
+        String key =  "SMS:VerificationData:" + username;
 
         ValueOperations<String, String> ops = redisTemplate.opsForValue();
 
@@ -72,9 +78,11 @@ public class RedisService {
         return ops.get(key);
     }
 
-    public void deleteVerificationCode(String verificationCode) {
+    public void deleteVerificationCode(String username) {
 
-        redisTemplate.delete(verificationCode);
+        String key = "SMS:VerificationData:" + username;
+
+        redisTemplate.delete(username);
     }
 
     public void setExpireValue(String key, Long timeout) {

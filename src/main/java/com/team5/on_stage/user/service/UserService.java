@@ -1,10 +1,12 @@
 package com.team5.on_stage.user.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.team5.on_stage.global.config.redis.RedisService;
+import com.team5.on_stage.global.config.redis.dto.SmsVerificationData;
 import com.team5.on_stage.global.config.s3.S3Uploader;
 import com.team5.on_stage.global.constants.ErrorCode;
 import com.team5.on_stage.global.exception.GlobalException;
-import com.team5.on_stage.summary.service.SummaryService;
 import com.team5.on_stage.user.dto.UserProfileDto;
 import com.team5.on_stage.user.dto.UserSendSmsDto;
 import com.team5.on_stage.user.entity.*;
@@ -25,7 +27,6 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final S3Uploader s3Uploader;
-    private final SummaryService summaryService;
     private final SmsUtil smsUtil;
     private final RedisService redisService;
 
@@ -139,21 +140,32 @@ public class UserService {
     public SingleMessageSentResponse sendSmsToVerify(UserSendSmsDto userSendSmsDto) {
 
         String username = userSendSmsDto.getUsername();
-
-        //수신번호 형태에 맞춰 "-"을 ""로 변환
-        String phoneNumber = userSendSmsDto.getPhoneNumber().replaceAll("-","");
-
+        String phoneNumber = userSendSmsDto.getPhoneNumber().replaceAll("-",""); // 형식에 맞게 변환
         User foundUser = userRepository.findByUsername(username);
 
         if (foundUser == null) {
             throw new GlobalException(ErrorCode.USER_NOT_FOUND);
         }
 
+        // Redis에 저장하기 위해 가공
+        ObjectMapper objectMapper = new ObjectMapper();
+
         String verificationCode = generateVerificationCode();
 
-        redisService.setVerificationCode(verificationCode, username);
+        SmsVerificationData data = new SmsVerificationData(username, verificationCode, phoneNumber);
 
-        return smsUtil.sendVerificationCode(phoneNumber, generateVerificationCode());
+        // Todo: 예외처리
+        String verificationData;
+
+        try {
+            verificationData = objectMapper.writeValueAsString(data);
+        } catch (JsonProcessingException e) {
+            throw new GlobalException(ErrorCode.VERIFY_REQUEST_ERROR);
+        }
+
+        redisService.setSmsVerificationCode(username, verificationData);
+
+        return smsUtil.sendVerificationCode(phoneNumber, verificationCode);
     }
 
 
