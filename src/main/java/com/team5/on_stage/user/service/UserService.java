@@ -6,7 +6,7 @@ import com.team5.on_stage.global.constants.ErrorCode;
 import com.team5.on_stage.global.exception.GlobalException;
 import com.team5.on_stage.summary.service.SummaryService;
 import com.team5.on_stage.user.dto.UserProfileDto;
-import com.team5.on_stage.user.dto.UserVerifyDto;
+import com.team5.on_stage.user.dto.UserSendSmsDto;
 import com.team5.on_stage.user.entity.*;
 import com.team5.on_stage.user.repository.UserRepository;
 import com.team5.on_stage.util.sms.SmsUtil;
@@ -133,13 +133,15 @@ public class UserService {
     }
 
 
-    // Todo: 예외처리
-    public SingleMessageSentResponse sendSmsToVerify(UserVerifyDto userVerifyDto) {
+    /* SMS 본인인증 */
 
-        String username = userVerifyDto.getUsername();
+    // Todo: 예외처리
+    public SingleMessageSentResponse sendSmsToVerify(UserSendSmsDto userSendSmsDto) {
+
+        String username = userSendSmsDto.getUsername();
 
         //수신번호 형태에 맞춰 "-"을 ""로 변환
-        String phoneNumber = userVerifyDto.getPhoneNumber().replaceAll("-","");
+        String phoneNumber = userSendSmsDto.getPhoneNumber().replaceAll("-","");
 
         User foundUser = userRepository.findByUsername(username);
 
