@@ -8,9 +8,9 @@ import com.team5.on_stage.global.config.auth.refresh.RefreshService;
 import com.team5.on_stage.global.config.jwt.CustomLogoutFilter;
 import com.team5.on_stage.global.config.jwt.JwtFilter;
 import com.team5.on_stage.global.config.jwt.JwtUtil;
+import com.team5.on_stage.global.config.redis.RedisService;
 import com.team5.on_stage.global.exception.JwtAccessDeniedHandler;
 import com.team5.on_stage.global.exception.JwtAuthenticationEntryPointHandler;
-import com.team5.on_stage.global.config.auth.refresh.RefreshRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,7 +34,6 @@ public class SecurityConfig {
     private final JdbcTemplate jdbcTemplate;
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
     private final JwtUtil jwtUtil;
-    private final RefreshRepository refreshRepository;
     private final RefreshService refreshService;
 
     @Bean
@@ -44,7 +43,7 @@ public class SecurityConfig {
 
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, RedisService redisService) throws Exception {
 
         http
                 .cors((cors) -> cors.configurationSource(new CorsConfig()));
@@ -61,7 +60,7 @@ public class SecurityConfig {
                 .requestMatchers("/login", "/login/**", "/api/auth/reissue").permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/api/**").permitAll()
-                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll() /* Swagger */
+                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .requestMatchers("/usertest").authenticated()
                 .anyRequest().permitAll());
 
@@ -70,10 +69,9 @@ public class SecurityConfig {
                         .authenticationEntryPoint(new JwtAuthenticationEntryPointHandler(jwtUtil))
                         .accessDeniedHandler(new JwtAccessDeniedHandler()))
                 .addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository, refreshService), LogoutFilter.class);
+                .addFilterBefore(new CustomLogoutFilter(jwtUtil, redisService, refreshService), LogoutFilter.class);
 
         http.oauth2Login((oauth2) -> oauth2
-                //.loginPage("/login")
                 .authorizedClientService(customOAuth2AuthorizedClientService.oAuth2AuthorizedClientService(jdbcTemplate, customClientRegistrationRepo.ClientRegistrationRepository()))
                 .clientRegistrationRepository(customClientRegistrationRepo.ClientRegistrationRepository())
                 .successHandler(oAuth2SuccessHandler)

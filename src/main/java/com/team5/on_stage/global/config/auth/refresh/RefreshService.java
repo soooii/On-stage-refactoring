@@ -17,7 +17,7 @@ import static com.team5.on_stage.global.constants.AuthConstants.TYPE_REFRESH;
 public class RefreshService {
 
     private final SecretKey secretKey;
-    private final RefreshRepository refreshRepository;
+//    private final RefreshRepository refreshRepository;
 
 
     public String generateRefreshToken(String username,
@@ -36,23 +36,23 @@ public class RefreshService {
     }
 
 
-    // Refresh Token DB 저장
-    // DB에서의 만료 시간은 Redis TTL로 관리
-    @Transactional
-    public void saveRefreshToken(String refreshToken, String username) {
+//    // Refresh Token DB 저장
+//    // DB에서의 만료 시간은 Redis TTL로 관리
+//    @Transactional
+//    public void saveRefreshToken(String refreshToken, String username) {
+//
+//        Refresh refresh = Refresh.builder()
+//                .refreshToken(refreshToken)
+//                .username(username)
+//                .build();
+//
+//        refreshRepository.save(refresh);
+//    }
 
-        Refresh refresh = Refresh.builder()
-                .refreshToken(refreshToken)
-                .username(username)
-                .build();
-
-        refreshRepository.save(refresh);
-    }
-
-    @Transactional
-    public void deleteRefreshToken(String refreshToken) {
-
-        refreshRepository.findByRefreshToken(refreshToken)
-                .ifPresent(token -> refreshRepository.delete(token));
-    }
+//    @Transactional
+//    public void deleteRefreshToken(String refreshToken) {
+//
+//        refreshRepository.findByRefreshToken(refreshToken)
+//                .ifPresent(token -> refreshRepository.delete(token));
+//    }
 }
