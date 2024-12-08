@@ -149,8 +149,7 @@ public class UserService {
 
         String verificationCode = generateVerificationCode();
 
-        //인증코드 유효기간 5분 설정
-        redisService.setVerificationCode(verificationCode, username, 60 * 5L);
+        redisService.setVerificationCode(verificationCode, username);
 
         return smsUtil.sendVerificationCode(phoneNumber, generateVerificationCode());
     }
@@ -164,7 +163,7 @@ public class UserService {
     }
 
 
-    // Todo: 인증코드 중복 검증
+    // Todo: 인증코드 중복 검증. 근데 username과 조합하는데 굳이 필요 있을까?
     private String generateVerificationCode() {
 
         char[] charSet = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };

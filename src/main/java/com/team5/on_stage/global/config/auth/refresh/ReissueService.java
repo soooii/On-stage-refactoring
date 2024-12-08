@@ -1,7 +1,7 @@
 package com.team5.on_stage.global.config.auth.refresh;
 
 import com.team5.on_stage.global.config.jwt.JwtUtil;
-import com.team5.on_stage.global.config.redis.RedisRepository;
+import com.team5.on_stage.global.config.redis.RedisService;
 import com.team5.on_stage.global.constants.ErrorCode;
 import com.team5.on_stage.global.exception.GlobalException;
 import jakarta.servlet.http.Cookie;
@@ -22,7 +22,7 @@ import static com.team5.on_stage.global.config.jwt.JwtUtil.setErrorResponse;
 public class ReissueService {
 
     private final JwtUtil jwtUtil;
-    private final RedisRepository redisRepository;
+    private final RedisService redisService;
     private final RefreshService refreshService;
 
     public void reissueRefreshToken(HttpServletRequest request,
@@ -55,8 +55,9 @@ public class ReissueService {
                 throw new GlobalException(ErrorCode.TYPE_NOT_MATCHED);
             }
 
-            redisRepository.findByRefreshToken(oldRefreshToken)
-                    .orElseThrow(() -> new GlobalException(ErrorCode.REFRESH_TOKEN_NOT_EXISTS));
+            if (redisService.getRefreshToken(oldRefreshToken) == null) {
+                throw new GlobalException(ErrorCode.REFRESH_TOKEN_NOT_EXISTS);
+            }
 
 
         } catch (GlobalException e) {
@@ -75,8 +76,8 @@ public class ReissueService {
         String newRefreshToken = refreshService.generateRefreshToken(username, nickname, role);
 
 
-        refreshService.deleteRefreshToken(oldRefreshToken);
-        refreshService.saveRefreshToken(newRefreshToken, username);
+        redisService.deleteRefreshToken(oldRefreshToken);
+        redisService.setRefreshToken(newRefreshToken, username);
 
         Cookie deleteRefreshToken = deleteCookie("refresh");
 

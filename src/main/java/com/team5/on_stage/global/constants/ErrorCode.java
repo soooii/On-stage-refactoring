@@ -37,7 +37,8 @@ public enum ErrorCode {
 
     // Subscribe
     SUBSCRIBED_NOT_FOUND(HttpStatus.NOT_FOUND, "SUBSCRIBE-01", "즐겨찾기 대상을 찾을 수 없습니다."),
-    CANNOT_SUBSCRIBE_SELF(HttpStatus.BAD_REQUEST, "SUBSCRIBE-02", "잘못된 즐겨찾기 요청입니다.");
+    CANNOT_SUBSCRIBE_SELF(HttpStatus.BAD_REQUEST, "SUBSCRIBE-02", "잘못된 즐겨찾기 요청입니다."),
+    SUBSCRIBE_CANNOT_BE_MINUS(HttpStatus.BAD_REQUEST, "SUBSCRIBE-03", "잘못된 즐겨찾기 요청입니다.");
 
     // ANALYSIS
 

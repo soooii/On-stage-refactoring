@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
@@ -19,39 +18,68 @@ public class RedisService {
     private final RedisTemplate<String, String> redisTemplate;
 
 
-    public void setValue(String key, String value, Duration duration) {
+    /* Refresh Token */
 
-        ValueOperations<String, String> data = redisTemplate.opsForValue();
-        data.set(key, value, duration);
+    // Todo: Transactional 어노테이션 필요성
+    public void setRefreshToken(String username, String refreshToken) {
+
+        String key = "RefreshToken: " + username;
+
+        ValueOperations<String, String> ops = redisTemplate.opsForValue();
+
+        ops.set(key, refreshToken, Duration.ofHours(24));
     }
 
-    public void setVerificationCode(String verificationCode, String username, Long timeout) {
+    public String getRefreshToken(String refreshToken) {
 
-        ValueOperations<String, String> verificationData = redisTemplate.opsForValue();
+        String key = "RefreshToken: " + refreshToken;
 
-        verificationData.set(verificationCode, username, timeout, TimeUnit.MINUTES);
-    }
+        ValueOperations<String, String> ops = redisTemplate.opsForValue();
 
-    @Transactional
-    public String getValue(String key) {
-
-        ValueOperations<String, String> data = redisTemplate.opsForValue();
-
-        if (data.get(key) == null) {
-            return "false";
+        if (ops.get(key) == null) {
+            return null;
         }
 
-        return data.get(key);
+        return ops.get(key);
+    }
+
+    public void deleteRefreshToken(String refreshToken) {
+
+        redisTemplate.delete(refreshToken);
+    }
+
+    /* Verification Code */
+
+    public void setVerificationCode(String username, String verificationCode) {
+
+        String key = "VerificationCode: " + verificationCode;
+
+        ValueOperations<String, String> ops = redisTemplate.opsForValue();
+
+        ops.set(key, username, Duration.ofMinutes(5));
+    }
+
+    public String getVerificationCode(String verificationCode) {
+
+        String key =  "VerificationCode: " + verificationCode;
+
+        ValueOperations<String, String> ops = redisTemplate.opsForValue();
+
+        if (ops.get(key) == null) {
+            return null;
+        }
+
+        return ops.get(key);
+    }
+
+    public void deleteVerificationCode(String verificationCode) {
+
+        redisTemplate.delete(verificationCode);
     }
 
     public void setExpireValue(String key, Long timeout) {
 
         redisTemplate.expire(key, timeout, TimeUnit.MINUTES);
-    }
-
-    public void deleteValue(String key) {
-
-        redisTemplate.delete(key);
     }
 
 //    public void setHashOps(String key, Map<String, String> data) {

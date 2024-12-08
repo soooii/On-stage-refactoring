@@ -1,9 +1,9 @@
 package com.team5.on_stage.global.config.jwt;
 
 import com.team5.on_stage.global.config.auth.refresh.RefreshService;
+import com.team5.on_stage.global.config.redis.RedisService;
 import com.team5.on_stage.global.constants.ErrorCode;
 import com.team5.on_stage.global.exception.GlobalException;
-import com.team5.on_stage.global.config.redis.RedisRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
@@ -23,7 +23,7 @@ import static com.team5.on_stage.global.config.jwt.JwtUtil.setErrorResponse;
 public class CustomLogoutFilter extends GenericFilterBean {
 
     private final JwtUtil jwtUtil;
-    private final RedisRepository redisRepository;
+    private final RedisService redisService;
     private final RefreshService refreshService;
 
     @Override
@@ -86,14 +86,14 @@ public class CustomLogoutFilter extends GenericFilterBean {
             throw new GlobalException(ErrorCode.TYPE_NOT_MATCHED);
         }
 
-        if (redisRepository.findByRefreshToken(refreshToken).isEmpty()) {
+        if (redisService.getRefreshToken(refreshToken) == null) {
             setErrorResponse(response, ErrorCode.REFRESH_TOKEN_NOT_EXISTS);
             throw new GlobalException(ErrorCode.REFRESH_TOKEN_NOT_EXISTS);
         }
 
         /* 로그아웃 */
 
-        refreshService.deleteRefreshToken(refreshToken);
+        redisService.deleteRefreshToken(refreshToken);
 
         Cookie deleteRefreshCookie = deleteCookie("refresh");
         Cookie deleteAccessCookie = deleteCookie("access");
