@@ -39,7 +39,8 @@ public class ThemeService {
                 dto.getButtonColor(),
                 dto.getProfileColor(),
                 dto.getFontColor(),
-                dto.getIconColor()
+                dto.getIconColor(),
+                dto.getBackgroundColor()
         );
         return dto;
     }
@@ -52,6 +53,14 @@ public class ThemeService {
 
         String imageUrl = s3Uploader.upload(backgroundImage, "backgroundImages");
         theme.setBackgroundImage(imageUrl);
+        themeRepository.save(theme);
+        return getTheme(username);
+    }
+
+    public ThemeDTO clearBackgroundImage(String username) throws IOException {
+        Theme theme = themeRepository.findByUsername(username)
+                .orElseThrow(() -> new GlobalException(ErrorCode.THEME_NOT_FOUND));
+        theme.setBackgroundImage(null);
         themeRepository.save(theme);
         return getTheme(username);
     }

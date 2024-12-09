@@ -3,6 +3,7 @@ package com.team5.on_stage.global.config.auth;
 import com.team5.on_stage.global.config.auth.dto.CustomOAuth2User;
 import com.team5.on_stage.global.config.jwt.JwtUtil;
 import com.team5.on_stage.global.config.auth.refresh.RefreshService;
+import com.team5.on_stage.global.config.redis.RedisService;
 import com.team5.on_stage.global.constants.ErrorCode;
 import com.team5.on_stage.global.exception.GlobalException;
 import jakarta.servlet.ServletException;
@@ -23,9 +24,11 @@ import static com.team5.on_stage.global.config.jwt.JwtUtil.setErrorResponse;
 @Component
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    private final JwtUtil jwtUtil;
     public final String REDIRECT = "http://localhost:3000/management";
+
+    private final JwtUtil jwtUtil;
     private final RefreshService refreshService;
+    private final RedisService redisService;
 
 
     // Todo: 리다이렉트
@@ -45,7 +48,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
             String refreshToken = refreshService.generateRefreshToken(username, nickname, role);
 
-            refreshService.saveRefreshToken(refreshToken, username);
+            redisService.setRefreshToken(refreshToken, username);
 
             response.addCookie(createCookie("access", accessToken, false));
             response.addCookie(createCookie("refresh", refreshToken, true));

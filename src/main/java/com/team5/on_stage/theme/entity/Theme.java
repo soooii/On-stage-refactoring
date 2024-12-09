@@ -28,16 +28,19 @@ public class Theme {
 
     private String iconColor;
 
+    private String backgroundColor;
+
     private int borderRadius;
 
     @Builder
     public Theme(String username) {
         this.username = username;
-        this.backgroundImage = "https://s3-on-stage.s3.ap-northeast-2.amazonaws.com/backgroundImages/2.png";
+        this.backgroundImage = null;
         this.buttonColor = "#ffffff";
         this.profileColor = "#ffffff";
         this.fontColor = "#000000";
         this.iconColor = "#ffffff";
+        this.backgroundColor = "#94a0db";
         this.borderRadius = 25;
     }
 }

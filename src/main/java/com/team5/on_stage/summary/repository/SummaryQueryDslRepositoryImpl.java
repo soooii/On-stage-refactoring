@@ -1,13 +1,12 @@
 package com.team5.on_stage.summary.repository;
 
-import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.team5.on_stage.summary.entity.Summary;
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
 
 
@@ -22,6 +21,7 @@ import static com.team5.on_stage.summary.entity.QSummary.summary1;
 public class SummaryQueryDslRepositoryImpl implements SummaryQueryDslRepository {
 
     private final JPAQueryFactory queryFactory;
+    private final EntityManager em;
 
     @Override
     @Transactional
@@ -31,6 +31,10 @@ public class SummaryQueryDslRepositoryImpl implements SummaryQueryDslRepository 
                 .set(summary1.isDeleted, true)
                 .where(summary1.user.username.eq(username))
                 .execute();
+
+        em.flush();
+        em.clear();
+
     }
 
     @Override
@@ -60,6 +64,6 @@ public class SummaryQueryDslRepositoryImpl implements SummaryQueryDslRepository 
                 .join(summary1.user)
                 .where(summary1.createdAt.loe(timeToCompare))
                 .groupBy(summary1.user.username)
-               .fetch();
+                .fetch();
     }
 }

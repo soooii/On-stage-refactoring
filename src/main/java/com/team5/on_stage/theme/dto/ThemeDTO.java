@@ -22,6 +22,8 @@ public class ThemeDTO {
 
     private String iconColor;
 
+    private String backgroundColor;
+
     private int borderRadius;
 
 }
