@@ -40,7 +40,7 @@ public class Theme {
         this.profileColor = "#ffffff";
         this.fontColor = "#000000";
         this.iconColor = "#ffffff";
-        this.backgroundColor = "#333333";
+        this.backgroundColor = "#94a0db";
         this.borderRadius = 25;
     }
 }
