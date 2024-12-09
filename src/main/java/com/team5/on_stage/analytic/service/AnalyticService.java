@@ -17,6 +17,8 @@ import com.team5.on_stage.linkDetail.repository.LinkDetailRepository;
 import com.team5.on_stage.user.entity.User;
 import com.team5.on_stage.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,13 @@ import java.util.List;
 @Service
 public class AnalyticService {
 
+    // IP 주소 응답을 위한 내부 클래스
+    @Getter
+    @Setter
+    private static class IpResponse {
+        private String ip;
+    }
+    private final String IPIFY_API_URL = "https://api.ipify.org?format=json";
     private final AnalyticRepository analyticRepository;
     private final LocationRepository locationRepository;
     private final UserRepository userRepository;
@@ -69,7 +78,6 @@ public class AnalyticService {
         analyticRepository.save(analytic);
     }
 
-    @Transactional
     private LocationInfo getLocationByIp(String ipAddress) {
         RestTemplate restTemplate = new RestTemplate();
         LocationInfo locationInfo = restTemplate.getForObject(API_URL + ipAddress, LocationInfo.class);
@@ -122,6 +130,12 @@ public class AnalyticService {
                 .build();
 
         analyticRepository.save(analytic);
+    }
+
+    public String getPublicIp() {
+        RestTemplate restTemplate = new RestTemplate();
+        IpResponse response = restTemplate.getForObject(IPIFY_API_URL, IpResponse.class);
+        return response != null ? response.getIp() : null;
     }
 
     @Transactional
