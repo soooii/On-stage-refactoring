@@ -43,8 +43,4 @@ public class Analytic {
     @ManyToOne
     @JoinColumn(name = "link_id")
     private Link link;
-
-    @ManyToOne
-    @JoinColumn(name = "linkDetail_id")
-    private LinkDetail linkDetail;
 }
