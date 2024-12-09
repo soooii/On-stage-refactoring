@@ -1,5 +1,6 @@
 package com.team5.on_stage.user.dto;
 
+import com.team5.on_stage.user.entity.Verified;
 import lombok.Builder;
 import lombok.Data;
 
@@ -14,4 +15,6 @@ public class UserProfileDto {
     private String description;
 
     private String profileImage;
+
+    private Verified verified;
 }

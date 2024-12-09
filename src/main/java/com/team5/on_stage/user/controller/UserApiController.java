@@ -3,8 +3,12 @@ package com.team5.on_stage.user.controller;
 import com.team5.on_stage.global.config.jwt.TokenUsername;
 import com.team5.on_stage.subscribe.service.SubscribeService;
 import com.team5.on_stage.user.dto.UserProfileDto;
+import com.team5.on_stage.user.dto.UserSendSmsDto;
+import com.team5.on_stage.user.dto.UserSmsVerificationCheckDto;
 import com.team5.on_stage.user.service.UserService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -88,6 +92,17 @@ public class UserApiController {
     }
 
 
+    @PostMapping("/send")
+    public ResponseEntity<SingleMessageSentResponse> sendSmsValidate(@RequestBody @Valid UserSendSmsDto userSendSmsDto) {
+
+        return ResponseEntity.ok(userService.sendSmsToVerify(userSendSmsDto));
+    }
+
+    @PostMapping("/verify")
+    public ResponseEntity<Boolean> redisVerify(@RequestBody @Valid UserSmsVerificationCheckDto smsVerificationCheckDto) {
+
+        return ResponseEntity.ok(userService.verifyUser(smsVerificationCheckDto));
+    }
 
     // 유저 삭제
     @DeleteMapping
@@ -98,11 +113,4 @@ public class UserApiController {
         return ResponseEntity.ok().build();
     }
 
-
-//    @PostMapping("/{username}")
-//    public ResponseEntity<Void> likeUser(@TokenUsername String username,
-//                                         @PathVariable("linkId") Long linkId) {
-//
-//        return ResponseEntity.ok(userService.likeLink(username, linkId));
-//    }
 }
