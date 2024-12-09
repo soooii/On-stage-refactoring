@@ -4,6 +4,7 @@ import com.team5.on_stage.global.config.jwt.TokenUsername;
 import com.team5.on_stage.subscribe.service.SubscribeService;
 import com.team5.on_stage.user.dto.UserProfileDto;
 import com.team5.on_stage.user.dto.UserSendSmsDto;
+import com.team5.on_stage.user.dto.UserSmsVerificationCheckDto;
 import com.team5.on_stage.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -95,6 +96,12 @@ public class UserApiController {
     public ResponseEntity<SingleMessageSentResponse> sendSmsValidate(@RequestBody @Valid UserSendSmsDto userSendSmsDto) {
 
         return ResponseEntity.ok(userService.sendSmsToVerify(userSendSmsDto));
+    }
+
+    @PostMapping("/verify")
+    public ResponseEntity<Boolean> redisVerify(@RequestBody @Valid UserSmsVerificationCheckDto smsVerificationCheckDto) {
+
+        return ResponseEntity.ok(userService.verifyUser(smsVerificationCheckDto));
     }
 
     // 유저 삭제
