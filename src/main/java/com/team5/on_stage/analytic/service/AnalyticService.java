@@ -69,7 +69,6 @@ public class AnalyticService {
         analyticRepository.save(analytic);
     }
 
-    @Transactional
     private LocationInfo getLocationByIp(String ipAddress) {
         RestTemplate restTemplate = new RestTemplate();
         LocationInfo locationInfo = restTemplate.getForObject(API_URL + ipAddress, LocationInfo.class);
