@@ -48,6 +48,17 @@ public class JwtUtil {
                 .get(claim, String.class);
     }
 
+    // 발급 시간 추출
+    public Date getIssuedAt(String token) {
+
+        return Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .getIssuedAt();
+    }
+
     // 만료 시간 추출
     public Date getExpires(String token) {
 
