@@ -18,13 +18,14 @@ import java.util.List;
 public class SummaryApiController {
     private final SummaryService summaryService;
 
+    // 해당 유저네임의 아티스트 뉴스 요약 저장
     @PostMapping("/{username}")
     public ResponseEntity<String> saveSummary(@PathVariable String username) {
         summaryService.saveSummary(username);
         return ResponseEntity.ok("뉴스 요약이 저장되었습니다.");
     }
 
-    //해당하는 페이지의 아티스트 뉴스 가져오기
+    // 해당 유저네임의 아티스트 뉴스 요약 가져오기
     @GetMapping("/{username}")
     public ResponseEntity<Page<SummaryResponseDTO>> getSummary(
             @PathVariable String username,
@@ -36,6 +37,7 @@ public class SummaryApiController {
         return ResponseEntity.ok(response);
     }
 
+    // 해당 유저네임의 아티스트 뉴스 요약 모두 삭제
     @DeleteMapping("/{username}")
     public ResponseEntity<String> deleteSummary(@PathVariable String username){
         summaryService.deleteSummary(username);
