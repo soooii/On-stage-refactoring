@@ -24,6 +24,11 @@ public class ArticleCrawlService {
             Document doc = Jsoup.connect(url).get();
             Elements newsArticles = doc.select("ul.list_news > li");
 
+            // 검색 결과 없을 경우 빈 리스트 반환 후 종료
+            if (newsArticles.isEmpty()) {
+                return articles;
+            }
+
             for (Element article : newsArticles) {
                 String title = article.select("a.news_tit").text();
                 String link = article.select("a.news_tit").attr("href");
