@@ -13,5 +13,5 @@ public class PageViewStatsDto {
     private LocalDate date;
     private Long pageViewCount;
     private Long linkClickCount;
-    private Long subscriberCount; // 구독자 수
+//    private Long subscriberCount; // 구독자 수
 }
