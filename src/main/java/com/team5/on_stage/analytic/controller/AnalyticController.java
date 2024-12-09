@@ -36,6 +36,11 @@ public class AnalyticController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    @GetMapping("/get-ip")
+    public String getIp(){
+        return analyticService.getPublicIp();
+    }
+
     @GetMapping("/dashboard")
     public CompletableFuture<CombinedStatsDto> getCombinedStats(
             @RequestParam String userName,
