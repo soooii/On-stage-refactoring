@@ -1,27 +1,32 @@
 package com.team5.on_stage.global.config.redis.dto;
 
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
 @Getter
+@NoArgsConstructor
 public class SmsVerificationData implements Serializable {
 
-    private final String username;
+    private String username;
 
-    private final String verificationCode;
+    private String verificationCode;
 
-    private final String phoneNumber;
+    private String phoneNumber;
 
-    //private final long expiresAt;
+    private String requestTime;
 
+    @Builder
     public SmsVerificationData(String username,
                                String verificationCode,
-                               String phoneNumber) {
+                               String phoneNumber,
+                               String requestTime) {
 
         this.username = username;
         this.verificationCode = verificationCode;
         this.phoneNumber = phoneNumber;
-        //this.expiresAt = 1000 * 60 * 5;
+        this.requestTime = requestTime;
     }
 }

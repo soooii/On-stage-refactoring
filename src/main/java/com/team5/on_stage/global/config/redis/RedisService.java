@@ -55,19 +55,46 @@ public class RedisService {
 
     // Todo: 검증 강화. key를 username + 만료 시간으로 할까?
     // Todo: 위의 토큰과 같은 문제. 키값 설정, username을 키로 넣었더니 value 저장이 안 된다.
-    public void setSmsVerificationCode(String username,
-                                       String verificationData) {
+    public void setSmsVerificationData(String username,
+                                       String verificationData,
+                                       String requestTime) {
 
-        String key = "SMS:VerificationData:" + verificationData;
+        String key = "SMS:VerificationData:" + username + ":" + requestTime;
 
         ValueOperations<String, String> ops = redisTemplate.opsForValue();
 
-        ops.set(key, verificationData, Duration.ofMinutes(5));
+        ops.set(key, verificationData, Duration.ofMinutes(60));
     }
 
-    public String getVerificationCode(String username) {
+    public String getVerificationData(String username,
+                                      String requestTime) {
 
-        String key =  "SMS:VerificationData:" + username;
+        String key = "SMS:VerificationData:" + username + ":" + requestTime;
+
+        ValueOperations<String, String> ops = redisTemplate.opsForValue();
+
+        if (ops.get(key) == null) {
+            return null;
+        }
+
+        return ops.get(key);
+    }
+
+    public void setSmsVerificationRequestTime(String username,
+                                              String phoneNumber,
+                                              String requestTime) {
+
+        String key = "SMS:RequestTime:" + username + ":" + phoneNumber;
+
+        ValueOperations<String, String> ops = redisTemplate.opsForValue();
+
+        ops.set(key, requestTime, Duration.ofMinutes(60));
+    }
+
+    public String getSmsVerificationRequestTime(String username,
+                                                String phoneNumber) {
+
+        String key = "SMS:RequestTime:" + username + ":" + phoneNumber;
 
         ValueOperations<String, String> ops = redisTemplate.opsForValue();
 

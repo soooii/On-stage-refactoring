@@ -5,6 +5,7 @@ import com.team5.on_stage.subscribe.service.SubscribeService;
 import com.team5.on_stage.user.dto.UserProfileDto;
 import com.team5.on_stage.user.dto.UserSendSmsDto;
 import com.team5.on_stage.user.service.UserService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import org.springframework.http.HttpStatus;
@@ -91,7 +92,7 @@ public class UserApiController {
 
 
     @PostMapping("/send")
-    public ResponseEntity<SingleMessageSentResponse> sendSmsValidate(@RequestBody UserSendSmsDto userSendSmsDto) {
+    public ResponseEntity<SingleMessageSentResponse> sendSmsValidate(@RequestBody @Valid UserSendSmsDto userSendSmsDto) {
 
         return ResponseEntity.ok(userService.sendSmsToVerify(userSendSmsDto));
     }

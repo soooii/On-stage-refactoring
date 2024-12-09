@@ -15,7 +15,12 @@ public enum ErrorCode {
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USER-02", "유저를 찾을 수 없습니다."),
     NOT_MODIFIED(HttpStatus.NOT_MODIFIED, "USER-03", "변경 사항이 없습니다."),
     LOGIN_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "USER-4", "로그인에 실패했습니다."),
-    VERIFY_REQUEST_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "USER-5", "인증 요청에 실패했습니다."),
+
+    // Verify
+    VERIFY_REQUEST_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "VERIFY-01", "인증 요청에 실패했습니다."),
+    VERIFY_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "VERIFY-02", "인증 과정에서 문제가 발생했습니다."),
+    VERIFY_CODE_UNMATCHED(HttpStatus.BAD_REQUEST, "VERIFY-03", "인증 코드가 일치하지 않습니다."),
+    PHONENUMBER_UNMATCHED(HttpStatus.BAD_REQUEST, "VERIFY-04", "전화번호가 일치하지 않습니다."),
 
     // JWT
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "AUTH-01", "인증되지 않은 사용자입니다."),
