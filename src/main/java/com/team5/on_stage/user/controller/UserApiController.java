@@ -46,6 +46,7 @@ public class UserApiController {
     @PatchMapping("/profile")
     public ResponseEntity<UserProfileDto> updateUserProfileImage(@TokenUsername String username,
                                                                  @RequestPart("profileImage")   MultipartFile profileImage) throws IOException {
+
         return ResponseEntity.ok(userService.updateUserProfileImage(username, profileImage));
     }
 
@@ -93,15 +94,17 @@ public class UserApiController {
 
 
     @PostMapping("/send")
-    public ResponseEntity<SingleMessageSentResponse> sendSmsValidate(@RequestBody @Valid UserSendSmsDto userSendSmsDto) {
+    public ResponseEntity<SingleMessageSentResponse> sendSmsValidate(@TokenUsername String username,
+                                                                     @RequestBody @Valid UserSendSmsDto userSendSmsDto) {
 
-        return ResponseEntity.ok(userService.sendSmsToVerify(userSendSmsDto));
+        return ResponseEntity.ok(userService.sendSmsToVerify(username, userSendSmsDto));
     }
 
     @PostMapping("/verify")
-    public ResponseEntity<Boolean> redisVerify(@RequestBody @Valid UserSmsVerificationCheckDto smsVerificationCheckDto) {
+    public ResponseEntity<Boolean> redisVerify(@TokenUsername String username,
+                                               @RequestBody @Valid UserSmsVerificationCheckDto smsVerificationCheckDto) {
 
-        return ResponseEntity.ok(userService.verifyUser(smsVerificationCheckDto));
+        return ResponseEntity.ok(userService.verifyUser(username, smsVerificationCheckDto));
     }
 
     // 유저 삭제

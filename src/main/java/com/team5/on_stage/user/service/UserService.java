@@ -142,9 +142,9 @@ public class UserService {
     /* SMS 본인인증 */
 
     // Todo: 예외처리
-    public SingleMessageSentResponse sendSmsToVerify(UserSendSmsDto userSendSmsDto) {
+    public SingleMessageSentResponse sendSmsToVerify(String username,
+                                                     UserSendSmsDto userSendSmsDto) {
 
-        String username = userSendSmsDto.getUsername();
         String phoneNumber = userSendSmsDto.getPhoneNumber().replaceAll("-",""); // 형식에 맞게 변환
         User foundUser = userRepository.findByUsername(username);
 
@@ -195,10 +195,10 @@ public class UserService {
 
     // Todo: 현재는 인증 시 바로 변경되지만, 추후 변경 신청해서 관리자가 변경시키는 방식으로 바꾸기
     @Transactional
-    public Boolean verifyUser(UserSmsVerificationCheckDto verificationCheckDto) {
+    public Boolean verifyUser(String username,
+                              UserSmsVerificationCheckDto verificationCheckDto) {
 
 //      1. 요청자의 User 객체 정보
-        String username = verificationCheckDto.getUsername();
         User user = userRepository.findByUsername(username);
 
         if (user == null) {
