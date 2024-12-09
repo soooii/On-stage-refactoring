@@ -96,14 +96,13 @@ public class UserService {
             throw new GlobalException(ErrorCode.USER_NOT_FOUND);
         }
 
-        UserProfileDto userProfileDto = UserProfileDto.builder()
+        return UserProfileDto.builder()
                 .username(user.getUsername())
                 .nickname(user.getNickname())
                 .description(user.getDescription())
                 .profileImage(user.getProfileImage())
+                .verified(user.getVerified())
                 .build();
-
-        return userProfileDto;
     }
 
 
