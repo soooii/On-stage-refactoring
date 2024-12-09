@@ -1,12 +1,13 @@
 package com.team5.on_stage.user.entity;
 
 
+import com.team5.on_stage.global.constants.ErrorCode;
+import com.team5.on_stage.global.exception.GlobalException;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
@@ -49,19 +50,20 @@ public class User {
     private OAuth2Domain OAuth2Domain;
 
     // 소셜 로그인 정보에서 가져온 이메일
-    // Todo: 이메일이 없을 수도 있다. (ex: 깃허브)
+    // Todo: 이메일이 없을 수도 있다. (ex: 깃허브) 필요한가?
     @NotNull
     @Email
     @Column(name = "email", nullable = false)
     private String email;
 
     // 소셜 로그인 정보에서 가져온 이름
+    // Todo: 필요한가?
     @NotNull
     @Column(name = "name", nullable = false)
     private String name;
 
     @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
     @Column(name = "deactivated_at")
     private LocalDateTime deactivatedAt;
@@ -92,7 +94,7 @@ public class User {
         this.role = Role.ROLE_USER;
         this.verified = Verified.UNVERIFIED;
         this.deactivatedAt = null;
-        this.createdAt = LocalDate.now();
+        this.createdAt = LocalDateTime.now();
         this.description = "나를 소개하는 한마디";
         this.profileImage = "https://s3-on-stage.s3.ap-northeast-2.amazonaws.com/profileImages/defaultProfile.jpg";
     }
@@ -107,13 +109,13 @@ public class User {
         this.subscribed++;
     }
 
-    // Todo: 예외처리
+    // Todo: 예외처리 응답 반환 확인
     public void unsubscribe() {
         if (this.subscribed > 0) {
             this.subscribed--;
         }
         else {
-            throw new IllegalStateException("Subscribed cannot be minus");
+            throw new GlobalException(ErrorCode.SUBSCRIBE_CANNOT_BE_MINUS);
         }
     }
 }
