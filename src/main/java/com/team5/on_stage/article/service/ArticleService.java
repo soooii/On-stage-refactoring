@@ -39,7 +39,6 @@ public class ArticleService {
     }
 
     //해당 username의 기사 모두 삭제
-    //물리적으로 지울 필요는 없다 (soft delete)
     public void delete(String username) {
         articleRepository.softDeleteByUsername(username);
     }

@@ -56,10 +56,10 @@ public class DataSourceConfig {
         // Hibernate 설정
         Properties properties = new Properties();
         properties.put("hibernate.hbm2ddl.auto", "update");
-        properties.put("hibernate.physical_naming_strategy", "org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl"); // ImprovedNamingStrategy 삭제
+        properties.put("hibernate.physical_naming_strategy", "org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl");
         properties.put("hibernate.format_sql", "true");
         properties.put("hibernate.enable_lazy_load_no_trans", "true");
-        //ImprovedNamingStrategy 지원하지 않는다?
+
         entityManagerFactory.setJpaProperties(properties);
 
         return entityManagerFactory;
