@@ -36,9 +36,9 @@ public class AnalyticController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping("/dashboard/{userName}")
+    @GetMapping("/dashboard")
     public CompletableFuture<CombinedStatsDto> getCombinedStats(
-            @PathVariable String userName,
+            @RequestParam String userName,
             @RequestParam LocalDate startDate,
             @RequestParam LocalDate endDate){
 
