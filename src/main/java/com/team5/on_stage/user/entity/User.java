@@ -39,6 +39,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Verified verified;
 
+    @Column(name = "verified_at")
+    private LocalDateTime verifiedAt;
+
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)

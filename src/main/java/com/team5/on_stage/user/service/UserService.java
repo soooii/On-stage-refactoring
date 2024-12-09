@@ -101,6 +101,8 @@ public class UserService {
                 .nickname(user.getNickname())
                 .description(user.getDescription())
                 .profileImage(user.getProfileImage())
+                .verified(user.getVerified())
+                .verifiedAt(user.getVerifiedAt())
                 .build();
 
         return userProfileDto;
@@ -247,6 +249,7 @@ public class UserService {
 
 //      8. 변경
         user.setVerified(Verified.VERIFIED);
+        user.setVerifiedAt(LocalDateTime.now());
 
         userRepository.save(user);
 
