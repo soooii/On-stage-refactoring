@@ -13,6 +13,7 @@ import com.team5.on_stage.user.dto.UserSendSmsDto;
 import com.team5.on_stage.user.entity.*;
 import com.team5.on_stage.user.repository.UserRepository;
 import com.team5.on_stage.util.sms.SmsUtil;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.nurigo.sdk.message.response.SingleMessageSentResponse;
@@ -190,7 +191,8 @@ public class UserService {
     }
 
 
-    // Todo: 인증 후 인증정보 삭제, Verified 변경 처리
+    // Todo: 현재는 인증 시 바로 변경되지만, 추후 변경 신청해서 관리자가 변경시키는 방식으로 바꾸기
+    @Transactional
     public Boolean verifyUser(UserSmsVerificationCheckDto verificationCheckDto) {
 
 //      1. 요청자의 User 객체 정보
@@ -236,6 +238,17 @@ public class UserService {
         if (!verificationCode.equals(savedCode)) {
             throw new GlobalException(ErrorCode.VERIFY_CODE_UNMATCHED);
         }
+
+        /* 인증 완료 후 처리 */
+
+//      7. 인증 정보 삭제
+        redisService.deleteVerificationData(username, savedRequestTime);
+        redisService.deleteVerificationRequestTime(username, phoneNumber);
+
+//      8. 변경
+        user.setVerified(Verified.VERIFIED);
+
+        userRepository.save(user);
 
         return true;
     }

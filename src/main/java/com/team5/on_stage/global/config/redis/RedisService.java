@@ -51,7 +51,7 @@ public class RedisService {
         redisTemplate.delete(key);
     }
 
-    /* Verification Code */
+    /* Verification Data */
 
     // Todo: 검증 강화. key를 username + 만료 시간으로 할까?
     // Todo: 위의 토큰과 같은 문제. 키값 설정, username을 키로 넣었더니 value 저장이 안 된다.
@@ -80,6 +80,16 @@ public class RedisService {
         return ops.get(key);
     }
 
+    public void deleteVerificationData(String username,
+                                       String requestTime) {
+
+        String key = "SMS:VerificationData:" + username + ":" + requestTime;
+
+        redisTemplate.delete(key);
+    }
+
+    /* Verification Request Time */
+
     public void setSmsVerificationRequestTime(String username,
                                               String phoneNumber,
                                               String requestTime) {
@@ -105,11 +115,12 @@ public class RedisService {
         return ops.get(key);
     }
 
-    public void deleteVerificationCode(String username) {
+    public void deleteVerificationRequestTime(String username,
+                                              String phoneNumber) {
 
-        String key = "SMS:VerificationData:" + username;
+        String key = "SMS:RequestTime:" + username + ":" + phoneNumber;
 
-        redisTemplate.delete(username);
+        redisTemplate.delete(key);
     }
 
     public void setExpireValue(String key, Long timeout) {
