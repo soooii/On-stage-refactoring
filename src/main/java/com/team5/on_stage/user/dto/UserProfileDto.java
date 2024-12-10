@@ -21,4 +21,6 @@ public class UserProfileDto {
     private Verified verified;
 
     private LocalDateTime verifiedAt;
+
+    private int subscribed;
 }

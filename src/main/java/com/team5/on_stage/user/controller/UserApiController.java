@@ -1,6 +1,7 @@
 package com.team5.on_stage.user.controller;
 
 import com.team5.on_stage.global.config.jwt.TokenUsername;
+import com.team5.on_stage.subscribe.SubscribedUserDto;
 import com.team5.on_stage.subscribe.service.SubscribeService;
 import com.team5.on_stage.user.dto.UserProfileDto;
 import com.team5.on_stage.user.dto.UserSendSmsDto;
@@ -8,7 +9,6 @@ import com.team5.on_stage.user.dto.UserSmsVerificationCheckDto;
 import com.team5.on_stage.user.service.UserService;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @Tag(name = "User Controller", description = "유저 기능 컨트롤러")
 @AllArgsConstructor
@@ -75,6 +76,14 @@ public class UserApiController {
                                                  @PathVariable("username") String subscribed) {
 
         return ResponseEntity.ok(subscribeService.subscribeLink(subscriber, subscribed));
+    }
+
+
+    @Operation(summary = "즐겨찾기한 링크를 조회하는 엔드포인트", description = "사용자가 즐겨찾기에 등록한 링크들을 조회한다.")
+    @GetMapping("/subscribe/list")
+    public ResponseEntity<List<SubscribedUserDto>> getSubscribedLink(@TokenUsername String subscriber) {
+
+        return ResponseEntity.ok(subscribeService.getSubscribedList(subscriber));
     }
 
 

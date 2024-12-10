@@ -71,7 +71,7 @@ public class User {
     @Column(name = "deactivated_at")
     private LocalDateTime deactivatedAt;
 
-
+    @Column(name = "subscribed")
     private int subscribed;
 
 

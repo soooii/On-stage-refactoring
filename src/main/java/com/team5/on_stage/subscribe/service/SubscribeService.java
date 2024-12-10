@@ -2,8 +2,7 @@ package com.team5.on_stage.subscribe.service;
 
 import com.team5.on_stage.global.constants.ErrorCode;
 import com.team5.on_stage.global.exception.GlobalException;
-import com.team5.on_stage.link.entity.Link;
-import com.team5.on_stage.link.repository.LinkRepository;
+import com.team5.on_stage.subscribe.SubscribedUserDto;
 import com.team5.on_stage.subscribe.entity.Subscribe;
 import com.team5.on_stage.subscribe.repository.SubscribeRepository;
 import com.team5.on_stage.user.entity.User;
@@ -11,6 +10,9 @@ import com.team5.on_stage.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -55,6 +57,29 @@ public class SubscribeService {
 
         }
         return true;
+    }
+
+
+    public List<SubscribedUserDto> getSubscribedList(String subscriberUsername) {
+
+        User subscriber = userRepository.findByUsername(subscriberUsername);
+        if (subscriber == null) {
+            throw new GlobalException(ErrorCode.USER_NOT_FOUND);
+        }
+
+        List<Subscribe> subscribes = subscribeRepository.findAllBySubscriber(subscriber);
+
+        return subscribes.stream()
+                .map(subscribe -> {
+                    User subscribedUser = subscribe.getSubscribed();
+                    return SubscribedUserDto.builder()
+                            .nickname(subscribedUser.getNickname())
+                            .profileImage(subscribedUser.getProfileImage())
+                            .verified(subscribedUser.getVerified())
+                            .subscribed(subscribedUser.getSubscribed())
+                            .build();
+                })
+                .collect(Collectors.toList());
     }
 
 }

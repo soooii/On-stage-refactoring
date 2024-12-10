@@ -103,6 +103,7 @@ public class UserService {
                 .profileImage(user.getProfileImage())
                 .verified(user.getVerified())
                 .verifiedAt(user.getVerifiedAt())
+                .subscribed(user.getSubscribed())
                 .build();
 
         return userProfileDto;
