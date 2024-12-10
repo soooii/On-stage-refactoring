@@ -1,5 +1,6 @@
 package com.team5.on_stage.theme.controller;
 
+import com.team5.on_stage.global.config.jwt.TokenUsername;
 import com.team5.on_stage.theme.dto.ThemeDTO;
 import com.team5.on_stage.theme.service.ThemeService;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +23,13 @@ public class ThemeController {
         return ResponseEntity.status(HttpStatus.OK).body(themeService.updateTheme(themeDTO));
     }
 
-    @PutMapping("/{username}/background")
-    public ThemeDTO uploadBackgroundImage(@PathVariable String username, @RequestParam("file") MultipartFile file) throws IOException {
-        return themeService.updateBackgroundImage(username, file);
+    @PutMapping("/background")
+    public ResponseEntity<ThemeDTO> uploadBackgroundImage(@TokenUsername String username, @RequestParam("file") MultipartFile file) throws IOException {
+        return ResponseEntity.status(HttpStatus.OK).body(themeService.updateBackgroundImage(username, file));
+    }
+
+    @PutMapping("/background/clear")
+    public ResponseEntity<ThemeDTO> clearBackgroundImage(@TokenUsername String username) throws IOException {
+        return ResponseEntity.status(HttpStatus.OK).body(themeService.clearBackgroundImage(username));
     }
 }

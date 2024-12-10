@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
-@RequestMapping("/api/analytics")
+@RequestMapping("/analytics")
 public class AnalyticController {
 
     @Autowired
@@ -36,23 +36,21 @@ public class AnalyticController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    @GetMapping("/get-ip")
+    public String getIp(){
+        return analyticService.getPublicIp();
+    }
+
     @GetMapping("/dashboard")
     public CompletableFuture<CombinedStatsDto> getCombinedStats(
             @RequestParam String userName,
             @RequestParam LocalDate startDate,
-            @RequestParam LocalDate endDate){
+            @RequestParam LocalDate endDate) {
 
-        CompletableFuture<List<PageViewStatsDto>> pageViewStats =
-                CompletableFuture.supplyAsync(() -> analyticService.getPageViewStats(userName, startDate, endDate));
-
-        CompletableFuture<List<SocialLinkClickStatsDto>> socialLinkClickStats =
-                CompletableFuture.supplyAsync(() -> analyticService.getSocialLinkClickStats(userName, startDate, endDate));
-
-        CompletableFuture<List<LinkClickStatsDto>> linkClickStats =
-                CompletableFuture.supplyAsync(() -> analyticService.getLickClickStats(userName, startDate, endDate));
-
-        CompletableFuture<List<LocationStatsDto>> locationStats =
-                CompletableFuture.supplyAsync(() -> analyticService.getLocationStats(userName, startDate, endDate));
+        CompletableFuture<List<PageViewStatsDto>> pageViewStats = analyticService.getPageViewStats(userName, startDate, endDate);
+        CompletableFuture<List<SocialLinkClickStatsDto>> socialLinkClickStats = analyticService.getSocialLinkClickStats(userName, startDate, endDate);
+        CompletableFuture<List<LinkClickStatsDto>> linkClickStats = analyticService.getLinkClickStats(userName, startDate, endDate);
+        CompletableFuture<List<LocationStatsDto>> locationStats = analyticService.getLocationStats(userName, startDate, endDate);
 
         return CompletableFuture.allOf(pageViewStats, socialLinkClickStats, linkClickStats, locationStats)
                 .thenApply(voidResult -> {

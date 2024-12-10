@@ -17,6 +17,8 @@ import com.team5.on_stage.linkDetail.repository.LinkDetailRepository;
 import com.team5.on_stage.user.entity.User;
 import com.team5.on_stage.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -24,10 +26,18 @@ import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class AnalyticService {
 
+    // IP 주소 응답을 위한 내부 클래스
+    @Getter
+    @Setter
+    private static class IpResponse {
+        private String ip;
+    }
+    private final String IPIFY_API_URL = "https://api.ipify.org?format=json";
     private final AnalyticRepository analyticRepository;
     private final LocationRepository locationRepository;
     private final UserRepository userRepository;
@@ -90,9 +100,6 @@ public class AnalyticService {
     @Transactional
     public void linkEvent(AnalyticRequestDto requestDto){
 
-        LinkDetail linkDetail = linkDetailRepository.findById(requestDto.getLinkDetailId())
-                .orElseThrow(() -> new GlobalException(ErrorCode.LINK_DETAIL_NOT_FOUND));
-
         User user = userRepository.findByUsername(requestDto.getUsername());
 
         Link link = linkRepository.findById(requestDto.getLinkId())
@@ -101,7 +108,6 @@ public class AnalyticService {
         Analytic analytic = Analytic.builder()
                 .eventType(EventType.valueOf("LINK_CLICK"))
                 .link(link)
-                .linkDetail(linkDetail)
                 .date(LocalDate.now())
                 .user(user)
                 .build();
@@ -123,23 +129,25 @@ public class AnalyticService {
         analyticRepository.save(analytic);
     }
 
-    @Transactional
-    public List<PageViewStatsDto> getPageViewStats(String userName, LocalDate startDate, LocalDate endDate) {
-        return analyticRepositoryCustom.getPageViewStats(userName, startDate, endDate);
+    public String getPublicIp() {
+        RestTemplate restTemplate = new RestTemplate();
+        IpResponse response = restTemplate.getForObject(IPIFY_API_URL, IpResponse.class);
+        return response != null ? response.getIp() : null;
     }
 
-    @Transactional
-    public List<SocialLinkClickStatsDto> getSocialLinkClickStats(String userName, LocalDate startDate, LocalDate endDate) {
-        return analyticRepositoryCustom.getSocialLinkClickStats(userName, startDate, endDate);
+    public CompletableFuture<List<PageViewStatsDto>> getPageViewStats(String userName, LocalDate startDate, LocalDate endDate) {
+        return CompletableFuture.supplyAsync(() -> analyticRepositoryCustom.getPageViewStats(userName, startDate, endDate));
     }
 
-    @Transactional
-    public List<LinkClickStatsDto> getLickClickStats(String userName, LocalDate startDate, LocalDate endDate) {
-        return analyticRepositoryCustom.getLinkClickStats(userName, startDate, endDate);
+    public CompletableFuture<List<SocialLinkClickStatsDto>> getSocialLinkClickStats(String userName, LocalDate startDate, LocalDate endDate) {
+        return CompletableFuture.supplyAsync(() -> analyticRepositoryCustom.getSocialLinkClickStats(userName, startDate, endDate));
     }
 
-    @Transactional
-    public List<LocationStatsDto> getLocationStats(String userName, LocalDate startDate, LocalDate endDate) {
-        return analyticRepositoryCustom.getLocationStats(userName, startDate, endDate);
+    public CompletableFuture<List<LinkClickStatsDto>> getLinkClickStats(String userName, LocalDate startDate, LocalDate endDate) {
+        return CompletableFuture.supplyAsync(() -> analyticRepositoryCustom.getLinkClickStats(userName, startDate, endDate));
+    }
+
+    public CompletableFuture<List<LocationStatsDto>> getLocationStats(String userName, LocalDate startDate, LocalDate endDate) {
+        return CompletableFuture.supplyAsync(() -> analyticRepositoryCustom.getLocationStats(userName, startDate, endDate));
     }
 }

@@ -11,6 +11,5 @@ public class AnalyticRequestDto {
     private String ipAddress;   // 사용자 IP
     private String username;       // 사용자 이름
     private Long linkId;    // 링크 ID
-    private Long linkDetailId; // 링크 세부 ID
     private String socialLinkType;  // 소셜 링크 ID
 }
