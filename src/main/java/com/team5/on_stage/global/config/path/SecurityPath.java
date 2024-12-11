@@ -12,6 +12,8 @@ public class SecurityPath {
             "/api/auth/reissue",
     };
     public static final String[] ONLY_GET_WHITELIST = {
+            /* User */
+            "/{username}",
             /* Summary */
             "/api/summary/{username}",
             /* Analytics */
