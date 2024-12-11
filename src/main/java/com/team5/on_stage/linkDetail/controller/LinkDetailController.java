@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/link-detail")
+@RequestMapping("/link-detail")
 @RequiredArgsConstructor
 public class LinkDetailController {
     private final LinkDetailService linkDetailService;

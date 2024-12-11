@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/api/link")
+@RequestMapping("/link")
 public class LinkController {
     private final LinkService linkService;
 

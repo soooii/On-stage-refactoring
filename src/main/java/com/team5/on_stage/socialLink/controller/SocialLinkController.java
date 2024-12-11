@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/social-link")
+@RequestMapping("/social-link")
 @RequiredArgsConstructor
 public class SocialLinkController {
     private final SocialLinkService socialLinkService;

@@ -10,26 +10,26 @@ public class SecurityPath {
             "/login/**",
             "/login/oauth2/code/{registrationId}",
             "/logout",
-            "/api/auth/reissue",
+            "/auth/reissue",
     };
     public static final String[] ONLY_GET_WHITELIST = {
             /* User */
             "/{username}",
             /* Summary */
-            "/api/summary/{username}",
+            "/summary/{username}",
             /* Analytics */
-            "/api/analytics/dashboard",
-            "/api/analytics/get-ip"
+            "/analytics/dashboard",
+            "/analytics/get-ip"
     };
     public static final String[] ONLY_POST_WHITELIST = {
             /* Summary */
-            "/api/summary/{username}",
+            "/summary/{username}",
             /* Article */
-            "/api/article/{username}",
+            "/article/{username}",
             /* Analytics */
-            "/api/analytics/page",
-            "/api/analytics/link",
-            "/api/analytics/socialLink"
+            "/analytics/page",
+            "/analytics/link",
+            "/analytics/socialLink"
     };
     public static final String[] ONLY_PATCH_WHITELIST = {
 
@@ -39,8 +39,8 @@ public class SecurityPath {
     };
     public static final String[] ONLY_DELETE_WHITELIST = {
             /* Summary */
-            "/api/summary/{username}",
+            "/summary/{username}",
             /* Article */
-            "/api/article/{username}"
+            "/article/{username}"
     };
 }
