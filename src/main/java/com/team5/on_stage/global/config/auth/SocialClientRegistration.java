@@ -6,11 +6,13 @@ import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.oidc.IdTokenClaimNames;
 import org.springframework.stereotype.Component;
 
+import static com.team5.on_stage.global.constants.AuthConstants.DEPLOY_BACK_DOMAIN;
+
 @Component
 public class SocialClientRegistration {
 
     // application.properties를 대신하여 OAuth 정보를 관리하는 클래스
-    private final String BASE_URL = "http://localhost:8080";
+    private final String BASE_URL = DEPLOY_BACK_DOMAIN; //"http://localhost:8080";
 
     @Value("${naver.client.id}")
     private String naverClientId;

@@ -19,12 +19,13 @@ import java.io.IOException;
 
 import static com.team5.on_stage.global.config.auth.cookie.CookieUtil.createCookie;
 import static com.team5.on_stage.global.config.jwt.JwtUtil.setErrorResponse;
+import static com.team5.on_stage.global.constants.AuthConstants.DEPLOY_FRONT_DOMAIN;
 
 @RequiredArgsConstructor
 @Component
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    public final String REDIRECT = "http://localhost:3000/management";
+    public final String REDIRECT = DEPLOY_FRONT_DOMAIN + "/management";
 
     private final JwtUtil jwtUtil;
     private final RefreshService refreshService;
