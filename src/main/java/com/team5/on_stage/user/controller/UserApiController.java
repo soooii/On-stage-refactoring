@@ -119,16 +119,26 @@ public class UserApiController {
     public ResponseEntity<SingleMessageSentResponse> sendSmsValidate(@TokenUsername String username,
                                                                      @RequestBody @Valid UserSendSmsDto userSendSmsDto) {
 
-        return ResponseEntity.ok(userService.sendSmsToVerify(username, userSendSmsDto));
+        return ResponseEntity.ok(userService.sendSmsToVerifyRequest(username, userSendSmsDto));
     }
 
-    @Operation(summary = "SMS 인증 확인 요청 엔드포인트", description = "요청자 정보와 입력한 코드를 전달받아 본인 인증 절차를 처리한다.")
+    @Operation(summary = "SMS 인증 확인 요청 엔드포인트", description = "요청자 정보와 입력한 코드를 전달받아 본인 인증 절차를 처리한다. 그 후 신청 상태를 변경한다.")
     @PostMapping("/verify")
     public ResponseEntity<Boolean> redisVerify(@TokenUsername String username,
                                                @RequestBody @Valid UserSmsVerificationCheckDto smsVerificationCheckDto) {
 
-        return ResponseEntity.ok(userService.verifyUser(username, smsVerificationCheckDto));
+        return ResponseEntity.ok(userService.addVerifyRequest(username, smsVerificationCheckDto));
     }
+
+    @Operation(summary = "SMS 인증을 통한 신청 확인 처리 엔드포인트", description = "관리자가 신청 요청을 수락한다.")
+    @PostMapping("/accept/{username}")
+    public ResponseEntity<Void> acceptVerifyRequest(@PathVariable String username) {
+
+        userService.acceptVerifyRequest(username);
+
+        return ResponseEntity.ok().build();
+    }
+
 
     // 유저 삭제
     @Operation(summary = "사용자 삭제(비활성화) 엔드포인트", description = "Soft Delete 방식으로 사용자를 삭제한다.")
