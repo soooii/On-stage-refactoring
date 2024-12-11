@@ -1,10 +1,15 @@
 package com.team5.on_stage.global.config.path;
 
 public class SecurityPath {
-    private static final String[] COMMON_WHITELIST = {
+    public static final String[] COMMON_WHITELIST = {
             "/",
             "/swagger-ui/**",
             "/v3/api-docs/**",
+
+            /* User */
+            "/login",
+            "/logout",
+            "/api/auth/reissue",
     };
     public static final String[] ONLY_GET_WHITELIST = {
             /* Summary */
@@ -14,10 +19,6 @@ public class SecurityPath {
             "/api/analytics/get-ip"
     };
     public static final String[] ONLY_POST_WHITELIST = {
-            /* User */
-            "/login",
-            "/logout",
-            "/api/auth/reissue",
             /* Summary */
             "/api/summary/{username}",
             /* Article */
