@@ -7,7 +7,8 @@ public class SecurityPath {
             "/v3/api-docs/**",
 
             /* User */
-            "/login",
+            "/login/**",
+            "/login/oauth2/code/{registrationId}",
             "/logout",
             "/api/auth/reissue",
     };
