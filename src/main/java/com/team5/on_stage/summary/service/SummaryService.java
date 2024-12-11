@@ -83,7 +83,7 @@ public class SummaryService {
             if (i + 1 < filteredSummaries.size()) {
                 String title = filteredSummaries.get(i)
                         .replaceAll("^[0-9.\\s#*]+", "")
-                        .replaceAll("[*]+$", "")
+                        .replaceAll("[#*]+$", "")
                         .trim();
                 String content = filteredSummaries.get(i + 1).trim();
 

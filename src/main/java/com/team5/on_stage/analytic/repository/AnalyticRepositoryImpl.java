@@ -83,7 +83,7 @@ public class AnalyticRepositoryImpl implements AnalyticRepositoryCustom {
                         analytic.socialLinkType,
                         analytic.count()))
                 .from(analytic)
-                .where(analytic.eventType.eq(EventType.LINK_CLICK)
+                .where(analytic.eventType.eq(EventType.SOCIAL_LINK_CLICK)
                         .and(analytic.user.eq(user))
                         .and(analytic.date.between(startDate, endDate)))
                 .groupBy(analytic.socialLinkType)
