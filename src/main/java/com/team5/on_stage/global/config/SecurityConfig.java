@@ -8,12 +8,14 @@ import com.team5.on_stage.global.config.auth.refresh.RefreshService;
 import com.team5.on_stage.global.config.jwt.CustomLogoutFilter;
 import com.team5.on_stage.global.config.jwt.JwtFilter;
 import com.team5.on_stage.global.config.jwt.JwtUtil;
+import com.team5.on_stage.global.config.path.SecurityPath;
 import com.team5.on_stage.global.config.redis.RedisService;
 import com.team5.on_stage.global.exception.JwtAccessDeniedHandler;
 import com.team5.on_stage.global.exception.JwtAuthenticationEntryPointHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -22,6 +24,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
+
+import static com.team5.on_stage.global.config.path.SecurityPath.COMMON_WHITELIST;
 
 @RequiredArgsConstructor
 @Configuration
@@ -57,12 +61,12 @@ public class SecurityConfig {
                 .logout(logout -> logout.logoutUrl("/logout"));
 
         http.authorizeHttpRequests((auth) -> auth
-                .requestMatchers("/login", "/login/**", "/api/auth/reissue").permitAll()
+                .requestMatchers(COMMON_WHITELIST).permitAll()
+                .requestMatchers(HttpMethod.GET, SecurityPath.ONLY_GET_WHITELIST).permitAll()
+                .requestMatchers(HttpMethod.POST, SecurityPath.ONLY_POST_WHITELIST).permitAll()
+                .requestMatchers(HttpMethod.DELETE, SecurityPath.ONLY_DELETE_WHITELIST).permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
-                .requestMatchers("/api/**").permitAll()
-                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                .requestMatchers("/usertest").authenticated()
-                .anyRequest().permitAll());
+                .anyRequest().authenticated());
 
         http
                 .exceptionHandling(ex -> ex
