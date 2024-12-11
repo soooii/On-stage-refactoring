@@ -22,7 +22,7 @@ import java.io.IOException;
 
 @Tag(name = "User Controller", description = "유저 기능 컨트롤러")
 @AllArgsConstructor
-@RequestMapping("/api/user")
+@RequestMapping("/user")
 @RestController
 public class UserApiController {
 
