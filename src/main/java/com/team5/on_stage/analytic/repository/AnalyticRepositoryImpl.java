@@ -9,6 +9,7 @@ import com.team5.on_stage.analytic.dto.SocialLinkClickStatsDto;
 import com.team5.on_stage.analytic.dto.LocationStatsDto;
 import com.team5.on_stage.analytic.dto.PageViewStatsDto;
 import com.team5.on_stage.analytic.entity.QAnalytic;
+import com.team5.on_stage.subscribe.repository.SubscribeRepository;
 import com.team5.on_stage.user.entity.User;
 import com.team5.on_stage.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,9 @@ public class AnalyticRepositoryImpl implements AnalyticRepositoryCustom {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private SubscribeRepository subscribeRepository;
 
     @Override
     public List<PageViewStatsDto> getPageViewStats(String userName, LocalDate startDate, LocalDate endDate) {
@@ -79,7 +83,7 @@ public class AnalyticRepositoryImpl implements AnalyticRepositoryCustom {
                         analytic.socialLinkType,
                         analytic.count()))
                 .from(analytic)
-                .where(analytic.eventType.eq(EventType.LINK_CLICK)
+                .where(analytic.eventType.eq(EventType.SOCIAL_LINK_CLICK)
                         .and(analytic.user.eq(user))
                         .and(analytic.date.between(startDate, endDate)))
                 .groupBy(analytic.socialLinkType)

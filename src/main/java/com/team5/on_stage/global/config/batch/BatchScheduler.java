@@ -1,4 +1,4 @@
-package com.team5.on_stage.global.batch;
+package com.team5.on_stage.global.config.batch;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
