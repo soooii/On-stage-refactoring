@@ -21,6 +21,7 @@ public enum ErrorCode {
     VERIFY_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "VERIFY-02", "인증 과정에서 문제가 발생했습니다."),
     VERIFY_CODE_UNMATCHED(HttpStatus.BAD_REQUEST, "VERIFY-03", "인증 코드가 일치하지 않습니다."),
     PHONENUMBER_UNMATCHED(HttpStatus.BAD_REQUEST, "VERIFY-04", "전화번호가 일치하지 않습니다."),
+    BAD_REQUEST_VERIFY(HttpStatus.BAD_REQUEST, "VERIFY-05", "잘못된 요청입니다."),
 
     // JWT
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "AUTH-01", "인증되지 않은 사용자입니다."),
@@ -31,7 +32,7 @@ public enum ErrorCode {
     REFRESH_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "AUTH-06", "토큰이 만료되었습니다."),
     INVALID_AUTH_HEADER(HttpStatus.UNAUTHORIZED, "AUTH-07", "유효한 인증 헤더가 아닙니다."),
     TYPE_NOT_MATCHED(HttpStatus.UNAUTHORIZED, "AUTH-08", "토큰 타입이 일치하지 않습니다."),
-    BAD_REQUEST(HttpStatus.UNAUTHORIZED, "AUTH-09", "잘못된 요청입니다."),
+    BAD_REQUEST_TOKEN(HttpStatus.UNAUTHORIZED, "AUTH-09", "잘못된 요청입니다."),
     REFRESH_TOKEN_NOT_EXISTS(HttpStatus.UNAUTHORIZED, "AUTH-10", "토큰이 존재하지 않습니다."),
     FAILED_TO_REISSUE(HttpStatus.UNAUTHORIZED, "AUTH-11", "토큰 재발급에 실패했습니다."),
 
