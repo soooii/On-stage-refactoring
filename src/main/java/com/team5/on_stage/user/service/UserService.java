@@ -11,6 +11,7 @@ import com.team5.on_stage.user.dto.UserSmsVerificationCheckDto;
 import com.team5.on_stage.user.dto.UserProfileDto;
 import com.team5.on_stage.user.dto.UserSendSmsDto;
 import com.team5.on_stage.user.entity.*;
+import com.team5.on_stage.user.enums.Verified;
 import com.team5.on_stage.user.repository.UserRepository;
 import com.team5.on_stage.util.sms.SmsUtil;
 import jakarta.transaction.Transactional;

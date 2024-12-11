@@ -4,6 +4,8 @@ import com.team5.on_stage.global.config.auth.dto.*;
 import com.team5.on_stage.socialLink.service.SocialLinkService;
 import com.team5.on_stage.theme.service.ThemeService;
 import com.team5.on_stage.user.entity.*;
+import com.team5.on_stage.user.enums.OAuth2Domain;
+import com.team5.on_stage.user.enums.Role;
 import com.team5.on_stage.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;

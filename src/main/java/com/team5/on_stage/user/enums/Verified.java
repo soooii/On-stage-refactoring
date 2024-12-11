@@ -1,4 +1,4 @@
-package com.team5.on_stage.user.entity;
+package com.team5.on_stage.user.enums;
 
 public enum Verified {
     VERIFIED,

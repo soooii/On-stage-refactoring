@@ -3,6 +3,9 @@ package com.team5.on_stage.user.entity;
 
 import com.team5.on_stage.global.constants.ErrorCode;
 import com.team5.on_stage.global.exception.GlobalException;
+import com.team5.on_stage.user.enums.OAuth2Domain;
+import com.team5.on_stage.user.enums.Role;
+import com.team5.on_stage.user.enums.Verified;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -50,7 +53,7 @@ public class User {
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "oauth2_domain", nullable = false, updatable = false)
-    private OAuth2Domain OAuth2Domain;
+    private com.team5.on_stage.user.enums.OAuth2Domain OAuth2Domain;
 
     // 소셜 로그인 정보에서 가져온 이메일
     // Todo: 이메일이 없을 수도 있다. (ex: 깃허브) 필요한가?

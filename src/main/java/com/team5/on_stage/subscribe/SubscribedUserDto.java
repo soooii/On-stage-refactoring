@@ -1,6 +1,6 @@
 package com.team5.on_stage.subscribe;
 
-import com.team5.on_stage.user.entity.Verified;
+import com.team5.on_stage.user.enums.Verified;
 import lombok.Builder;
 
 @Builder

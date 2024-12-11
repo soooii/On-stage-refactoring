@@ -3,7 +3,7 @@ package com.team5.on_stage.global.config.jwt;
 import com.team5.on_stage.global.config.auth.dto.CustomOAuth2User;
 import com.team5.on_stage.global.config.auth.dto.UserDto;
 import com.team5.on_stage.global.constants.ErrorCode;
-import com.team5.on_stage.user.entity.Role;
+import com.team5.on_stage.user.enums.Role;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
