@@ -3,8 +3,9 @@ package com.team5.on_stage.global.constants;
 public class AuthConstants {
 
     // Domain
-    static public String FRONT_DOMAIN = "http://localhost:3000";
-    static public String BACK_DOMAIN = "http://localhost:8080";
+//    static public String DEPLOY_DOMAIN = "localhost";
+//    static public String DEPLOY_FRONT_DOMAIN = "http://localhost:3000";
+//    static public String DEPLOY_BACK_DOMAIN = "http://localhost:8080";
 
     // Domain - Deploy
 //    static public String DEPLOY_DOMAIN = "59.8.139.239";
