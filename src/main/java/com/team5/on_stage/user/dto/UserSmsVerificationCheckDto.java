@@ -6,8 +6,6 @@ import lombok.Getter;
 @Getter
 public class UserSmsVerificationCheckDto {
 
-    private String username;
-
     private String verificationCode;
 
     @Pattern(regexp = "(010)[0-9]{4}[0-9]{4}", message = "전화번호 형식이 올바르지 않습니다.")

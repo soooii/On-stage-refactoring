@@ -2,8 +2,7 @@ package com.team5.on_stage.subscribe.service;
 
 import com.team5.on_stage.global.constants.ErrorCode;
 import com.team5.on_stage.global.exception.GlobalException;
-import com.team5.on_stage.link.entity.Link;
-import com.team5.on_stage.link.repository.LinkRepository;
+import com.team5.on_stage.subscribe.SubscribedUserDto;
 import com.team5.on_stage.subscribe.entity.Subscribe;
 import com.team5.on_stage.subscribe.repository.SubscribeRepository;
 import com.team5.on_stage.user.entity.User;
@@ -11,6 +10,9 @@ import com.team5.on_stage.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -21,9 +23,9 @@ public class SubscribeService {
 
 
     @Transactional
-    public Boolean subscribeLink(String subscriber, String subscribed) {
+    public Boolean subscribeLink(String subscriber, String subscribedNickname) {
 
-        if (subscriber.equals(subscribed)) {
+        if (subscriber.equals(subscribedNickname)) {
             throw new GlobalException(ErrorCode.CANNOT_SUBSCRIBE_SELF);
         }
 
@@ -33,14 +35,14 @@ public class SubscribeService {
             throw new GlobalException(ErrorCode.USER_NOT_FOUND);
         }
 
-        User subscribedUser = userRepository.findByUsername(subscribed);
+        User subscribedUser = userRepository.findByNickname(subscribedNickname);
 
         if (subscribedUser == null) {
             throw new GlobalException(ErrorCode.USER_NOT_FOUND);
         }
 
         // Subscribe 기록이 없으면 추가, 있으면 삭제
-        if (!subscribeRepository.existsSubscribeBySubscriberAndSubscribed(subscriber, subscribed)) {
+        if (!subscribeRepository.existsSubscribeBySubscriberAndSubscribed(subscriber, subscribedNickname)) {
 
             Subscribe subscribe = new Subscribe(user, subscribedUser);
             subscribeRepository.save(subscribe);
@@ -49,12 +51,35 @@ public class SubscribeService {
 
         } else {
 
-            subscribeRepository.deleteSubscribeBySubscriberAndSubscribed(subscriber, subscribed);
+            subscribeRepository.deleteSubscribeBySubscriberAndSubscribed(subscriber, subscribedNickname);
 
             subscribedUser.unsubscribe();
 
         }
         return true;
+    }
+
+
+    public List<SubscribedUserDto> getSubscribedList(String subscriberUsername) {
+
+        User subscriber = userRepository.findByUsername(subscriberUsername);
+        if (subscriber == null) {
+            throw new GlobalException(ErrorCode.USER_NOT_FOUND);
+        }
+
+        List<Subscribe> subscribes = subscribeRepository.findAllBySubscriber(subscriber);
+
+        return subscribes.stream()
+                .map(subscribe -> {
+                    User subscribedUser = subscribe.getSubscribed();
+                    return SubscribedUserDto.builder()
+                            .nickname(subscribedUser.getNickname())
+                            .profileImage(subscribedUser.getProfileImage())
+                            .verified(subscribedUser.getVerified())
+                            .subscribed(subscribedUser.getSubscribed())
+                            .build();
+                })
+                .collect(Collectors.toList());
     }
 
 }

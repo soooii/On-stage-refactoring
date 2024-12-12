@@ -11,6 +11,7 @@ import com.team5.on_stage.user.dto.UserSmsVerificationCheckDto;
 import com.team5.on_stage.user.dto.UserProfileDto;
 import com.team5.on_stage.user.dto.UserSendSmsDto;
 import com.team5.on_stage.user.entity.*;
+import com.team5.on_stage.user.enums.Verified;
 import com.team5.on_stage.user.repository.UserRepository;
 import com.team5.on_stage.util.sms.SmsUtil;
 import jakarta.transaction.Transactional;
@@ -96,13 +97,17 @@ public class UserService {
             throw new GlobalException(ErrorCode.USER_NOT_FOUND);
         }
 
-        return UserProfileDto.builder()
+        UserProfileDto userProfileDto = UserProfileDto.builder()
                 .username(user.getUsername())
                 .nickname(user.getNickname())
                 .description(user.getDescription())
                 .profileImage(user.getProfileImage())
                 .verified(user.getVerified())
+                .verifiedAt(user.getVerifiedAt())
+                .subscribed(user.getSubscribed())
                 .build();
+
+        return userProfileDto;
     }
 
 
@@ -139,14 +144,18 @@ public class UserService {
     /* SMS 본인인증 */
 
     // Todo: 예외처리
-    public SingleMessageSentResponse sendSmsToVerify(UserSendSmsDto userSendSmsDto) {
+    public SingleMessageSentResponse sendSmsToVerifyRequest(String username,
+                                                            UserSendSmsDto userSendSmsDto) {
 
-        String username = userSendSmsDto.getUsername();
         String phoneNumber = userSendSmsDto.getPhoneNumber().replaceAll("-",""); // 형식에 맞게 변환
         User foundUser = userRepository.findByUsername(username);
 
         if (foundUser == null) {
             throw new GlobalException(ErrorCode.USER_NOT_FOUND);
+        }
+
+        if (foundUser.getVerified() == Verified.VERIFIED || foundUser.getVerified() == Verified.IN_PROGRESS) {
+            throw new GlobalException(ErrorCode.BAD_REQUEST_VERIFY);
         }
 
         /* Redis에 저장하기 위해 가공 */
@@ -190,16 +199,19 @@ public class UserService {
     }
 
 
-    // Todo: 현재는 인증 시 바로 변경되지만, 추후 변경 신청해서 관리자가 변경시키는 방식으로 바꾸기
     @Transactional
-    public Boolean verifyUser(UserSmsVerificationCheckDto verificationCheckDto) {
+    public Boolean addVerifyRequest(String username,
+                                    UserSmsVerificationCheckDto verificationCheckDto) {
 
 //      1. 요청자의 User 객체 정보
-        String username = verificationCheckDto.getUsername();
         User user = userRepository.findByUsername(username);
 
         if (user == null) {
             throw new GlobalException(ErrorCode.USER_NOT_FOUND);
+        }
+
+        if (user.getVerified() == Verified.VERIFIED || user.getVerified() == Verified.IN_PROGRESS) {
+            throw new GlobalException(ErrorCode.BAD_REQUEST_VERIFY);
         }
 
         /* Redis에 저장된 인증 정보 조회 */
@@ -244,12 +256,28 @@ public class UserService {
         redisService.deleteVerificationData(username, savedRequestTime);
         redisService.deleteVerificationRequestTime(username, phoneNumber);
 
-//      8. 변경
-        user.setVerified(Verified.VERIFIED);
+//      -> 요청 시 변경으로 수정
+//        user.setVerified(Verified.VERIFIED);
+//        user.setVerifiedAt(LocalDateTime.now());
 
+//      8. 인증 요청자 상태 변경
+        user.setVerified(Verified.IN_PROGRESS);
         userRepository.save(user);
 
         return true;
+    }
+
+
+    public void acceptVerifyRequest(String username) {
+
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new GlobalException(ErrorCode.USER_NOT_FOUND);
+        }
+
+        user.setVerified(Verified.VERIFIED);
+
+        userRepository.save(user);
     }
 
 

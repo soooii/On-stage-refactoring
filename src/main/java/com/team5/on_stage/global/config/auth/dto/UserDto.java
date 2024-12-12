@@ -1,6 +1,6 @@
 package com.team5.on_stage.global.config.auth.dto;
 
-import com.team5.on_stage.user.entity.Role;
+import com.team5.on_stage.user.enums.Role;
 import lombok.Getter;
 import lombok.Setter;
 

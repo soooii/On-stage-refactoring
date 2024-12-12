@@ -66,12 +66,12 @@ public class CustomLogoutFilter extends GenericFilterBean {
             }
 
         } catch (Exception e) {
-            setErrorResponse(response, ErrorCode.BAD_REQUEST);
-            throw new GlobalException(ErrorCode.BAD_REQUEST);
+            setErrorResponse(response, ErrorCode.BAD_REQUEST_TOKEN);
+            throw new GlobalException(ErrorCode.BAD_REQUEST_TOKEN);
         }
 
         if (refreshToken == null) {
-            setErrorResponse(response, ErrorCode.BAD_REQUEST);
+            setErrorResponse(response, ErrorCode.BAD_REQUEST_TOKEN);
             throw new GlobalException(ErrorCode.INVALID_REFRESH_TOKEN);
         }
 
