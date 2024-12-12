@@ -2,7 +2,9 @@ package com.team5.on_stage.subscribe;
 
 import com.team5.on_stage.user.enums.Verified;
 import lombok.Builder;
+import lombok.Data;
 
+@Data
 @Builder
 public class SubscribedUserDto {
 
@@ -12,7 +14,4 @@ public class SubscribedUserDto {
 
     private Verified verified;
 
-    private Integer subscribe;
-
-    private Integer subscribed;
 }
