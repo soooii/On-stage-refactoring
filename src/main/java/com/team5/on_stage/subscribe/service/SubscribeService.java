@@ -26,8 +26,8 @@ public class SubscribeService {
     public Boolean subscribeLink(String subscriber, String subscribedNickname) {
 
 
-        User user = userRepository.findByUsername(subscriber);
-        if (user == null) {
+        User subscribeUser = userRepository.findByUsername(subscriber);
+        if (subscribeUser == null) {
             throw new GlobalException(ErrorCode.USER_NOT_FOUND);
         }
 
@@ -43,15 +43,17 @@ public class SubscribeService {
         // Subscribe 기록이 없으면 추가, 있으면 삭제
         if (!subscribeRepository.existsSubscribeBySubscriberAndSubscribed(subscriber, subscribedNickname)) {
 
-            Subscribe subscribe = new Subscribe(user, subscribedUser);
+            Subscribe subscribe = new Subscribe(subscribeUser, subscribedUser);
             subscribeRepository.save(subscribe);
 
+            subscribeUser.subscribed();
             subscribedUser.subscribe();
 
         } else {
 
             subscribeRepository.deleteSubscribeBySubscriberAndSubscribed(subscriber, subscribedNickname);
 
+            subscribeUser.unsubscribed();
             subscribedUser.unsubscribe();
 
         }
