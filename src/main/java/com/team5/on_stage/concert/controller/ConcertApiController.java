@@ -29,25 +29,25 @@ public class ConcertApiController {
     //공유 url 끝 이름 nickname 검색 => 활동명
     // url 추출 linkcontext에서 nickname 받으면 됨
     // 매니지먼트 username 통해서 활동명 nickname
-    @GetMapping("/list/{username}")
-    public ResponseEntity<List<ConcertListResponse>> getConcertList(@PathVariable String username){
-        //user네임 통해서 콘서트 이름 및 performer, director 검색sa
-        return ResponseEntity.status(HttpStatus.OK).body(concertService.getConcertList(username));
+    @GetMapping("/list/{nickname}")
+    public ResponseEntity<List<ConcertListResponse>> getConcertList(@PathVariable String nickname){
+        //user네임 통해서 콘서트 이름 및 performer, director 검색
+        return ResponseEntity.status(HttpStatus.OK).body(concertService.getConcertListByNickname(nickname));
     }
     // 관리페이지 정보 검토
     // api쪽 token값 검증
-//    @GetMapping("/list")
-//    public ResponseEntity<List<ConcertInfoDto>> getConcertListInProfile(@TokenUsername String username){
-//        //user네임 통해서 콘서트 이름 및 performer, director 검색
-//        //context 까서 nickname
-//        concertService.getConcertList();
-//    }
+    @GetMapping("/list/")
+    public ResponseEntity<List<ConcertListResponse>> getConcertListToManage(@TokenUsername String username){
+        //user네임 통해서 콘서트 이름 및 performer, director 검색sa
+        return ResponseEntity.status(HttpStatus.OK).body(concertService.getConcertListByUsername(username));
+    }
 
     //엄...?
     @PatchMapping("/info/{userId}")
     public void patchConcertList(){
     }
     //하루 주기 정도로 db 스케쥴링, 일정 끝난거 지워버리기
+    // => 일자 지난거 삭제
     @DeleteMapping("/delete")
     public void deleteConcertInfo(){
     }

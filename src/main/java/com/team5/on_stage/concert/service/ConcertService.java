@@ -20,7 +20,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -85,7 +85,7 @@ public class ConcertService {
         System.out.println(concertPlaces);
 
     }
-    public List<ConcertListResponse> getConcertList(String username){
+    public List<ConcertListResponse> getConcertListByUsername(String username){
         String nickname = userRepository.findByUsername(username).getNickname();
         // 1. ConcertInfo 검색
         List<ConcertInfo> infoList = concertInfoRepository.findByPrfnmContaining(nickname);
@@ -139,6 +139,66 @@ public class ConcertService {
                                     .collect(Collectors.toList()))
                             .build();
                 })
+                .collect(Collectors.toList());
+    }
+    public List<ConcertListResponse> getConcertListByNickname(String nickname){
+        // 1. ConcertInfo 검색
+        List<ConcertInfo> infoList = concertInfoRepository.findByPrfnmContaining(nickname);
+
+        // 2. ConcertDetail 검색
+        List<ConcertDetail> detailList = concertDetailRepository.findByPrfcastContaining(nickname);
+
+        // 3. 두 리스트 중 nickname이 포함된 ConcertInfo를 반환
+        Set<ConcertInfo> resultSet = new HashSet<>(infoList);
+        detailList.stream()
+                .map(ConcertDetail::getConcertInfo) // ConcertDetail에서 ConcertInfo 추출
+                .forEach(resultSet::add);
+        List<ConcertInfo> filteredInfoList = new ArrayList<>(resultSet);
+
+        // 4. ConcertDetailResponse로 변환하여 반환
+        //ConcertDetail은 연관 데이터(ConcertPlace, Relate)를 포함하고 있어 DTO 변환이 효율적
+        //detailList에 매칭되지 않는 경우 해당 ConcertInfo를 제외하도록 필터링합니다.
+        return filteredInfoList.stream()
+                .map(info -> {
+                    // filteredInfoList의 현재 ConcertInfo의 mt20id와 일치하는 ConcertDetail 찾기
+                    ConcertDetail detail = info.getConcertDetail();
+
+                    // detail이 null인 경우 null 반환 (이후 필터링을 통해 제거)
+                    if (detail == null) {
+                        return null;
+                    }
+
+                    ConcertPlace place = detail.getConcertPlace();
+                    List<Relate> relates = detail.getRelate();
+
+                    return ConcertListResponse.builder()
+                            .concertId(info.getMt20id())
+                            .concertName(info.getPrfnm())
+                            .startDate(info.getPrfpdfrom().toString())
+                            .endDate(info.getPrfpdto().toString())
+                            .placeName(info.getFcltynm())
+                            .posterUrl(info.getPoster())
+                            .area(info.getArea())
+                            .concertState(info.getPrfstate())
+                            .performer(detail.getPrfcast())
+                            .director(detail.getPrfcrew())
+                            .placeId(detail.getMt10id())
+                            .placeInfo(ConcertListResponse.PlaceInfo.builder()
+                                    .placeId(place.getMt10id())
+                                    .address(place.getAdres())
+                                    .placeName(place.getFcltynm())
+                                    .latitude(place.getLatitude())
+                                    .longitude(place.getLongtitude())
+                                    .build())
+                            .relateInfos(relates.stream()
+                                    .map(relate -> ConcertListResponse.RelateInfo.builder()
+                                            .relateName(relate.getRelateNm())
+                                            .relateUrl(relate.getRelateUrl())
+                                            .build())
+                                    .collect(Collectors.toList()))
+                            .build();
+                })
+                .filter(Objects::nonNull)  // null 제거
                 .collect(Collectors.toList());
     }
     public void getConcertMap(){
