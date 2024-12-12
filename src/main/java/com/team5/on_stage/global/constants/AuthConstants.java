@@ -13,8 +13,8 @@ public class AuthConstants {
 //    static public String DEPLOY_BACK_DOMAIN = "http://59.8.139.239:5000";
 
     static public String DEPLOY_DOMAIN = "www.on-stage.link";
-    static public String DEPLOY_FRONT_DOMAIN = "http://www.on-stage.link:3000";
-    static public String DEPLOY_BACK_DOMAIN = "http://www.on-stage.link:5000";
+    static public String DEPLOY_FRONT_DOMAIN = "www.on-stage.link";
+    static public String DEPLOY_BACK_DOMAIN = "www.on-stage.link";
 
     // Token Type
     static public String TYPE_REFRESH = "refresh";
