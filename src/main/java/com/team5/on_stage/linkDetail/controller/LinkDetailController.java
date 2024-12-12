@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/link-detail")
+@RequestMapping("/api/link-detail")
 @RequiredArgsConstructor
 @Tag(name = "Link Detail Controller", description = "링크 디테일 컨트롤러")
 public class LinkDetailController {

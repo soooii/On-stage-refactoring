@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Summary API", description = "사용자의 아티스트 뉴스 요약을 저장, 조회, 삭제하는 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/summary/")
+@RequestMapping("/api/summary/")
 public class SummaryApiController {
     private final SummaryService summaryService;
 

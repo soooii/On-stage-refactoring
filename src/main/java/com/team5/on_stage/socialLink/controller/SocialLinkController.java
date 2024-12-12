@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/social-link")
+@RequestMapping("/api/social-link")
 @RequiredArgsConstructor
 @Tag(name = "Social Link Controller", description = "소셜 링크 컨트롤러")
 public class SocialLinkController {

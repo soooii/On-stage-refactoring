@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Article API", description = "사용자의 아티스트 뉴스 기사를 저장, 삭제하는 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/article/")
+@RequestMapping("/api/article/")
 public class ArticleApiController {
     private final ArticleService articleService;
 
