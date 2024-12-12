@@ -75,10 +75,10 @@ public class User {
     private LocalDateTime deactivatedAt;
 
     @Column(name = "subscribe")
-    private int subscribe;
+    private Integer subscribe;
 
     @Column(name = "subscribed")
-    private int subscribed;
+    private Integer subscribed;
 
 
     @Builder
@@ -106,6 +106,8 @@ public class User {
         this.createdAt = LocalDateTime.now();
         this.description = "나를 소개하는 한마디";
         this.profileImage = "https://s3-on-stage.s3.ap-northeast-2.amazonaws.com/profileImages/defaultProfile.jpg";
+        this.subscribe = 0;
+        this.subscribed = 0;
     }
 
     public void updateOAuthUser(String name, String email) {
