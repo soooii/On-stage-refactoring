@@ -3,18 +3,18 @@ package com.team5.on_stage.global.constants;
 public class AuthConstants {
 
     // Domain
-    static public String DEPLOY_DOMAIN = "localhost";
-    static public String DEPLOY_FRONT_DOMAIN = "http://localhost:3000";
-    static public String DEPLOY_BACK_DOMAIN = "http://localhost:8080";
+//    static public String DEPLOY_DOMAIN = "localhost";
+//    static public String DEPLOY_FRONT_DOMAIN = "http://localhost:3000";
+//    static public String DEPLOY_BACK_DOMAIN = "http://localhost:8080";
 
     // Domain - Deploy
 //    static public String DEPLOY_DOMAIN = "59.8.139.239";
 //    static public String DEPLOY_FRONT_DOMAIN = "http://59.8.139.239:3000";
 //    static public String DEPLOY_BACK_DOMAIN = "http://59.8.139.239:5000";
 
- //   static public String DEPLOY_DOMAIN = "www.on-stage.link";
- //   static public String DEPLOY_FRONT_DOMAIN = "http://www.on-stage.link:3000";
- //   static public String DEPLOY_BACK_DOMAIN = "http://www.on-stage.link:5000";
+    static public String DEPLOY_DOMAIN = "www.on-stage.link";
+    static public String DEPLOY_FRONT_DOMAIN = "http://www.on-stage.link:3000";
+    static public String DEPLOY_BACK_DOMAIN = "http://www.on-stage.link:5000";
 
     // Token Type
     static public String TYPE_REFRESH = "refresh";
