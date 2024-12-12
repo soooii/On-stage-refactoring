@@ -12,5 +12,7 @@ public class SubscribedUserDto {
 
     private Verified verified;
 
-    private int subscribed;
+    private Integer subscribe;
+
+    private Integer subscribed;
 }
