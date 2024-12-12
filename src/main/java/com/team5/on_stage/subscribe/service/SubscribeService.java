@@ -25,20 +25,19 @@ public class SubscribeService {
     @Transactional
     public Boolean subscribeLink(String subscriber, String subscribedNickname) {
 
-        if (subscriber.equals(subscribedNickname)) {
-            throw new GlobalException(ErrorCode.CANNOT_SUBSCRIBE_SELF);
-        }
 
         User user = userRepository.findByUsername(subscriber);
-
         if (user == null) {
             throw new GlobalException(ErrorCode.USER_NOT_FOUND);
         }
 
         User subscribedUser = userRepository.findByNickname(subscribedNickname);
-
         if (subscribedUser == null) {
             throw new GlobalException(ErrorCode.USER_NOT_FOUND);
+        }
+
+        if (subscriber.equals(subscribedUser.getUsername())) {
+            throw new GlobalException(ErrorCode.CANNOT_SUBSCRIBE_SELF);
         }
 
         // Subscribe 기록이 없으면 추가, 있으면 삭제
