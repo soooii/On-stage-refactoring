@@ -2,9 +2,11 @@ package com.team5.on_stage.global.config.auth.cookie;
 
 import jakarta.servlet.http.Cookie;
 
+import static com.team5.on_stage.global.constants.AuthConstants.DEPLOY_DOMAIN;
+
 public class CookieUtil {
 
-    public final static String COOKIE_DOMAIN = "localhost";
+    public final static String COOKIE_DOMAIN = DEPLOY_DOMAIN; //"localhost";
     public final static String COOKIE_PATH = "/";
     public final static int COOKIE_MAX_AGE = 24 * 60 * 60;
 

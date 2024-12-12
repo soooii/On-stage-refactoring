@@ -18,8 +18,7 @@ public class ConcertPlace {
     @Column(name = "place_id", nullable = false, unique = true)
     private String mt10id; // PK로 변경
 
-    @OneToOne
-    @JoinColumn(name = "place_id", referencedColumnName = "place_id")
+    @OneToOne(mappedBy = "concertPlace", fetch = FetchType.LAZY)
     private ConcertDetail concertDetail;
 
     @Column(name = "adres", nullable = false)
