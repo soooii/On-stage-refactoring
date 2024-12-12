@@ -74,6 +74,9 @@ public class User {
     @Column(name = "deactivated_at")
     private LocalDateTime deactivatedAt;
 
+    @Column(name = "subscribe")
+    private int subscribe;
+
     @Column(name = "subscribed")
     private int subscribed;
 
@@ -119,6 +122,19 @@ public class User {
     public void unsubscribe() {
         if (this.subscribed > 0) {
             this.subscribed--;
+        }
+        else {
+            throw new GlobalException(ErrorCode.SUBSCRIBE_CANNOT_BE_MINUS);
+        }
+    }
+
+    public void subscribed() {
+        this.subscribe++;
+    }
+
+    public void unsubscribed() {
+        if (this.subscribe > 0) {
+            this.subscribe--;
         }
         else {
             throw new GlobalException(ErrorCode.SUBSCRIBE_CANNOT_BE_MINUS);
