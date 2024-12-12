@@ -71,11 +71,11 @@ public class UserApiController {
 
     // 좋아요 기능
     @Operation(summary = "다른 사용자의 링크를 즐겨찾기에 등록하는 엔드포인트", description = "마음에 드는 사용자의 링크를 로그인한 사용자의 즐겨찾기 목록에 저장한다.")
-    @PostMapping("/subscribe/{username}")
+    @PostMapping("/subscribe/{nickname}")
     public ResponseEntity<Boolean> subscribeLink(@TokenUsername String subscriber,
-                                                 @PathVariable("username") String subscribed) {
+                                                 @PathVariable("nickname") String subscribedNickname) {
 
-        return ResponseEntity.ok(subscribeService.subscribeLink(subscriber, subscribed));
+        return ResponseEntity.ok(subscribeService.subscribeLink(subscriber, subscribedNickname));
     }
 
 

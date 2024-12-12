@@ -23,9 +23,9 @@ public class SubscribeService {
 
 
     @Transactional
-    public Boolean subscribeLink(String subscriber, String subscribed) {
+    public Boolean subscribeLink(String subscriber, String subscribedNickname) {
 
-        if (subscriber.equals(subscribed)) {
+        if (subscriber.equals(subscribedNickname)) {
             throw new GlobalException(ErrorCode.CANNOT_SUBSCRIBE_SELF);
         }
 
@@ -35,14 +35,14 @@ public class SubscribeService {
             throw new GlobalException(ErrorCode.USER_NOT_FOUND);
         }
 
-        User subscribedUser = userRepository.findByUsername(subscribed);
+        User subscribedUser = userRepository.findByNickname(subscribedNickname);
 
         if (subscribedUser == null) {
             throw new GlobalException(ErrorCode.USER_NOT_FOUND);
         }
 
         // Subscribe 기록이 없으면 추가, 있으면 삭제
-        if (!subscribeRepository.existsSubscribeBySubscriberAndSubscribed(subscriber, subscribed)) {
+        if (!subscribeRepository.existsSubscribeBySubscriberAndSubscribed(subscriber, subscribedNickname)) {
 
             Subscribe subscribe = new Subscribe(user, subscribedUser);
             subscribeRepository.save(subscribe);
@@ -51,7 +51,7 @@ public class SubscribeService {
 
         } else {
 
-            subscribeRepository.deleteSubscribeBySubscriberAndSubscribed(subscriber, subscribed);
+            subscribeRepository.deleteSubscribeBySubscriberAndSubscribed(subscriber, subscribedNickname);
 
             subscribedUser.unsubscribe();
 
