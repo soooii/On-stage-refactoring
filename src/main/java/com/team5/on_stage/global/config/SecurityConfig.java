@@ -76,6 +76,8 @@ public class SecurityConfig {
                 .addFilterBefore(new CustomLogoutFilter(jwtUtil, redisService, refreshService), LogoutFilter.class);
 
         http.oauth2Login((oauth2) -> oauth2
+                .authorizationEndpoint(endpoint -> endpoint
+                        .baseUri("/login/oauth2/authorization"))
                 .authorizedClientService(customOAuth2AuthorizedClientService.oAuth2AuthorizedClientService(jdbcTemplate, customClientRegistrationRepo.ClientRegistrationRepository()))
                 .clientRegistrationRepository(customClientRegistrationRepo.ClientRegistrationRepository())
                 .successHandler(oAuth2SuccessHandler)

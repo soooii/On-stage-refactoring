@@ -8,6 +8,7 @@ public class SecurityPath {
 
             /* User */
             "/login/**",
+            "/login/oauth2/authorization/*",
             "/login/oauth2/code/{registrationId}",
             "/logout",
             "/auth/reissue",
