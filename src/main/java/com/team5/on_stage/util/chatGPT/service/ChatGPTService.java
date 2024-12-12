@@ -10,10 +10,10 @@ import org.springframework.web.client.RestTemplate;
 @Service
 @RequiredArgsConstructor
 public class ChatGPTService {
-    @Value("${ON-STAGE-CHATGPT-MODEL}")
+    @Value("${openai.model}")
     private String model;
 
-    @Value("${ON-STAGE-CHATGPT-API-URL}")
+    @Value("${openai.url}")
     private String apiURL;
 
     private final RestTemplate restTemplate;

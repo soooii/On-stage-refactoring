@@ -10,8 +10,8 @@ import java.util.List;
 public interface ConcertDetailRepository extends JpaRepository<ConcertDetail, String> {
     // performer로 검색
     @EntityGraph(attributePaths = {
-        "concertDetail.concertPlace",
-                "concertDetail.relate"
+        "concertPlace",
+        "relate"
     })
-    List<ConcertDetail> findByPrfcastContaining(String performer);
+    List<ConcertDetail> findByPrfcastContaining(String nickname);
 }

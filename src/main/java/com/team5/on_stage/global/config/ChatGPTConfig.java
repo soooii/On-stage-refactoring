@@ -9,7 +9,7 @@ import org.springframework.web.client.RestTemplate;
 @Configuration
 public class ChatGPTConfig {
 
-    @Value("${ON-STAGE-CHATGPT}")
+    @Value("${openai.secret-key}")
     private String gptSecretKey;
     @Bean
     public RestTemplate template() {
