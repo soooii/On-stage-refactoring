@@ -5,9 +5,9 @@ public class SecurityPath {
             "/",
             "/swagger-ui/**",
             "/v3/api-docs/**",
-
             /* User */
             "/login/**",
+            "/api/login/**",
             "/login/oauth2/authorization/*",
             "/login/oauth2/code/{registrationId}",
             "/logout",
