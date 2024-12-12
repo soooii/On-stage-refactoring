@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
-@RequestMapping("/analytics")
+@RequestMapping("/api/analytics")
 @Tag(name = "Analytics Controller", description = "APIs for tracking and retrieving analytics data")
 public class AnalyticController {
 
