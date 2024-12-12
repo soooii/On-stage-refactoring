@@ -11,4 +11,6 @@ import java.util.List;
 public interface SubscribeRepository extends JpaRepository<Subscribe, Long>, SubscribeQueryDslRepository {
 
     List<Subscribe> findAllBySubscriber(User subscriber);
+
+    List<Subscribe> findAllBySubscribed(User subscriber);
 }

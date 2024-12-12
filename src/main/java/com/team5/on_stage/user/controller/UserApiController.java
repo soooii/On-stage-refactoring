@@ -86,6 +86,13 @@ public class UserApiController {
         return ResponseEntity.ok(subscribeService.getSubscribedList(subscriber));
     }
 
+    @Operation(summary = "즐겨찾기한 링크를 조회하는 엔드포인트", description = "사용자가 즐겨찾기에 등록한 링크들을 조회한다.")
+    @GetMapping("/subscribed/list")
+    public ResponseEntity<List<SubscribedUserDto>> getSubscribeLink(@TokenUsername String subscriber) {
+
+        return ResponseEntity.ok(subscribeService.getSubscribeList(subscriber));
+    }
+
 
     // 본인 프로필 정보 조회
     @Operation(summary = "로그인한 사용자의 프로필 정보를 가져오는 엔드포인트", description = "로그인한 사용자의 마이페이지 및 링크 관리 화면에 보여질 프로필 정보를 조회한다.")

@@ -77,11 +77,27 @@ public class SubscribeService {
                             .nickname(subscribedUser.getNickname())
                             .profileImage(subscribedUser.getProfileImage())
                             .verified(subscribedUser.getVerified())
-                            .subscribe(subscribedUser.getSubscribe())
-                            .subscribed(subscribedUser.getSubscribed())
                             .build();
                 })
                 .collect(Collectors.toList());
     }
 
+    public List<SubscribedUserDto> getSubscribeList (String subscriberUsername) {
+
+        User subscriber = userRepository.findByUsername(subscriberUsername);
+        if (subscriber == null) {
+            throw new GlobalException(ErrorCode.USER_NOT_FOUND);
+        }
+        List<Subscribe> subscribes = subscribeRepository.findAllBySubscribed(subscriber);
+        return subscribes.stream()
+                .map(subscribe -> {
+                    User subscribedUser = subscribe.getSubscribed();
+                    return SubscribedUserDto.builder()
+                            .nickname(subscribedUser.getNickname())
+                            .profileImage(subscribedUser.getProfileImage())
+                            .verified(subscribedUser.getVerified())
+                            .build();
+                })
+                .collect(Collectors.toList());
+    }
 }
