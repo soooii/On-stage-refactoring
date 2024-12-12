@@ -14,7 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/theme")
+@RequestMapping("/api/theme")
 @RequiredArgsConstructor
 @Tag(name = "Theme Controller", description = "테마 컨트롤러")
 public class ThemeController {

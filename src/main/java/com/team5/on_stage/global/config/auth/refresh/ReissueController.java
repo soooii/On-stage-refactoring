@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 
 @Tag(name = "Reissue Controller", description = "Refresh Token 재발급 담당 컨트롤러")
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 @RequiredArgsConstructor
 @RestController
 public class ReissueController {
