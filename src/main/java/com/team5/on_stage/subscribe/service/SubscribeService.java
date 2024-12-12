@@ -77,6 +77,7 @@ public class SubscribeService {
                             .nickname(subscribedUser.getNickname())
                             .profileImage(subscribedUser.getProfileImage())
                             .verified(subscribedUser.getVerified())
+                            .subscribe(subscribedUser.getSubscribe())
                             .subscribed(subscribedUser.getSubscribed())
                             .build();
                 })
