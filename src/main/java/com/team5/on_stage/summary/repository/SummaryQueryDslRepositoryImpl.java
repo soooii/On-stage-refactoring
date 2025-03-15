@@ -37,22 +37,38 @@ public class SummaryQueryDslRepositoryImpl implements SummaryQueryDslRepository 
 
     }
 
+    // 가장 최신 뉴스 Summary 가져옴
     @Override
-    public List<Summary> getSummaryByUsername(String username, Pageable pageable) {
+    public List<Summary> getRecentSummaryByUsername(String username, Pageable pageable) {
         return queryFactory
                 .selectFrom(summary1)
                 .where(summary1.user.username.eq(username))
+                .where(summary1.isDeleted.isFalse())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
     }
 
+    // 예전 뉴스 Summary 가져옴 (softDelete로 삭제된 것 중 최신순 정렬)
     @Override
-    public long countSummaryByUsername(String username) {
+    public List<Summary> getOldSummaryByUsername(String username, Pageable pageable) {
+        return queryFactory
+                .selectFrom(summary1)
+                .where(summary1.user.username.eq(username))
+                .where(summary1.isDeleted.isTrue())
+                .orderBy(summary1.createdAt.desc())
+                .offset(4 + pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+    }
+
+    @Override
+    public long countOldSummaryByUsername(String username) {
         return queryFactory
                 .select(summary1.count())
                 .from(summary1)
                 .where(summary1.user.username.eq(username))
+                .where(summary1.isDeleted.isTrue())
                 .fetchOne();
     }
 

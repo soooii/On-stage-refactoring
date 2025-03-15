@@ -10,7 +10,9 @@ import java.util.List;
 
 public interface SummaryQueryDslRepository {
     void softDeleteByUsername(String username);
-    List<Summary> getSummaryByUsername(String username, Pageable pageable);
-    long countSummaryByUsername(String username);
+    List<Summary> getRecentSummaryByUsername(String username, Pageable pageable);
+    List<Summary> getOldSummaryByUsername(String username, Pageable pageable);
+    long countOldSummaryByUsername(String username);
     List<String> findUsernamesWithOldSummaries(LocalDateTime timeToCompare);
+
 }

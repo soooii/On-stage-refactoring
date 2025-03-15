@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name="summary")
-@Where(clause = "is_deleted = false")
+//@Where(clause = "is_deleted = false")
 @EntityListeners(AuditingEntityListener.class)
 public class Summary {
 

@@ -13,5 +13,6 @@ public class ArticleRequestDTO {
     private String title;
     private String content;
     private String link;
+    private String time;
 }
 

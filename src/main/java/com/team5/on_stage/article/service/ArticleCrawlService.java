@@ -2,6 +2,7 @@ package com.team5.on_stage.article.service;
 
 import com.team5.on_stage.article.dto.ArticleRequestDTO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -10,10 +11,12 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ArticleCrawlService {
 
     public List<ArticleRequestDTO> crawlArticles(String keyword) {
@@ -33,11 +36,13 @@ public class ArticleCrawlService {
                 String title = article.select("a.news_tit").text();
                 String link = article.select("a.news_tit").attr("href");
                 String content = article.select("div.news_dsc").text();
-
+                String time = article.select("span.info").first().text();
+                log.info(time);
                 ArticleRequestDTO dto = new ArticleRequestDTO();
                 dto.setTitle(title);
                 dto.setLink(link);
                 dto.setContent(content);
+                dto.setTime(time);
                 articles.add(dto);
             }
 

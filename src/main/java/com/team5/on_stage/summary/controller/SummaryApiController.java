@@ -21,13 +21,24 @@ public class SummaryApiController {
     @Operation(summary = "아티스트 뉴스 요약 조회", description = "특정 사용자의 아티스트 뉴스 요약 데이터를 페이징 형식으로 조회합니다.")
     @Parameter(name = "username", description = "조회할 요약 데이터 사용자의 username")
     @GetMapping("/{username}")
-    public ResponseEntity<Page<SummaryResponseDTO>> getSummary(
+    public ResponseEntity<Page<SummaryResponseDTO>> getRecentSummary(
             @PathVariable String username,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "2") int size) {
 
         SummaryRequestDTO request = new SummaryRequestDTO(username, page, size);
-        Page<SummaryResponseDTO> response = summaryService.getSummary(request);
+        Page<SummaryResponseDTO> response = summaryService.getRecentSummary(request);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/old/{username}")
+    public ResponseEntity<Page<SummaryResponseDTO>> getOldSummary(
+           @PathVariable String username,
+           @RequestParam(defaultValue = "0") int page,
+           @RequestParam(defaultValue = "2") int size){
+
+        SummaryRequestDTO request = new SummaryRequestDTO(username, page, size);
+        Page<SummaryResponseDTO> response = summaryService.getOldSummary(request);
         return ResponseEntity.ok(response);
     }
 
