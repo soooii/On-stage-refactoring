@@ -18,6 +18,7 @@ public interface ArticleMapper {
                 .title(dto.getTitle())
                 .content(dto.getContent())
                 .link(dto.getLink())
+                .time(dto.getTime())
                 .build();
         return article;
     }

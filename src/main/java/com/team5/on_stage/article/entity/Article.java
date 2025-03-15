@@ -38,6 +38,10 @@ public class Article {
     @Column(name="link", nullable = false)
     private String link;
 
+    //기사 발행 시간
+    @Column(name="time", nullable = false)
+    private String time;
+
     //삭제 여부
     @Column(name="is_deleted", nullable = false)
     private boolean isDeleted;
