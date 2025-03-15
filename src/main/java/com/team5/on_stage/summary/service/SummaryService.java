@@ -103,7 +103,7 @@ public class SummaryService {
 
     // saveSummary 호출하는 순간부터 3개월마다 자동으로 saveSummary 동작되도록 -> batch
     // 해당 userId의 뉴스 요약 가져오기 (페이지네이션 적용)
-    public Page<SummaryResponseDTO> getSummary(SummaryRequestDTO request) {
+    public Page<SummaryResponseDTO> getRecentSummary(SummaryRequestDTO request) {
         String username = request.getUsername();
         User user = userRepository.findByUsername(username);
         String currentNickname = user.getNickname();
@@ -121,7 +121,7 @@ public class SummaryService {
         }
 
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
-        List<Summary> summaries = summaryRespository.getSummaryByUsername(username, pageable);
+        List<Summary> summaries = summaryRespository.getRecentSummaryByUsername(username, pageable);
 
         if (summaries.isEmpty()) {
             log.info("해당 유저의 뉴스가 없습니다: {}", currentNickname);
@@ -133,7 +133,30 @@ public class SummaryService {
                 .collect(Collectors.toList());
 
         // 해당 username의 전체 뉴스 요약 개수
-        long total = summaryRespository.countSummaryByUsername(username);
+        //long total = summaryRespository.countSummaryByUsername(username);
+
+        return new PageImpl<>(summaryList, pageable, 4);
+    }
+
+    public Page<SummaryResponseDTO> getOldSummary(SummaryRequestDTO request) {
+        String username = request.getUsername();
+        User user = userRepository.findByUsername(username);
+        String currentNickname = user.getNickname();
+
+        Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
+        List<Summary> summaries = summaryRespository.getOldSummaryByUsername(username, pageable);
+
+        if (summaries.isEmpty()) {
+            log.info("해당 유저의 예전 뉴스가 아직 없습니다: {}", currentNickname);
+            return new PageImpl<>(Collections.emptyList(), pageable, 0);
+        }
+
+        List<SummaryResponseDTO> summaryList = summaries.stream()
+                .map(summaryMapper::toDTO)
+                .collect(Collectors.toList());
+
+        // 해당 username의 전체 뉴스 요약 개수
+        long total = summaryRespository.countOldSummaryByUsername(username);
 
         return new PageImpl<>(summaryList, pageable, total);
     }

@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+import java.util.Date;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -12,4 +15,5 @@ import lombok.Setter;
 public class SummaryResponseDTO {
     private String title;
     private String summary;
+    private LocalDateTime createdAt;
 }
