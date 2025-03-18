@@ -45,6 +45,7 @@ public class SummaryService {
         summaryRespository.softDeleteByUsername(username);
 
         articleService.save(username);
+        articleService.firstFilteredArticles(username);
 
         List<Article> articles = articleRepository.findAllByUser_Username(username);
 
