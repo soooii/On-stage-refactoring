@@ -45,4 +45,15 @@ public class Article {
     //삭제 여부
     @Column(name="is_deleted", nullable = false)
     private boolean isDeleted;
+
+    //수동 검수 여부
+    @Builder.Default
+    @Enumerated(EnumType.STRING) // ENUM 값 문자열로 저장
+    private ArticleStatus status = ArticleStatus.WAITING;
+
+    // 검수 상태 업데이트
+    public Article updateStatus(ArticleStatus status) {
+        this.status = status;
+        return this;
+    }
 }
