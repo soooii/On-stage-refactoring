@@ -10,9 +10,12 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ArticleRequestDTO {
+    private Long id;
     private String title;
     private String content;
     private String link;
     private String time;
+    private boolean isDeleted;
+    private String status;
 }
 

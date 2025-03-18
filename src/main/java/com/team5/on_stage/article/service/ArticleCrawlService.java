@@ -1,6 +1,7 @@
 package com.team5.on_stage.article.service;
 
 import com.team5.on_stage.article.dto.ArticleRequestDTO;
+import com.team5.on_stage.article.entity.ArticleStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
@@ -13,6 +14,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import static com.team5.on_stage.article.entity.ArticleStatus.WAITING;
 
 @Service
 @RequiredArgsConstructor
@@ -43,6 +46,8 @@ public class ArticleCrawlService {
                 dto.setLink(link);
                 dto.setContent(content);
                 dto.setTime(time);
+                dto.setDeleted(false);
+                dto.setStatus("WAITING");
                 articles.add(dto);
             }
 
