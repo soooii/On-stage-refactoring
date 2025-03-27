@@ -1,10 +1,14 @@
 package com.team5.on_stage.article.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.team5.on_stage.article.entity.Article;
+import com.team5.on_stage.article.entity.ArticleStatus;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 import static com.team5.on_stage.article.entity.QArticle.article;
 
@@ -27,5 +31,14 @@ public class ArticleQueryDslRepositoryImpl implements ArticleQueryDslRepository 
             em.flush();
             em.clear();
 
+    }
+
+    @Override
+    public List<Article> findByStatus(String status) {
+        return queryFactory
+                .select(article)
+                .from(article)
+                .where(article.status.eq(ArticleStatus.valueOf(status)))
+                .fetch();
     }
 }
