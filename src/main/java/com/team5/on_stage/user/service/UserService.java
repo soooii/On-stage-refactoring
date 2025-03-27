@@ -57,6 +57,8 @@ public class UserService {
         checkNicknameDuplicated(nickname);
         user.setNickname(nickname);
         userRepository.save(user);
+
+        redisService.updateUserNicknameCache(username, nickname);
     }
 
     public void updateUserDescription(String username,

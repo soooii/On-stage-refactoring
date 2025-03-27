@@ -3,6 +3,7 @@ package com.team5.on_stage.summary.service;
 import com.team5.on_stage.article.entity.Article;
 import com.team5.on_stage.article.repository.ArticleRepository;
 import com.team5.on_stage.article.service.ArticleService;
+import com.team5.on_stage.global.config.redis.RedisService;
 import com.team5.on_stage.summary.dto.SummaryRequestDTO;
 import com.team5.on_stage.summary.dto.SummaryResponseDTO;
 
@@ -34,6 +35,7 @@ public class SummaryService {
     private final SummaryMapper summaryMapper;
     private final ChatGPTService chatGPTService;
     private final UserRepository userRepository;
+    private final RedisService redisService;
 
     // username별로 닉네임 정보 캐싱
     private final Map<String, String> userNicknameCache = new ConcurrentHashMap<>();
@@ -106,8 +108,10 @@ public class SummaryService {
     // 해당 userId의 뉴스 요약 가져오기 (페이지네이션 적용)
     public Page<SummaryResponseDTO> getRecentSummary(SummaryRequestDTO request) {
         String username = request.getUsername();
-        User user = userRepository.findByUsername(username);
-        String currentNickname = user.getNickname();
+        //User user = userRepository.findByUsername(username);
+        //String currentNickname = user.getNickname();
+
+        String currentNickname = redisService.getUserNickname(username);
 
         // prevNickname 가져오기
         String prevNickname = userNicknameCache.get(username);

@@ -14,7 +14,12 @@ import org.hibernate.annotations.Where;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "article")
+@Table(
+        name = "article",
+        indexes = {
+                @Index(name = "idx_status", columnList = "status")
+        }
+)
 @Where(clause = "is_deleted = false")
 public class Article {
     @Id

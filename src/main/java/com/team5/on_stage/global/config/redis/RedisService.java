@@ -1,8 +1,13 @@
 package com.team5.on_stage.global.config.redis;
 
 
+import com.team5.on_stage.user.entity.User;
+import com.team5.on_stage.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
@@ -15,7 +20,7 @@ import java.time.Duration;
 public class RedisService {
 
     private final RedisTemplate<String, String> redisTemplate;
-
+    private final UserRepository userRepository;
 
     /* Refresh Token */
 
@@ -119,6 +124,21 @@ public class RedisService {
 
         redisTemplate.delete(key);
     }
+
+    @Cacheable(value = "userNicknameCache", key = "#username")
+    public String getUserNickname(String username) {
+        User user = userRepository.findByUsername(username);
+        return user.getNickname();
+    }
+
+    @CachePut(value = "userNicknameCache", key = "#username")
+    public String updateUserNicknameCache(String username, String newNickname) {
+        return newNickname;
+    }
+
+
+
+
 
 
 }
