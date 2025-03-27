@@ -18,9 +18,14 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="summary")
-//@Where(clause = "is_deleted = false")
 @EntityListeners(AuditingEntityListener.class)
+//@Where(clause = "is_deleted = false")
+@Table(
+        name = "summary",
+        indexes = {
+                @Index(name = "idx_created_at", columnList = "created_at DESC")
+        }
+)
 public class Summary {
 
     @Id
