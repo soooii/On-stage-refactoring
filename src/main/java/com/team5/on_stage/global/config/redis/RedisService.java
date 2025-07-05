@@ -1,6 +1,11 @@
 package com.team5.on_stage.global.config.redis;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JavaType;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.team5.on_stage.summary.dto.SummaryResponseDTO;
 import com.team5.on_stage.user.entity.User;
 import com.team5.on_stage.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +18,7 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -21,6 +27,7 @@ public class RedisService {
 
     private final RedisTemplate<String, String> redisTemplate;
     private final UserRepository userRepository;
+    private final ObjectMapper objectMapper;
 
     /* Refresh Token */
 
@@ -135,6 +142,55 @@ public class RedisService {
     public String updateUserNicknameCache(String username, String newNickname) {
         return newNickname;
     }
+
+    public void setSummaryCache(String username, List<SummaryResponseDTO> summaries, Duration ttl) {
+        String key = "SummaryCache:" + username;
+        try {
+            String json = objectMapper.writeValueAsString(summaries);
+            redisTemplate.opsForValue().set(key, json, ttl);
+        } catch (JsonProcessingException e) {
+            log.error("SummaryCache 직렬화 오류", e);
+        }
+    }
+
+    public List<SummaryResponseDTO> getSummaryCache(String username) {
+        String key = "SummaryCache:" + username;
+        String json = redisTemplate.opsForValue().get(key);
+        if (json == null) return null;
+
+        try {
+            JavaType type = objectMapper.getTypeFactory().constructCollectionType(List.class, SummaryResponseDTO.class);
+            return objectMapper.readValue(json, type);
+        } catch (JsonProcessingException e) {
+            log.error("SummaryCache 역직렬화 오류", e);
+            return null;
+        }
+    }
+
+
+    public void deleteSummaryCache(String username) {
+        String key = "SummaryCache:" + username;
+        redisTemplate.delete(key);
+    }
+
+    public boolean isNicknameChanged(String username) {
+        String prevNicknameKey = "PrevUserNickname:" + username;
+        ValueOperations<String, String> ops = redisTemplate.opsForValue();
+
+        String prevNickname = ops.get(prevNicknameKey);
+        String currentNickname = getUserNickname(username);
+
+        if (prevNickname == null || !prevNickname.equals(currentNickname)) {
+            ops.set(prevNicknameKey, currentNickname, Duration.ofDays(7));
+            return true;
+        }
+        return false;
+    }
+
+
+
+
+
 
 
 

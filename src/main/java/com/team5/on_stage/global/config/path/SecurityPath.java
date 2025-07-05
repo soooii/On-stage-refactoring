@@ -18,6 +18,7 @@ public class SecurityPath {
             "/{username}",
             /* Summary */
             "/summary/{username}",
+            "/summary/admin/{username}",
             /* Analytics */
             "/analytics/dashboard",
             "/analytics/get-ip"
@@ -33,7 +34,8 @@ public class SecurityPath {
             "/analytics/socialLink"
     };
     public static final String[] ONLY_PATCH_WHITELIST = {
-
+        "/approve/{summaryId}",
+        "/reject/{summaryId}"
     };
     public static final String[] ONLY_PUT_WHITELIST = {
 
