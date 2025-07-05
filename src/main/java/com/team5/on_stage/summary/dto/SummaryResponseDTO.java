@@ -16,4 +16,5 @@ public class SummaryResponseDTO {
     private String title;
     private String summary;
     private LocalDateTime createdAt;
+    private Long summaryId;
 }

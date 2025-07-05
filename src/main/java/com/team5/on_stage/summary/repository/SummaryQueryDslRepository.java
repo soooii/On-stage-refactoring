@@ -14,5 +14,6 @@ public interface SummaryQueryDslRepository {
     List<Summary> getOldSummaryByUsername(String username, Pageable pageable);
     long countOldSummaryByUsername(String username);
     List<String> findUsernamesWithOldSummaries(LocalDateTime timeToCompare);
-
+    List<Summary> getPendingSummaryByUsername(String username, Pageable pageable);
+    long countPendingSummaryByUsername(String username);
 }
