@@ -1,0 +1,173 @@
+name: Deploy to AWS EC2 using Docker
+
+on:
+  push:
+    branches:
+      - dev
+      - main
+      - test
+
+env:
+  DOCKER_IMAGE_NAME: ${{ secrets.DOCKER_IMAGE_NAME }}
+  CONTAINER_NAME: on-stage-prod-container
+  DOCKER_HUB_TOKEN : ${{ secrets.DOCKER_HUB_TOKEN }}
+  DOCKER_USERNAME : ${{ secrets.DOCKER_USERNAME }}
+  EC2_URL : ${{ secrets.EC2_URL }}
+  EC2_USERNAME : ubuntu
+  EC2_SSH_PRIVATE_KEY : ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+  EC2_PORT : 22
+  DATASOURCE_URL : ${{ secrets.DATASOURCE_URL }}
+  DATASOURCE_USERNAME : ${{ secrets.DATASOURCE_USERNAME }}
+  DATASOURCE_PASSWORD : ${{ secrets.DATASOURCE_PASSWORD }}
+  BATCH_DATASOURCE_URL: ${{ secrets.BATCH_DATASOURCE_URL }}
+  BATCH_DATASOURCE_USERNAME: ${{ secrets.BATCH_DATASOURCE_USERNAME }}
+  BATCH_DATASOURCE_PASSWORD: ${{ secrets.BATCH_DATASOURCE_PASSWORD }}
+  REDIS_HOST: redis-container
+  REDIS_PORT: 6379
+  JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+  ON_STAGE_CHATGPT_MODEL: ${{ secrets.ON_STAGE_CHATGPT_MODEL }}
+  ON_STAGE_CHATGPT: ${{ secrets.ON_STAGE_CHATGPT }}
+  ON_STAGE_CHATGPT_API_URL: ${{ secrets.ON_STAGE_CHATGPT_API_URL }}
+  GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+  KAKAO_CLIENT_ID: ${{ secrets.KAKAO_CLIENT_ID }}
+  NAVER_CLIENT_ID: ${{ secrets.NAVER_CLIENT_ID }}
+  GITHUB_CLIENT_ID: ${{ secrets.GITHUB_CLIENT_ID }}
+  IP_GEOLOCATION_KEY: ${{ secrets.IP_GEOLOCATION_KEY }}
+  S3_ONSTAGE_BUCKET : ${{ secrets.S3_ONSTAGE_BUCKET}}
+  S3_ONSTAGE_ACCESS_KEY: ${{ secrets.S3_ONSTAGE_ACCESS_KEY}}
+  S3_ONSTAGE_SECRET_KEY : ${{ secrets.S3_ONSTAGE_SECRET_KEY}}
+  COOLSMS_KEY :  ${{ secrets.COOLSMS_KEY}}
+  COOLSMS_SECRET : ${{ secrets.COOLSMS_SECRET}}
+
+jobs:
+  build-and-push-docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: "17"
+          distribution: "temurin"
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew build -x test
+
+      - name: Build the Docker image
+        run: docker build . --file Dockerfile --tag ${{ env.DOCKER_IMAGE_NAME }}:latest
+
+      - name: Login to Docker Hub
+        run: echo "${{ env.DOCKER_HUB_TOKEN }}" | docker login -u ${{ env.DOCKER_USERNAME }} --password-stdin
+
+      - name: Push the Docker image
+        run: docker push ${{ env.DOCKER_IMAGE_NAME }}:latest
+
+  deploy-to-ec2:
+    needs: build-and-push-docker
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.EC2_URL }}
+          username: ${{ env.EC2_USERNAME }}
+          key: ${{ env.EC2_SSH_PRIVATE_KEY }}
+          port: ${{ env.EC2_PORT }}
+          script: |
+            if sudo docker network inspect on-stage-net >/dev/null 2>&1; then
+              echo "Network 'on-stage-net' already exists."
+            else
+              echo "Creating network 'on-stage-net'..."
+              sudo docker network create on-stage-net
+            fi
+            
+            if [ ! $(sudo docker ps -q -f name=redis-container) ]; then
+              if [ $(sudo docker ps -a -q -f name=redis-container) ]; then
+                sudo docker start redis-container
+              else
+                sudo docker run --name redis-container -d \
+                  --network on-stage-net \
+                  -p 6379:6379 \
+                  redis:latest
+              fi
+            fi
+
+            TIMESTAMP=$(date +"%Y%m%d%H%M%S")
+            NEW_CONTAINER_NAME="${{ env.CONTAINER_NAME }}-$TIMESTAMP"
+
+            echo "Pulling latest image: ${{ env.DOCKER_IMAGE_NAME }}"
+            sudo docker pull ${{ env.DOCKER_IMAGE_NAME }}:latest
+
+            CONTAINER_ID=$(sudo docker ps -q --filter "publish=8080")
+
+            if [ ! -z "$CONTAINER_ID" ]; then
+              echo "Stopping existing container: $CONTAINER_ID"
+              sudo docker stop $CONTAINER_ID
+            fi
+
+            echo "Starting new container..."
+            sudo docker run --name $NEW_CONTAINER_NAME -d \
+              -p 8080:8080 \
+              --network on-stage-net \
+              -e "SPRING_PROFILES_ACTIVE=deploy" \
+              -e "DATASOURCE_URL=${{ env.DATASOURCE_URL }}" \
+              -e "DATASOURCE_USERNAME=${{ env.DATASOURCE_USERNAME }}" \
+              -e "DATASOURCE_PASSWORD=${{ env.DATASOURCE_PASSWORD }}" \
+              -e "BATCH_DATASOURCE_URL=${{ env.BATCH_DATASOURCE_URL }}" \
+              -e "BATCH_DATASOURCE_USERNAME=${{ env.BATCH_DATASOURCE_USERNAME }}" \
+              -e "BATCH_DATASOURCE_PASSWORD=${{ env.BATCH_DATASOURCE_PASSWORD }}" \
+              -e "SPRING_DATA_REDIS_HOST=${{ env.REDIS_HOST }}" \
+              -e "SPRING_DATA_REDIS_PORT=${{ env.REDIS_PORT }}" \
+              -e "JWT_SECRET_KEY=${{ env.JWT_SECRET_KEY }}" \
+              -e "ON_STAGE_CHATGPT_MODEL=${{ env.ON_STAGE_CHATGPT_MODEL }}" \
+              -e "ON_STAGE_CHATGPT=${{ env.ON_STAGE_CHATGPT }}" \
+              -e "ON_STAGE_CHATGPT_API_URL=${{ env.ON_STAGE_CHATGPT_API_URL }}" \
+              -e "GOOGLE_CLIENT_ID=${{ env.GOOGLE_CLIENT_ID }}" \
+              -e "KAKAO_CLIENT_ID=${{ env.KAKAO_CLIENT_ID }}" \
+              -e "NAVER_CLIENT_ID=${{ env.NAVER_CLIENT_ID }}" \
+              -e "GITHUB_CLIENT_ID=${{ env.GITHUB_CLIENT_ID }}" \
+              -e "IP_GEOLOCATION_KEY=${{ env.IP_GEOLOCATION_KEY }}" \
+              -e "S3_ONSTAGE_BUCKET=${{ env.S3_ONSTAGE_BUCKET }}" \
+              -e "S3_ONSTAGE_ACCESS_KEY=${{ env.S3_ONSTAGE_ACCESS_KEY }}" \
+              -e "S3_ONSTAGE_SECRET_KEY=${{ env.S3_ONSTAGE_SECRET_KEY }}" \
+              -e "COOLSMS_KEY=${{ env.COOLSMS_KEY }}" \
+              -e "COOLSMS_SECRET=${{ env.COOLSMS_SECRET }}" \
+              -e TZ=Asia/Seoul \
+              ${{ env.DOCKER_IMAGE_NAME }}:latest
+
+            echo "Performing health check on the new container..."
+            HEALTH_CHECK_URL="http://127.0.0.1:8080/actuator/health"
+            for i in {1..10}; do
+              HEALTH_STATUS=$(curl -s -o /dev/null -w "%{http_code}" $HEALTH_CHECK_URL)
+              if [ "$HEALTH_STATUS" == "200" ]; then
+                echo "Health check passed. New container is healthy."
+                if [ ! -z "$CONTAINER_ID" ]; then
+                  echo "Removing old container: $CONTAINER_ID"
+                  sudo docker rm $CONTAINER_ID
+                fi
+                IMAGE_ID=$(sudo docker images -q ${{ env.DOCKER_IMAGE_NAME }})
+                if [ ! -z "$IMAGE_ID" ]; then
+                  echo "Removing old image: $IMAGE_ID"
+                  sudo docker image prune -f
+                fi
+                exit 0
+              fi
+              echo "Health check failed. Retrying in 10 seconds... ($i/10)"
+              sleep 10
+            done
+
+            if [ "$HEALTH_STATUS" != "200" ]; then
+              echo "Health check failed after multiple attempts. Restarting old container."
+              sudo docker stop $NEW_CONTAINER_NAME
+              sudo docker rm $NEW_CONTAINER_NAME
+              if [ ! -z "$CONTAINER_ID" ]; then
+                echo "Restarting old container: $CONTAINER_ID"
+                sudo docker start $CONTAINER_ID
+              fi
+              exit 1
+            fi
