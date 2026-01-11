@@ -114,6 +114,7 @@ jobs:
             sudo docker run --name $NEW_CONTAINER_NAME -d \
               -p 8080:8080 \
               --network on-stage-net \
+              -e "SERVER_PORT=8080" \
               -e "SPRING_PROFILES_ACTIVE=deploy" \
               -e "DATASOURCE_URL=${{ env.DATASOURCE_URL }}" \
               -e "DATASOURCE_USERNAME=${{ env.DATASOURCE_USERNAME }}" \
