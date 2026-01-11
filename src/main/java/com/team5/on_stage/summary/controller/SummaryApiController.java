@@ -3,6 +3,7 @@ package com.team5.on_stage.summary.controller;
 import java.util.Optional;
 
 import com.team5.on_stage.global.config.redis.RedisService;
+import com.team5.on_stage.global.config.redis.SummaryCacheService;
 import com.team5.on_stage.summary.dto.SummaryRequestDTO;
 import com.team5.on_stage.summary.dto.SummaryResponseDTO;
 import com.team5.on_stage.summary.entity.Summary;
@@ -28,6 +29,7 @@ public class SummaryApiController {
     private final SummaryService summaryService;
     private final SummaryRespository summaryRepository;
     private final RedisService redisService;
+    private final SummaryCacheService summaryCacheService;
 
     @Operation(summary = "아티스트 뉴스 요약 조회", description = "특정 사용자의 아티스트 뉴스 요약 데이터를 페이징 형식으로 조회합니다.")
     @Parameter(name = "username", description = "조회할 요약 데이터 사용자의 username")
@@ -69,7 +71,7 @@ public class SummaryApiController {
             summaryRepository.save(summary.updateStatus(SummaryStatus.APPROVED));
 
             // 캐시 무효화
-            redisService.deleteSummaryCache(summary.getUser().getUsername());
+            summaryCacheService.deleteSummaryCache(summary.getUser().getUsername());
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();
@@ -84,7 +86,7 @@ public class SummaryApiController {
             summaryRepository.save(summary.updateStatus(SummaryStatus.REJECTED));
 
             // 캐시 무효화
-            redisService.deleteSummaryCache(summary.getUser().getUsername());
+            summaryCacheService.deleteSummaryCache(summary.getUser().getUsername());
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();
