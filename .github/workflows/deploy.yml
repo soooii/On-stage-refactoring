@@ -29,9 +29,12 @@ env:
   ON_STAGE_CHATGPT: ${{ secrets.ON_STAGE_CHATGPT }}
   ON_STAGE_CHATGPT_API_URL: ${{ secrets.ON_STAGE_CHATGPT_API_URL }}
   GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+  GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
   KAKAO_CLIENT_ID: ${{ secrets.KAKAO_CLIENT_ID }}
   NAVER_CLIENT_ID: ${{ secrets.NAVER_CLIENT_ID }}
-  GITHUB_CLIENT_ID: ${{ secrets.GITHUB_CLIENT_ID }}
+  NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
+  GITHUB_CLIENT_ID: ${{ secrets.GH_CLIENT_ID }}
+  GITHUB_CLIENT_SECRET: ${{ secrets.GH_CLIENT_SECRET }}
   IP_GEOLOCATION_KEY: ${{ secrets.IP_GEOLOCATION_KEY }}
   S3_ONSTAGE_BUCKET : ${{ secrets.S3_ONSTAGE_BUCKET}}
   S3_ONSTAGE_ACCESS_KEY: ${{ secrets.S3_ONSTAGE_ACCESS_KEY}}
@@ -129,9 +132,12 @@ jobs:
               -e "ON_STAGE_CHATGPT=${{ env.ON_STAGE_CHATGPT }}" \
               -e "ON_STAGE_CHATGPT_API_URL=${{ env.ON_STAGE_CHATGPT_API_URL }}" \
               -e "GOOGLE_CLIENT_ID=${{ env.GOOGLE_CLIENT_ID }}" \
+              -e "GOOGLE_CLIENT_SECRET=${{ env.GOOGLE_CLIENT_SECRET }}" \
               -e "KAKAO_CLIENT_ID=${{ env.KAKAO_CLIENT_ID }}" \
               -e "NAVER_CLIENT_ID=${{ env.NAVER_CLIENT_ID }}" \
+              -e "NAVER_CLIENT_SECRET=${{ env.NAVER_CLIENT_SECRET }}" \
               -e "GITHUB_CLIENT_ID=${{ env.GITHUB_CLIENT_ID }}" \
+              -e "GITHUB_CLIENT_SECRET=${{ env.GITHUB_CLIENT_SECRET }}" \
               -e "IP_GEOLOCATION_KEY=${{ env.IP_GEOLOCATION_KEY }}" \
               -e "S3_ONSTAGE_BUCKET=${{ env.S3_ONSTAGE_BUCKET }}" \
               -e "S3_ONSTAGE_ACCESS_KEY=${{ env.S3_ONSTAGE_ACCESS_KEY }}" \
