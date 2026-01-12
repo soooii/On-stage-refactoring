@@ -170,8 +170,8 @@ jobs:
 
             if [ "$HEALTH_STATUS" != "200" ]; then
               echo "Health check failed after multiple attempts. Restarting old container."
-              # sudo docker stop $NEW_CONTAINER_NAME
-              # sudo docker rm $NEW_CONTAINER_NAME
+              sudo docker stop $NEW_CONTAINER_NAME
+              sudo docker rm $NEW_CONTAINER_NAME
               if [ ! -z "$CONTAINER_ID" ]; then
                 echo "Restarting old container: $CONTAINER_ID"
                 sudo docker start $CONTAINER_ID
