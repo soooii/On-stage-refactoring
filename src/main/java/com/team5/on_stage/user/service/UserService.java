@@ -7,6 +7,7 @@ import com.team5.on_stage.global.config.redis.dto.SmsVerificationData;
 import com.team5.on_stage.global.config.s3.S3Uploader;
 import com.team5.on_stage.global.constants.ErrorCode;
 import com.team5.on_stage.global.exception.GlobalException;
+import com.team5.on_stage.summary.service.SummaryService;
 import com.team5.on_stage.user.dto.UserSmsVerificationCheckDto;
 import com.team5.on_stage.user.dto.UserProfileDto;
 import com.team5.on_stage.user.dto.UserSendSmsDto;
@@ -33,6 +34,7 @@ public class UserService {
     private final S3Uploader s3Uploader;
     private final SmsUtil smsUtil;
     private final RedisService redisService;
+    private final SummaryService summaryService;
 
 
     public void checkNicknameDuplicated(String nickname) {
@@ -58,7 +60,8 @@ public class UserService {
         user.setNickname(nickname);
         userRepository.save(user);
 
-        redisService.updateUserNicknameCache(username, nickname);
+        //redisService.updateUserNicknameCache(username, nickname);
+        summaryService.saveSummary(username);
     }
 
     public void updateUserDescription(String username,

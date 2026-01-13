@@ -28,6 +28,8 @@ public class RedisService {
     private final RedisTemplate<String, String> redisTemplate;
     private final UserRepository userRepository;
     private final ObjectMapper objectMapper;
+    private final SummaryCacheService summaryCacheService;
+    private final UserCacheService userCacheService;
 
     /* Refresh Token */
 
@@ -132,45 +134,9 @@ public class RedisService {
         redisTemplate.delete(key);
     }
 
-    @Cacheable(value = "userNicknameCache", key = "#username")
-    public String getUserNickname(String username) {
-        User user = userRepository.findByUsername(username);
-        return user.getNickname();
-    }
-
     @CachePut(value = "userNicknameCache", key = "#username")
     public String updateUserNicknameCache(String username, String newNickname) {
         return newNickname;
-    }
-
-    public void setSummaryCache(String username, List<SummaryResponseDTO> summaries, Duration ttl) {
-        String key = "SummaryCache:" + username;
-        try {
-            String json = objectMapper.writeValueAsString(summaries);
-            redisTemplate.opsForValue().set(key, json, ttl);
-        } catch (JsonProcessingException e) {
-            log.error("SummaryCache 직렬화 오류", e);
-        }
-    }
-
-    public List<SummaryResponseDTO> getSummaryCache(String username) {
-        String key = "SummaryCache:" + username;
-        String json = redisTemplate.opsForValue().get(key);
-        if (json == null) return null;
-
-        try {
-            JavaType type = objectMapper.getTypeFactory().constructCollectionType(List.class, SummaryResponseDTO.class);
-            return objectMapper.readValue(json, type);
-        } catch (JsonProcessingException e) {
-            log.error("SummaryCache 역직렬화 오류", e);
-            return null;
-        }
-    }
-
-
-    public void deleteSummaryCache(String username) {
-        String key = "SummaryCache:" + username;
-        redisTemplate.delete(key);
     }
 
     public boolean isNicknameChanged(String username) {
@@ -178,7 +144,7 @@ public class RedisService {
         ValueOperations<String, String> ops = redisTemplate.opsForValue();
 
         String prevNickname = ops.get(prevNicknameKey);
-        String currentNickname = getUserNickname(username);
+        String currentNickname = userCacheService.getUserNickname(username);
 
         if (prevNickname == null || !prevNickname.equals(currentNickname)) {
             ops.set(prevNicknameKey, currentNickname, Duration.ofDays(7));

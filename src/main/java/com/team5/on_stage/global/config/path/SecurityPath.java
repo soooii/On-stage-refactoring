@@ -12,6 +12,7 @@ public class SecurityPath {
             "/login/oauth2/code/{registrationId}",
             "/logout",
             "/auth/reissue",
+            "/actuator/health"
     };
     public static final String[] ONLY_GET_WHITELIST = {
             /* User */

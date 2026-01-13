@@ -4,6 +4,7 @@ import com.team5.on_stage.article.entity.Article;
 import com.team5.on_stage.article.repository.ArticleRepository;
 import com.team5.on_stage.article.service.ArticleService;
 import com.team5.on_stage.global.config.redis.RedisService;
+import com.team5.on_stage.global.config.redis.SummaryCacheService;
 import com.team5.on_stage.summary.dto.SummaryRequestDTO;
 import com.team5.on_stage.summary.dto.SummaryResponseDTO;
 
@@ -14,12 +15,15 @@ import com.team5.on_stage.summary.repository.SummaryRespository;
 import com.team5.on_stage.user.entity.User;
 import com.team5.on_stage.user.repository.UserRepository;
 import com.team5.on_stage.util.chatGPT.service.ChatGPTService;
+
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -38,11 +42,14 @@ public class SummaryService {
     private final ChatGPTService chatGPTService;
     private final UserRepository userRepository;
     private final RedisService redisService;
+    private final SummaryCacheService summaryCacheService;
 
     // username별로 닉네임 정보 캐싱
     private final Map<String, String> userNicknameCache = new ConcurrentHashMap<>();
 
     // 해당 username의 summary 저장
+    @Async
+    @Transactional
     public void saveSummary(String username) {
 
         //기존 Summary soft delete
@@ -108,68 +115,98 @@ public class SummaryService {
         summaryRespository.saveAll(summaries); //bulk insert
     }
 
-    //1. Redis 사용
+    // //1. Redis 사용
+    // public Page<SummaryResponseDTO> getRecentSummary(SummaryRequestDTO request) {
+    //     String username = request.getUsername();
+    //
+    //     // 닉네임 변경 여부 체크
+    //     if (redisService.isNicknameChanged(username)) {
+    //         log.info("닉네임 변경 감지됨, 요약 새로 생성");
+    //
+    //         // 기존 summary 캐시 삭제
+    //         redisService.deleteSummaryCache(username);
+    //
+    //         // 요약 새로 생성 저장
+    //         saveSummary(username);
+    //
+    //         // 새로 저장한 summary 전체를 DB에서 조회 후 Redis에 캐싱
+    //         List<SummaryResponseDTO> freshSummaries = summaryRespository.getRecentSummaryByUsername(username, Pageable.unpaged())
+    //             .stream()
+    //             .map(summaryMapper::toDTO)
+    //             .collect(Collectors.toList());
+    //
+    //         redisService.setSummaryCache(username, freshSummaries, Duration.ofHours(24));
+    //     }
+    //
+    //     // Redis 캐시에서 요약 데이터 조회
+    //     List<SummaryResponseDTO> cachedSummaries = redisService.getSummaryCache(username);
+    //
+    //     Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
+    //
+    //     if (cachedSummaries != null) {
+    //         int start = (int) pageable.getOffset();
+    //         int end = Math.min(start + pageable.getPageSize(), cachedSummaries.size());
+    //
+    //         if (start > end) {
+    //             // 요청 페이지 범위가 캐시 데이터 범위 밖일 경우 빈 페이지 반환
+    //             return new PageImpl<>(Collections.emptyList(), pageable, cachedSummaries.size());
+    //         }
+    //
+    //         List<SummaryResponseDTO> pageContent = cachedSummaries.subList(start, end);
+    //         return new PageImpl<>(pageContent, pageable, cachedSummaries.size());
+    //     } else {
+    //         // 캐시 미스 시 DB에서 데이터 조회 후 캐싱
+    //         List<Summary> summaries = summaryRespository.getRecentSummaryByUsername(username, pageable);
+    //
+    //         if (summaries.isEmpty()) {
+    //             log.info("해당 유저의 뉴스가 없습니다: {}", username);
+    //             return new PageImpl<>(Collections.emptyList(), pageable, 0);
+    //         }
+    //
+    //         List<SummaryResponseDTO> summaryList = summaries.stream()
+    //             .map(summaryMapper::toDTO)
+    //             .collect(Collectors.toList());
+    //
+    //         // 전체 데이터를 별도로 모두 조회해서 캐싱
+    //         List<SummaryResponseDTO> allSummaries = summaryRespository.getRecentSummaryByUsername(username, Pageable.unpaged())
+    //             .stream()
+    //             .map(summaryMapper::toDTO)
+    //             .collect(Collectors.toList());
+    //
+    //         redisService.setSummaryCache(username, allSummaries, Duration.ofHours(24));
+    //
+    //         return new PageImpl<>(summaryList, pageable, allSummaries.size());
+    //     }
+    // }
+
     public Page<SummaryResponseDTO> getRecentSummary(SummaryRequestDTO request) {
         String username = request.getUsername();
-
-        // 닉네임 변경 여부 체크
-        if (redisService.isNicknameChanged(username)) {
-            log.info("닉네임 변경 감지됨, 요약 새로 생성");
-
-            // 기존 summary 캐시 삭제
-            redisService.deleteSummaryCache(username);
-
-            // 요약 새로 생성 저장
-            saveSummary(username);
-
-            // 새로 저장한 summary 전체를 DB에서 조회 후 Redis에 캐싱
-            List<SummaryResponseDTO> freshSummaries = summaryRespository.getRecentSummaryByUsername(username, Pageable.unpaged())
-                .stream()
-                .map(summaryMapper::toDTO)
-                .collect(Collectors.toList());
-
-            redisService.setSummaryCache(username, freshSummaries, Duration.ofHours(24));
-        }
-
-        // Redis 캐시에서 요약 데이터 조회
-        List<SummaryResponseDTO> cachedSummaries = redisService.getSummaryCache(username);
-
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
 
+        // Redis
+        List<SummaryResponseDTO> cachedSummaries = summaryCacheService.getSummaryCache(username);
+
         if (cachedSummaries != null) {
-            int start = (int) pageable.getOffset();
-            int end = Math.min(start + pageable.getPageSize(), cachedSummaries.size());
-
-            if (start > end) {
-                // 요청 페이지 범위가 캐시 데이터 범위 밖일 경우 빈 페이지 반환
-                return new PageImpl<>(Collections.emptyList(), pageable, cachedSummaries.size());
-            }
-
-            List<SummaryResponseDTO> pageContent = cachedSummaries.subList(start, end);
-            return new PageImpl<>(pageContent, pageable, cachedSummaries.size());
-        } else {
-            // 캐시 미스 시 DB에서 데이터 조회 후 캐싱
-            List<Summary> summaries = summaryRespository.getRecentSummaryByUsername(username, pageable);
-
-            if (summaries.isEmpty()) {
-                log.info("해당 유저의 뉴스가 없습니다: {}", username);
-                return new PageImpl<>(Collections.emptyList(), pageable, 0);
-            }
-
-            List<SummaryResponseDTO> summaryList = summaries.stream()
-                .map(summaryMapper::toDTO)
-                .collect(Collectors.toList());
-
-            // 전체 데이터를 별도로 모두 조회해서 캐싱
-            List<SummaryResponseDTO> allSummaries = summaryRespository.getRecentSummaryByUsername(username, Pageable.unpaged())
-                .stream()
-                .map(summaryMapper::toDTO)
-                .collect(Collectors.toList());
-
-            redisService.setSummaryCache(username, allSummaries, Duration.ofHours(24));
-
-            return new PageImpl<>(summaryList, pageable, allSummaries.size());
+            log.info("[CACHE HIT] Redis에서 데이터 반환");
+            return getPageImpl(cachedSummaries, pageable);
         }
+
+        log.info("[CACHE MISS] DB에서 데이터 조회");
+
+
+        List<Summary> approvedList = summaryRespository.getRecentSummaryByUsername(username, Pageable.unpaged());
+
+        if (approvedList.isEmpty()) {
+            return new PageImpl<>(Collections.emptyList(), pageable, 0);
+        }
+
+        List<SummaryResponseDTO> dtoList = approvedList.stream()
+            .map(summaryMapper::toDTO)
+            .collect(Collectors.toList());
+
+        summaryCacheService.setSummaryCache(username, dtoList, Duration.ofHours(24));
+
+        return getPageImpl(dtoList, pageable);
     }
 
 
@@ -250,5 +287,22 @@ public class SummaryService {
         long total = summaryRespository.countPendingSummaryByUsername(username);
 
         return new PageImpl<>(summaryList, pageable, total);
+    }
+
+    /**
+     * Redis에서 가져온 전체 리스트를 Page 객체로 변환해주는 헬퍼 메서드
+     */
+    private Page<SummaryResponseDTO> getPageImpl(List<SummaryResponseDTO> list, Pageable pageable) {
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), list.size());
+
+        // 시작 지점이 리스트 크기보다 크면 빈 페이지 반환 (예: 데이터는 5개인데 100페이지 요청 시)
+        if (start > list.size()) {
+            return new PageImpl<>(Collections.emptyList(), pageable, list.size());
+        }
+
+        // 리스트를 시작~끝 지점만큼만 잘라서 Page 객체로 생성
+        List<SummaryResponseDTO> pageContent = list.subList(start, end);
+        return new PageImpl<>(pageContent, pageable, list.size());
     }
 }
