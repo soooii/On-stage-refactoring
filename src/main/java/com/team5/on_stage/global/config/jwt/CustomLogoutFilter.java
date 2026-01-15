@@ -95,13 +95,9 @@ public class CustomLogoutFilter extends GenericFilterBean {
 
         redisService.deleteRefreshToken(refreshToken);
 
-        Cookie deleteRefreshCookie = deleteCookie("refresh");
-        Cookie deleteAccessCookie = deleteCookie("access");
-        Cookie deleteJSessionCookie = deleteCookie("JSESSIONID");
-
-        response.addCookie(deleteRefreshCookie);
-        response.addCookie(deleteAccessCookie);
-        response.addCookie(deleteJSessionCookie);
+        response.addHeader("Set-Cookie", deleteCookie("refresh"));
+        response.addHeader("Set-Cookie", deleteCookie("access"));
+        response.addHeader("Set-Cookie", deleteCookie("JSESSIONID"));
 
         request.getSession().invalidate();
 

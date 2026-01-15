@@ -56,7 +56,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
 
         registry.addEndpoint("/ws")
-                .setAllowedOrigins("http://localhost:3000") // CORS 허용범위
+                .setAllowedOrigins("https://al-going.com") // CORS 허용범위
                 .withSockJS();
     }
 

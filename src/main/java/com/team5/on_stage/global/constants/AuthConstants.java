@@ -3,9 +3,13 @@ package com.team5.on_stage.global.constants;
 public class AuthConstants {
 
     // Domain
-    static public String DEPLOY_DOMAIN = "localhost";
-    static public String DEPLOY_FRONT_DOMAIN = "http://localhost:3000";
-    static public String DEPLOY_BACK_DOMAIN = "http://localhost:8080";
+    static public String DEPLOY_DOMAIN = ".al-going.com";
+    static public String DEPLOY_FRONT_DOMAIN = "https://al-going.com";
+    static public String DEPLOY_BACK_DOMAIN = "https://api.al-going.com";
+
+    // Cookie
+    static public boolean COOKIE_SECURE = true;
+    static public String COOKIE_SAME_SITE = "None";
 
     // Domain - Deploy
 //    static public String DEPLOY_DOMAIN = "59.8.139.239";
