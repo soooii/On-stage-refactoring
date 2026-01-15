@@ -3,14 +3,13 @@
 > **링크를 콘텐츠로, 데이터를 가치로**  
 > 아티스트와 유저를 연결하는 링크 기반 소셜 플랫폼
 
-
-<img width="1850" height="574" alt="Image" src="https://github.com/user-attachments/assets/b478d770-0c95-4f95-903d-550e33d3f81c" />
+<img width="1850" height="574" alt="Image" src="https://github.com/user-attachments/assets/cea13794-dcc0-4f27-8362-2aee80edf70a" />
 <p></p>
 
 **On-Stage**는 나를 표현하는 수많은 채널을 단 하나의 주소로 연결합니다. 단순한 링크 모음을 넘어, 방문자의 반응을 실시간을 확인하세요.
 
-## Key Featuers
-<img width="2852" height="1238" alt="Image" src="https://github.com/user-attachments/assets/f9122457-3a87-44c7-935c-e67bb9dd676a" />
+## Key Features
+<img width="2852" height="1238" alt="Image" src="https://github.com/user-attachments/assets/785fe1f0-fd47-4ef5-bfaf-87f6186f8391" />
 <p></p>
 
 ## 서비스 화면 예시
