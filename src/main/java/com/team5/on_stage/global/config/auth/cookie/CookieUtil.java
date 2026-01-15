@@ -1,7 +1,9 @@
 package com.team5.on_stage.global.config.auth.cookie;
 
-import jakarta.servlet.http.Cookie;
+import org.springframework.http.ResponseCookie;
 
+import static com.team5.on_stage.global.constants.AuthConstants.COOKIE_SAME_SITE;
+import static com.team5.on_stage.global.constants.AuthConstants.COOKIE_SECURE;
 import static com.team5.on_stage.global.constants.AuthConstants.DEPLOY_DOMAIN;
 
 public class CookieUtil {
@@ -10,29 +12,33 @@ public class CookieUtil {
     public final static String COOKIE_PATH = "/";
     public final static int COOKIE_MAX_AGE = 24 * 60 * 60;
 
+    public static String createCookie(String key, String value, Boolean httpOnly) {
+        ResponseCookie.ResponseCookieBuilder builder = ResponseCookie.from(key, value)
+                .maxAge(COOKIE_MAX_AGE)
+                .path(COOKIE_PATH)
+                .secure(COOKIE_SECURE)
+                .httpOnly(httpOnly)
+                .sameSite(COOKIE_SAME_SITE);
 
-    public static Cookie createCookie(String key, String value, Boolean httpOnly) {
+        if (COOKIE_DOMAIN != null && !COOKIE_DOMAIN.isBlank()) {
+            builder.domain(COOKIE_DOMAIN);
+        }
 
-        Cookie cookie = new Cookie(key, value);
-
-        cookie.setMaxAge(COOKIE_MAX_AGE);
-        cookie.setDomain(COOKIE_DOMAIN);
-        cookie.setPath(COOKIE_PATH);
-        cookie.setSecure(true);
-        cookie.setHttpOnly(httpOnly);
-
-        return cookie;
+        return builder.build().toString();
     }
 
-    public static Cookie deleteCookie(String key) {
+    public static String deleteCookie(String key) {
+        ResponseCookie.ResponseCookieBuilder builder = ResponseCookie.from(key, "")
+                .maxAge(0)
+                .path(COOKIE_PATH)
+                .secure(COOKIE_SECURE)
+                .httpOnly(true)
+                .sameSite(COOKIE_SAME_SITE);
 
-        Cookie cookie = new Cookie(key, null);
-        cookie.setMaxAge(0);
-        cookie.setDomain(COOKIE_DOMAIN);
-        cookie.setPath(COOKIE_PATH);
-        cookie.setSecure(true);
-        cookie.setHttpOnly(true);
+        if (COOKIE_DOMAIN != null && !COOKIE_DOMAIN.isBlank()) {
+            builder.domain(COOKIE_DOMAIN);
+        }
 
-        return cookie;
+        return builder.build().toString();
     }
 }

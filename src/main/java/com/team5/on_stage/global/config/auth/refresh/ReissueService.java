@@ -79,19 +79,14 @@ public class ReissueService {
         redisService.deleteRefreshToken(oldRefreshToken);
         redisService.setRefreshToken(newRefreshToken, username);
 
-        Cookie deleteRefreshToken = deleteCookie("refresh");
-
         response.setHeader(AUTH_HEADER, AUTH_TYPE + newAccessToken);
-        Cookie deleteAccessToken = deleteCookie("access");
-        Cookie deleteJSessionCookie = deleteCookie("JSESSIONID");
-
-        response.addCookie(deleteRefreshToken);
-        response.addCookie(deleteAccessToken);
-        response.addCookie(deleteJSessionCookie);
+        response.addHeader("Set-Cookie", deleteCookie("refresh"));
+        response.addHeader("Set-Cookie", deleteCookie("access"));
+        response.addHeader("Set-Cookie", deleteCookie("JSESSIONID"));
 
         request.getSession().invalidate();
 
-        response.addCookie(createCookie("refresh", newRefreshToken, true));
-        response.addCookie(createCookie("access", newAccessToken, false));
+        response.addHeader("Set-Cookie", createCookie("refresh", newRefreshToken, true));
+        response.addHeader("Set-Cookie", createCookie("access", newAccessToken, false));
     }
 }

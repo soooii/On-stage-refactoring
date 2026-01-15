@@ -51,8 +51,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
             redisService.setRefreshToken(refreshToken, username);
 
-            response.addCookie(createCookie("access", accessToken, false));
-            response.addCookie(createCookie("refresh", refreshToken, true));
+            response.addHeader("Set-Cookie", createCookie("access", accessToken, false));
+            response.addHeader("Set-Cookie", createCookie("refresh", refreshToken, true));
             response.setStatus(HttpStatus.OK.value());
         } catch (Exception e) {
             setErrorResponse(response, ErrorCode.LOGIN_FAILED);

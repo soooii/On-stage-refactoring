@@ -18,8 +18,11 @@ public class CorsConfig implements CorsConfigurationSource {
                 "http://localhost:3000",
                 "http://localhost:5000",
                 "http://localhost:8080",
+                "https://al-going.com",
                 "http://59.8.139.239:3000",
                 "http://59.8.139.239:5000",
+                "http://43.200.97.146",
+                "https://43.200.97.146",
                 "http://www.on-stage.link",
                 "http://www.on-stage.link:3000",
                 "http://www.on-stage.link:5000"));
