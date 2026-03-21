@@ -41,6 +41,18 @@ public class SummaryQueryDslRepositoryImpl implements SummaryQueryDslRepository 
     }
 
     @Override
+    @Transactional
+    public void deleteAllByUsername(String username) {
+        queryFactory
+                .delete(summary1)
+                .where(summary1.user.username.eq(username))
+                .execute();
+
+        em.flush();
+        em.clear();
+    }
+
+    @Override
     public List<Summary> getRecentSummaryByUsername(String username, Pageable pageable) {
         JPAQuery<Summary> query = queryFactory
             .selectFrom(summary1)
@@ -89,6 +101,7 @@ public class SummaryQueryDslRepositoryImpl implements SummaryQueryDslRepository 
                 .select(summary1.user.username)
                 .from(summary1)
                 .join(summary1.user)
+                .where(summary1.isDeleted.isFalse())
                 .where(summary1.createdAt.loe(timeToCompare))
                 .groupBy(summary1.user.username)
                 .fetch();

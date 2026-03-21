@@ -28,7 +28,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -44,9 +43,6 @@ public class SummaryService {
     private final RedisService redisService;
     private final SummaryCacheService summaryCacheService;
 
-    // username별로 닉네임 정보 캐싱
-    private final Map<String, String> userNicknameCache = new ConcurrentHashMap<>();
-
     // 해당 username의 summary 저장
     @Async
     @Transactional
@@ -56,11 +52,8 @@ public class SummaryService {
         summaryRespository.softDeleteByUsername(username);
 
         articleService.save(username);
-        //articleService.firstFilteredArticles(username);
 
         List<Article> articles = articleRepository.findAllByUser_Username(username);
-
-        //if(articles.isEmpty()){return;}
 
         User user = userRepository.findByUsername(username);
         String nickname = user.getNickname();
@@ -113,71 +106,8 @@ public class SummaryService {
         }
 
         summaryRespository.saveAll(summaries); //bulk insert
+        summaryCacheService.evictSummaryCache(username);
     }
-
-    // //1. Redis 사용
-    // public Page<SummaryResponseDTO> getRecentSummary(SummaryRequestDTO request) {
-    //     String username = request.getUsername();
-    //
-    //     // 닉네임 변경 여부 체크
-    //     if (redisService.isNicknameChanged(username)) {
-    //         log.info("닉네임 변경 감지됨, 요약 새로 생성");
-    //
-    //         // 기존 summary 캐시 삭제
-    //         redisService.deleteSummaryCache(username);
-    //
-    //         // 요약 새로 생성 저장
-    //         saveSummary(username);
-    //
-    //         // 새로 저장한 summary 전체를 DB에서 조회 후 Redis에 캐싱
-    //         List<SummaryResponseDTO> freshSummaries = summaryRespository.getRecentSummaryByUsername(username, Pageable.unpaged())
-    //             .stream()
-    //             .map(summaryMapper::toDTO)
-    //             .collect(Collectors.toList());
-    //
-    //         redisService.setSummaryCache(username, freshSummaries, Duration.ofHours(24));
-    //     }
-    //
-    //     // Redis 캐시에서 요약 데이터 조회
-    //     List<SummaryResponseDTO> cachedSummaries = redisService.getSummaryCache(username);
-    //
-    //     Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
-    //
-    //     if (cachedSummaries != null) {
-    //         int start = (int) pageable.getOffset();
-    //         int end = Math.min(start + pageable.getPageSize(), cachedSummaries.size());
-    //
-    //         if (start > end) {
-    //             // 요청 페이지 범위가 캐시 데이터 범위 밖일 경우 빈 페이지 반환
-    //             return new PageImpl<>(Collections.emptyList(), pageable, cachedSummaries.size());
-    //         }
-    //
-    //         List<SummaryResponseDTO> pageContent = cachedSummaries.subList(start, end);
-    //         return new PageImpl<>(pageContent, pageable, cachedSummaries.size());
-    //     } else {
-    //         // 캐시 미스 시 DB에서 데이터 조회 후 캐싱
-    //         List<Summary> summaries = summaryRespository.getRecentSummaryByUsername(username, pageable);
-    //
-    //         if (summaries.isEmpty()) {
-    //             log.info("해당 유저의 뉴스가 없습니다: {}", username);
-    //             return new PageImpl<>(Collections.emptyList(), pageable, 0);
-    //         }
-    //
-    //         List<SummaryResponseDTO> summaryList = summaries.stream()
-    //             .map(summaryMapper::toDTO)
-    //             .collect(Collectors.toList());
-    //
-    //         // 전체 데이터를 별도로 모두 조회해서 캐싱
-    //         List<SummaryResponseDTO> allSummaries = summaryRespository.getRecentSummaryByUsername(username, Pageable.unpaged())
-    //             .stream()
-    //             .map(summaryMapper::toDTO)
-    //             .collect(Collectors.toList());
-    //
-    //         redisService.setSummaryCache(username, allSummaries, Duration.ofHours(24));
-    //
-    //         return new PageImpl<>(summaryList, pageable, allSummaries.size());
-    //     }
-    // }
 
     public Page<SummaryResponseDTO> getRecentSummary(SummaryRequestDTO request) {
         String username = request.getUsername();
@@ -204,13 +134,11 @@ public class SummaryService {
             .map(summaryMapper::toDTO)
             .collect(Collectors.toList());
 
-        summaryCacheService.setSummaryCache(username, dtoList, Duration.ofHours(24));
+        summaryCacheService.setSummaryCache(username, dtoList, Duration.ofHours(12));
 
         return getPageImpl(dtoList, pageable);
     }
 
-
-    //2.Redis 미사용
     public Page<SummaryResponseDTO> getRecentSummaryWithoutCache(SummaryRequestDTO request) {
         String username = request.getUsername();
 
@@ -265,6 +193,39 @@ public class SummaryService {
     //해당 userId의 summary 삭제
     public void deleteSummary(String username) {
         summaryRespository.softDeleteByUsername(username);
+        summaryCacheService.evictSummaryCache(username);
+    }
+
+    @Transactional
+    public void clearSummaryHistoryForNicknameChange(String username) {
+        summaryRespository.deleteAllByUsername(username);
+        summaryCacheService.evictSummaryCache(username);
+    }
+
+    @Transactional
+    public boolean approveSummary(Long summaryId) {
+        Optional<Summary> summaryOpt = summaryRespository.findById(summaryId);
+        if (summaryOpt.isEmpty()) {
+            return false;
+        }
+
+        Summary summary = summaryOpt.get();
+        summaryRespository.save(summary.updateStatus(SummaryStatus.APPROVED));
+        summaryCacheService.evictSummaryCache(summary.getUser().getUsername());
+        return true;
+    }
+
+    @Transactional
+    public boolean rejectSummary(Long summaryId) {
+        Optional<Summary> summaryOpt = summaryRespository.findById(summaryId);
+        if (summaryOpt.isEmpty()) {
+            return false;
+        }
+
+        Summary summary = summaryOpt.get();
+        summaryRespository.save(summary.updateStatus(SummaryStatus.REJECTED));
+        summaryCacheService.evictSummaryCache(summary.getUser().getUsername());
+        return true;
     }
 
     public Page<SummaryResponseDTO> getPendingSummary(SummaryRequestDTO request) {

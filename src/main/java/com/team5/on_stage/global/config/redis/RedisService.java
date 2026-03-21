@@ -1,24 +1,12 @@
 package com.team5.on_stage.global.config.redis;
 
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JavaType;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.team5.on_stage.summary.dto.SummaryResponseDTO;
-import com.team5.on_stage.user.entity.User;
-import com.team5.on_stage.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
-import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -26,9 +14,6 @@ import java.util.List;
 public class RedisService {
 
     private final RedisTemplate<String, String> redisTemplate;
-    private final UserRepository userRepository;
-    private final ObjectMapper objectMapper;
-    private final SummaryCacheService summaryCacheService;
     private final UserCacheService userCacheService;
 
     /* Refresh Token */
@@ -134,11 +119,6 @@ public class RedisService {
         redisTemplate.delete(key);
     }
 
-    @CachePut(value = "userNicknameCache", key = "#username")
-    public String updateUserNicknameCache(String username, String newNickname) {
-        return newNickname;
-    }
-
     public boolean isNicknameChanged(String username) {
         String prevNicknameKey = "PrevUserNickname:" + username;
         ValueOperations<String, String> ops = redisTemplate.opsForValue();
@@ -152,15 +132,4 @@ public class RedisService {
         }
         return false;
     }
-
-
-
-
-
-
-
-
-
-
-
 }

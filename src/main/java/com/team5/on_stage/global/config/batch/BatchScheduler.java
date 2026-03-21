@@ -19,7 +19,7 @@ public class BatchScheduler {
     private final JobLauncher jobLauncher;
     private final Job saveSummaryJob;
 
-    // 매일 배치 작업 실행 (현재 시간 기준 3개월 지난 summary 새로 저장)
+    // 매일 배치 작업 실행
     @Scheduled(cron = "0 0 0 * * *")
     public void runSummaryCheck() throws Exception {
         JobParameters jobParameters = new JobParametersBuilder()
