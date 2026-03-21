@@ -60,7 +60,7 @@ public class UserService {
         user.setNickname(nickname);
         userRepository.save(user);
 
-        //redisService.updateUserNicknameCache(username, nickname);
+        summaryService.clearSummaryHistoryForNicknameChange(username);
         summaryService.saveSummary(username);
     }
 
@@ -289,6 +289,9 @@ public class UserService {
     public String convertNicknameToUsername(String nickname) {
 
         User user = userRepository.findByNickname(nickname);
+        if (user == null) {
+            throw new GlobalException(ErrorCode.USER_NOT_FOUND);
+        }
 
         return user.getUsername();
     }
