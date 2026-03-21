@@ -17,6 +17,8 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 
 import java.security.Principal;
 
+import static com.team5.on_stage.global.constants.AuthConstants.DEPLOY_FRONT_DOMAIN;
+
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSocketMessageBroker
@@ -56,7 +58,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
 
         registry.addEndpoint("/ws")
-                .setAllowedOrigins("https://al-going.com") // CORS 허용범위
+                .setAllowedOrigins(DEPLOY_FRONT_DOMAIN)
                 .withSockJS();
     }
 
