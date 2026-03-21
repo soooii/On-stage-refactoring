@@ -15,8 +15,6 @@ import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.interceptor.DefaultTransactionAttribute;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -60,7 +58,7 @@ public class SummaryBatchJobConfig {
     }
 
     private List<String> getUsersWithOldSummaries() {
-        LocalDateTime timeToCompare = LocalDateTime.now().minusMonths(3);
+        LocalDateTime timeToCompare = LocalDateTime.now().minusDays(1);
         log.info(String.valueOf(timeToCompare));
         List<String> usernames = summaryRespository.findUsernamesWithOldSummaries(timeToCompare);
         log.info("조회된 사용자: {}", usernames);
